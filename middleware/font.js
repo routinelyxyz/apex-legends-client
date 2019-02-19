@@ -7,10 +7,10 @@ const LoadFonts = () => {
 
   document.head.appendChild(link)
 
-  const roboto = new FontFaceObserver('Roboto')
+  const openSans = new FontFaceObserver('Open Sans')
 
-  roboto.load().then(() => {
-    document.documentElement.classList.add('roboto')
+  openSans.load().then(() => {
+    document.documentElement.classList.add('open-sans')
   });
 }
 
