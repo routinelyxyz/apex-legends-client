@@ -1,4 +1,22 @@
 body {
   font-family: 'Open Sans', sans-serif;
   margin: 0;
+  color: #fff;
+  font-size: 15px;
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
+  .app_container {
+    min-height: 100vh;
+    $bg-color: #1b264d;
+    background: $bg-color radial-gradient(
+      ellipse at top,
+      rgb(43, 74, 160),
+      $bg-color 72%
+    );
+    background-size: 100vw 45vh;
+    background-repeat: no-repeat;
+    color: #fff;
+  }
 }

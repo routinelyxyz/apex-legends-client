@@ -1,5 +1,6 @@
 import LoadFonts from '../middleware/font';
 import css from '../assets/css/index.scss';
+import Header from '../components/Header';
 
 
 class Index extends React.Component {
@@ -9,7 +10,10 @@ class Index extends React.Component {
 
   render() {
     return (
-      <div>Witaj</div>
+      <div className={css.app_container}>
+        <Header/>
+        <div>Witaj</div>
+      </div>
     )
   }
 }
