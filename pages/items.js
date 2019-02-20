@@ -4,6 +4,7 @@ import css from '../assets/css/items.scss';
 import fetch from 'isomorphic-unfetch';
 import styled from 'styled-components';
 import Link from 'next/link';
+import { useTransition, animated } from 'react-spring';
 
 import Item from '../reusable/Item';
 import Input from '../reusable/Input';
@@ -46,6 +47,12 @@ const Items = ({ items }) => {
     .sort((a, b) => 
       +(a[sortProp] > b[sortProp]) * sortDir
     );
+
+  const transitions = useTransition(filteredWeapons, item => item.id, {
+    from: { opacity: 0, transform: 'scale(0)' },
+    enter: { opacity: 1, transform: 'scale(1)' },
+    leave: { position: 'absolute', transform: 'scale(0)', opacity: 0 }
+  });
 
   return (
     <Layout>
@@ -109,10 +116,11 @@ const Items = ({ items }) => {
               />
             </div>
             <div className={css.items__container}>
-              {filteredWeapons.map(item =>
+              {transitions.map(({ item, props, key }) =>
                 <Item
-                  key={item.id}
+                  key={key}
                   item={item}
+                  style={props}
                 />
               )}
             </div>

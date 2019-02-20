@@ -1,9 +1,13 @@
 import css from './style.scss';
 import styled from 'styled-components';
+import { animated } from 'react-spring';
 
-const Item = ({ item }) => {
+const Item = ({ item, ...springProps }) => {
   return (
-    <Container className={css.item_rare}>
+    <Container
+      className={css.item_rare}
+      {...springProps}
+    >
       <Name>{item.name}</Name>
       <div className={css.item__container}>
         <img
@@ -15,7 +19,7 @@ const Item = ({ item }) => {
   )
 }
 
-const Container = styled.div`
+const Container = styled(animated.div)`
   margin: 0 0 60px 60px;
 `
 const Name = styled.p`
