@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Item = ({ item }) => {
   return (
     <Container className={css.item_rare}>
-      <Name>{item.name} {item.bodyDamage}</Name>
+      <Name>{item.name}</Name>
       <div className={css.item__container}>
         <img
           className={css.item__img}
@@ -16,7 +16,7 @@ const Item = ({ item }) => {
 }
 
 const Container = styled.div`
-  margin: 0 60px 60px 0;
+  margin: 0 0 60px 60px;
 `
 const Name = styled.p`
   margin: 0;

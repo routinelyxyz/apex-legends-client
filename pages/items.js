@@ -11,6 +11,16 @@ import Checkmark from '../reusable/Checkmark';
 import Select from '../reusable/Select';
 import { SortDirection } from '../reusable/SortDirection';
 
+const sortProps = [
+  ['bodyDamage', 'Body damage'],
+  ['headshotDamage', 'Headshot damage'],
+  ['bodyDPS', 'Body DPS'],
+  ['headshotDPS', 'Headshot DPS'],
+  ['reload', 'Reload time'],
+  ['emptyReload', 'Empty reload time'],
+  ['magazine', 'Magazine size']
+];
+
 const Items = ({ items }) => {
   const [phrase, setPhrase] = useState('');
   const [sortDir, setSortDir] = useState(1);
@@ -21,17 +31,6 @@ const Items = ({ items }) => {
       [weapon.type]: false
     }), {})
   );
-
-  const sortProps = [
-    ['bodyDamage', 'Body damage'],
-    ['headshotDamage', 'Headshot damage'],
-    ['bodyDPS', 'Body DPS'],
-    ['headshotDPS', 'Headshot DPS'],
-    ['reload', 'Reload time'],
-    ['emptyReload', 'Empty reload time'],
-    ['magazine', 'Magazine size']
-  ];
-
 
   const selectedTypesCount = Object.values(selectedTypes)
     .filter(val => val === true).length;
@@ -59,7 +58,6 @@ const Items = ({ items }) => {
             <NavLink>Attachments</NavLink>
           </Link>
         </SubMenu>
-        {sortDir} sortDir
         <ItemsContainer>
           <SearchFilters>
             <label>
