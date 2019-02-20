@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import Layout from '../layouts';
-import css from '../assets/css/items.scss';
+import Layout from '../../layouts';
+import css from './style.scss';
 import fetch from 'isomorphic-unfetch';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useTransition, animated } from 'react-spring';
 
-import Item from '../reusable/Item';
-import Input from '../reusable/Input';
-import Checkmark from '../reusable/Checkmark';
-import Select from '../reusable/Select';
-import { SortDirection } from '../reusable/SortDirection';
+import Item from '../../reusable/Item';
+import Input from '../../reusable/Input';
+import Checkmark from '../../reusable/Checkmark';
+import Select from '../../reusable/Select';
+import { SortDirection } from '../../reusable/SortDirection';
 
 const sortProps = [
   ['bodyDamage', 'Body damage'],
