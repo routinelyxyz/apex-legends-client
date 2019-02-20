@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Layout from '../../layouts';
 import css from './style.scss';
 import fetch from 'isomorphic-unfetch';
 import styled from 'styled-components';
@@ -55,81 +54,79 @@ const Items = ({ items }) => {
   });
 
   return (
-    <Layout>
-      <div>
-        <SubMenu>
-          <Link href="/items" passHref>
-            <NavLink active>Weapons</NavLink>
-          </Link>
-          <Link href="/items/attachments" passHref>
-            <NavLink>Attachments</NavLink>
-          </Link>
-        </SubMenu>
-        <ItemsContainer>
-          <SearchFilters>
-            <label>
-              <H3>Name</H3>
-              <Input
-                placeholder="Weapon name..."
-                value={phrase}
-                onChange={e => setPhrase(e.target.value)}
-              />
-            </label>
-            <CategoryFilters>
-              <H3>Category</H3>
-              {Object.keys(selectedTypes).map(type => (
-                <Checkmark
-                  title={type}
-                  key={type}
-                  value={selectedTypes[type]}
-                  onChange={e => setTypes({
-                    ...selectedTypes,
-                    [type]: e.target.checked
-                  })}
-                /> 
-              ))}
-            </CategoryFilters>
-          </SearchFilters>
-          <div className={css.items__wrapper}>
-            <div className={css.sort__container}>
-              <H3 margin={'0 10px 0 0'}>
-                Sort By
-              </H3>
-              <Select
-                value={sortProp}
-                onChange={e => setSortProp(
-                  e.target.value
-                )}
-              >
-                {sortProps.map(([prop, title]) => (
-                  <option value={prop} key={prop}>
-                    {title}
-                  </option>
-                ))}
-              </Select>
-              <H3 margin={'0 10px 0 40px'}>
-                Direction
-              </H3>
-              <SortDirection
-                value={sortDir}
-                onChange={e => setSortDir(
-                  e.target.checked ? 1 : -1
-                )}
-              />
-            </div>
-            <div className={css.items__container}>
-              {transitions.map(({ item, props, key }) =>
-                <Item
-                  key={key}
-                  item={item}
-                  style={props}
-                />
+    <div>
+      <SubMenu>
+        <Link href="/items" passHref>
+          <NavLink active>Weapons</NavLink>
+        </Link>
+        <Link href="/items/attachments" passHref>
+          <NavLink>Attachments</NavLink>
+        </Link>
+      </SubMenu>
+      <ItemsContainer>
+        <SearchFilters>
+          <label>
+            <H3>Name</H3>
+            <Input
+              placeholder="Weapon name..."
+              value={phrase}
+              onChange={e => setPhrase(e.target.value)}
+            />
+          </label>
+          <CategoryFilters>
+            <H3>Category</H3>
+            {Object.keys(selectedTypes).map(type => (
+              <Checkmark
+                title={type}
+                key={type}
+                value={selectedTypes[type]}
+                onChange={e => setTypes({
+                  ...selectedTypes,
+                  [type]: e.target.checked
+                })}
+              /> 
+            ))}
+          </CategoryFilters>
+        </SearchFilters>
+        <div className={css.items__wrapper}>
+          <div className={css.sort__container}>
+            <H3 margin={'0 10px 0 0'}>
+              Sort By
+            </H3>
+            <Select
+              value={sortProp}
+              onChange={e => setSortProp(
+                e.target.value
               )}
-            </div>
+            >
+              {sortProps.map(([prop, title]) => (
+                <option value={prop} key={prop}>
+                  {title}
+                </option>
+              ))}
+            </Select>
+            <H3 margin={'0 10px 0 40px'}>
+              Direction
+            </H3>
+            <SortDirection
+              value={sortDir}
+              onChange={e => setSortDir(
+                e.target.checked ? 1 : -1
+              )}
+            />
           </div>
-        </ItemsContainer>
-      </div>
-    </Layout>
+          <div className={css.items__container}>
+            {transitions.map(({ item, props, key }) =>
+              <Item
+                key={key}
+                item={item}
+                style={props}
+              />
+            )}
+          </div>
+        </div>
+      </ItemsContainer>
+    </div>
   )
 };
 

@@ -1,5 +1,10 @@
 import React from 'react'
 import App, { Container } from 'next/app'
+import LoadFonts from '../middleware/font';
+
+import Layout from '../layouts';
+
+// Apply context / portal for sub-nested routing shared components
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -11,18 +16,19 @@ class MyApp extends App {
 
     return { pageProps }
   }
-
-  componentDidMount = () => {
-    console.log("MOUTNED")
-  };
   
+  componentDidMount() {
+    LoadFonts();
+  }
 
   render () {
     const { Component, pageProps } = this.props
 
     return (
       <Container>
-        <Component {...pageProps}/>
+        <Layout>
+          <Component {...pageProps}/>
+        </Layout>
       </Container>
     );
   }
