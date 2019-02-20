@@ -7,6 +7,8 @@ import Link from 'next/link';
 import Item from '../reusable/Item';
 import Input from '../reusable/Input';
 import Checkmark from '../reusable/Checkmark';
+import Select from '../reusable/Select';
+import { SortDirection } from '../reusable/SortDirection';
 
 const Items = ({ items }) => {
   const weaponTypes = items
@@ -44,16 +46,29 @@ const Items = ({ items }) => {
                   key={type}                  
                 />
               ))}
-              
             </CategoryFilters>
           </SearchFilters>
-          <div className={css.items__container}>
-            {items.map(item =>
-              <Item
-                key={item.id}
-                item={item}
-              />
-            )}
+          <div className={css.items__wrapper}>
+            <div className={css.sort__container}>
+              <H3 margin={'0 10px 0 0'}>
+                Sort By
+              </H3>
+              <Select>
+                <option>Damage</option>
+              </Select>
+              <H3 margin={'0 10px 0 40px'}>
+                Direction
+              </H3>
+              <SortDirection/>
+            </div>
+            <div className={css.items__container}>
+              {items.map(item =>
+                <Item
+                  key={item.id}
+                  item={item}
+                />
+              )}
+            </div>
           </div>
         </ItemsContainer>
       </div>
@@ -74,7 +89,7 @@ const ItemsContainer = styled.article`
 const H3 = styled.h3`
   font-size: 12px;
   letter-spacing: 2px;
-  margin: 0 0 10px 0;
+  margin: ${props => props.margin ? props.margin : '0 0 10px 0'};
   text-transform: uppercase;
 `
 const SearchFilters = styled.nav`

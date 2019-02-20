@@ -1,0 +1,15 @@
+
+.container {
+  cursor: pointer;
+}
+
+.checkbox {
+  &:checked ~ .arrows {
+    transform: rotate(180deg);
+  }
+  display: none;
+}
+
+.arrows {
+  transition: transform .15s ease;
+}
