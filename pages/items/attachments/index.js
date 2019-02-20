@@ -1,8 +1,10 @@
+import ItemsLayout from '../../../layouts/items';
+
 
 const Attachements = () => (
-  <div>
+  <ItemsLayout>
     Attachements
-  </div>
+  </ItemsLayout>
 );
 
 export default Attachements;

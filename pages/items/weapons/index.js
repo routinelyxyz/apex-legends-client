@@ -1,10 +1,10 @@
-
+import ItemsLayout from '../../../layouts/items';
 
 const Weapons = () => {
   return (
-    <div>
+    <ItemsLayout>
       Weapons
-    </div>
+    </ItemsLayout>
   )
 }
 
