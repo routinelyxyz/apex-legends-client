@@ -25,7 +25,7 @@ const sortProps = [
 const Items = ({ items }) => {
   const [phrase, setPhrase] = useState('');
   const [sortDir, setSortDir] = useState(1);
-  const [sortProp, setSortProp] = useState(null);
+  const [sortProp, setSortProp] = useState('');
   const [selectedTypes, setTypes] = useState(
     items.reduce((types, weapon) => ({
       ...types,
@@ -72,7 +72,7 @@ const Items = ({ items }) => {
               <Input
                 placeholder="Weapon name..."
                 value={phrase}
-                onInput={e => setPhrase(e.target.value)}
+                onChange={e => setPhrase(e.target.value)}
               />
             </label>
             <CategoryFilters>
@@ -81,6 +81,7 @@ const Items = ({ items }) => {
                 <Checkmark
                   title={type}
                   key={type}
+                  value={selectedTypes[type]}
                   onChange={e => setTypes({
                     ...selectedTypes,
                     [type]: e.target.checked
@@ -94,14 +95,14 @@ const Items = ({ items }) => {
               <H3 margin={'0 10px 0 0'}>
                 Sort By
               </H3>
-              <Select onChange={e => setSortProp(
-                e.target.value
-              )}>
+              <Select
+                value={sortProp}
+                onChange={e => setSortProp(
+                  e.target.value
+                )}
+              >
                 {sortProps.map(([prop, title]) => (
-                  <option
-                    value={prop}
-                    key={prop}
-                  >
+                  <option value={prop} key={prop}>
                     {title}
                   </option>
                 ))}
@@ -110,6 +111,7 @@ const Items = ({ items }) => {
                 Direction
               </H3>
               <SortDirection
+                value={sortDir}
                 onChange={e => setSortDir(
                   e.target.checked ? 1 : -1
                 )}
