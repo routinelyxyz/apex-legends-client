@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Item = ({ item }) => {
   return (
-    <Container>
+    <Container className={css.item_rare}>
       <Name>{item.name}</Name>
       <div className={css.item__container}>
         <img
@@ -22,7 +22,7 @@ const Name = styled.p`
   margin: 0;
   position: relative;
   bottom: 5px;
-  font-size: 12px;
+  font-size: 13px;
   text-shadow: 0 1px 4px #000;
   text-align: center;
   &:after {

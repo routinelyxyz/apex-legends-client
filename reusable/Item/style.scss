@@ -1,13 +1,30 @@
+@import "../../assets/css/rarities.scss";
+
+@each $rarity, $colors in $rarities {
+  $borderColor: nth($colors, 1);
+  $bgColor: nth($colors, 2);
+
+  &.#{"item_" + $rarity} {
+    .item__container {
+      background:
+        linear-gradient(149.07deg, rgba(35, 35, 47, 0) 10%, $bgColor 133.81%),
+        radial-gradient(112.00px at 50% 50%, #23232F 0%, #313144 100%);
+      border-color: $borderColor;
+    }
+  }
+}
 
 .item__container {
   height: 150px;
   width: 150px;
-  // background: radial-gradient(#004e92, #111755);
+  // background:
+  //   linear-gradient(149.07deg, rgba(35, 35, 47, 0) 10%, #0B86FF 123.81%),
+  //   radial-gradient(112.00px at 50% 50%, #23232F 0%, #313144 100%);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255,255,255, .5);
+  border: 1px solid transparent;
   border-radius: 8px;
   transition: transform .2s ease;
   &:hover {
@@ -27,4 +44,6 @@
   height: 140px;
   width: 140px;
   position: relative;
+  // filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
 }
+
