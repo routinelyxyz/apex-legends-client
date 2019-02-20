@@ -7,7 +7,7 @@
   &.#{"item_" + $rarity} {
     .item__container {
       background:
-        linear-gradient(149.07deg, rgba(35, 35, 47, 0) 10%, $bgColor 133.81%),
+        linear-gradient(149.07deg, rgba(35, 35, 47, 0) 10%, $bgColor 143.81%),
         radial-gradient(112.00px at 50% 50%, #23232F 0%, #313144 100%);
       border-color: $borderColor;
     }

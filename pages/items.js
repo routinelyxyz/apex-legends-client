@@ -22,14 +22,14 @@ const Items = ({ items }) => {
   return (
     <Layout>
       <div>
-        <Nav>
+        <SubMenu>
           <Link href="/items" passHref>
-            <NavLink>Weapons</NavLink>
+            <NavLink active>Weapons</NavLink>
           </Link>
           <Link href="/items/attachments" passHref>
             <NavLink>Attachments</NavLink>
           </Link>
-        </Nav>
+        </SubMenu>
         <ItemsContainer>
           <SearchFilters>
             <label>
@@ -76,11 +76,24 @@ const Items = ({ items }) => {
   )
 };
 
-const Nav = styled.nav`
-  margin-bottom: 50px;
+const SubMenu = styled.nav`
+  margin: 25px 0 100px 0;
 `
 const NavLink = styled.a`
-  margin-right: 15px;
+  margin-right: 35px;
+  font-size: 20px;
+  color: ${props => props.active ? '#fff' : 'rgb(99, 99, 134)'};
+  position: relative;
+  &:after {
+    content: ${props => props.active ? "''" : ''};
+    height: 3px;
+    width: 100%;
+    border-radius: 6px;
+    background: #6770FA;
+    position: absolute;
+    left: 0;
+    bottom: -25px;
+  }
 `
 const ItemsContainer = styled.article`
   justify-content: space-between;
@@ -93,6 +106,7 @@ const H3 = styled.h3`
   text-transform: uppercase;
 `
 const SearchFilters = styled.nav`
+  margin-right: 20px;
 `
 const CategoryFilters = styled.div`
   margin-top: 40px;
