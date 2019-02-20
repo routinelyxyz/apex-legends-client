@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import App, { Container } from 'next/app'
 import LoadFonts from '../middleware/font';
 
@@ -7,6 +7,7 @@ import Layout from '../layouts';
 // Apply context / portal for sub-nested routing shared components
 
 class MyApp extends App {
+
   static async getInitialProps({ Component, ctx }) {
     let pageProps = {}
 
@@ -16,17 +17,16 @@ class MyApp extends App {
 
     return { pageProps }
   }
-  
+
   componentDidMount() {
     LoadFonts();
   }
 
   render () {
-    const { Component, pageProps } = this.props
-
+    const { Component, pageProps, router } = this.props;
     return (
       <Container>
-        <Layout>
+        <Layout route={router.route}>
           <Component {...pageProps}/>
         </Layout>
       </Container>

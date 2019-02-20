@@ -1,11 +1,8 @@
-import Layout from '../../../layouts';
 
 const Attachements = () => (
-  <Layout>
-    <div>
-      wewew
-    </div>
-  </Layout>
+  <div>
+    Attachements
+  </div>
 );
 
 export default Attachements;
