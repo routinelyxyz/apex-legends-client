@@ -1,9 +1,19 @@
 @import "../../assets/css/rwd.scss";
 
-.header__container {
+.container {
   padding: 10px;
+  display: flex;
+  align-items: center;
   @extend %rwd-sizing;
   margin-bottom: 50px;
+}
+
+.logo {
+  margin-right: 80px;
+}
+
+.searcher {
+  margin-left: auto;
 }
 
 .header__links {
