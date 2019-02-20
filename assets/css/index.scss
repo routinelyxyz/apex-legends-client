@@ -1,7 +1,7 @@
 @import "./rwd.scss";
 
 body {
-  font-family: 'Open Sans', sans-serif;
+  font-family: Cabin, sans-serif;
   margin: 0;
   color: #fff;
   font-size: 15px;
@@ -11,14 +11,15 @@ body {
   }
   .app_container {
     min-height: 100vh;
-    $bg-color: #1b264d;
-    background: $bg-color radial-gradient(
-      ellipse at top,
-      rgb(43, 74, 160),
-      $bg-color 72%
-    );
-    background-size: 100vw 45vh;
-    background-repeat: no-repeat;
+    $bg-color: #23232F;
+    background: $bg-color;
+    // background: $bg-color radial-gradient(
+    //   ellipse at top,
+    //   rgb(43, 74, 160),
+    //   $bg-color 72%
+    // );
+    // background-size: 100vw 45vh;
+    // background-repeat: no-repeat;
     color: #fff;
   }
   .app_content {

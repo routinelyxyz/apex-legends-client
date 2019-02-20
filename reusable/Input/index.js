@@ -12,6 +12,7 @@ const Input = styled.input`
   box-shadow: 4px 4px 10px rgba(1,1,1,.3);
   transition: background-color .2s ease;
   border: 1px solid #fff;
+  font-family: Cabin;
   &:focus {
     /* border: 1px solid #FE8EC1; */
   }
@@ -25,6 +26,7 @@ const Input = styled.input`
   &::placeholder {
     color: rgba(255,255,255,.8);
     color: rgb(122, 127, 145);
+    color: #5F5F6A;
   }
   box-sizing: border-box;
 `

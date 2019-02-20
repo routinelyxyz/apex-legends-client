@@ -1,0 +1,53 @@
+.check__container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.check__input {
+  margin: 0;
+  opacity: 0;
+  &:checked ~ .check__mark {
+    &:after {
+      transform: rotate(45deg) scale(1);
+    }
+  }
+  &:checked ~ .check__title{
+    color: #fff;
+  }
+}
+
+.check__mark {
+  left: 0;
+  &:before {
+    position: absolute;
+    content: "";
+    width: 18px;
+    height: 18px;
+    border: 2px solid #3A3A4A;
+    box-sizing: border-box;
+    border-radius: 4px;
+    left: 0;
+    top: 0;
+  }
+  &:after {
+    transition: transform .15s ease;
+    content: "";
+    position: absolute;
+    display: inline-block;
+    transform: rotate(45deg) scale(0);
+    height: 15px;
+    width: 6px;
+    border-bottom: 3px solid #6770FA;
+    border-right: 3px solid #6770FA;
+    left: 6px;
+    top: -4px;
+  }
+}
+
+.check__title {
+  margin-left: 15px;
+  font-size: 14px;
+  color: #636386;
+}

@@ -6,8 +6,17 @@ import Link from 'next/link';
 
 import Item from '../reusable/Item';
 import Input from '../reusable/Input';
+import Checkmark from '../reusable/Checkmark';
 
 const Items = ({ items }) => {
+  const weaponTypes = items
+    .reduce((types, weapon) => {
+      if (!types.some(type => type === weapon.type)) {
+        types.push(weapon.type);
+      }
+      return types;
+    }, []);
+
   return (
     <Layout>
       <div>
@@ -19,10 +28,25 @@ const Items = ({ items }) => {
             <NavLink>Attachments</NavLink>
           </Link>
         </Nav>
-        <div>
-          <Input
-            placeholder="Weapon name..."
-          />
+        <ItemsContainer>
+          <SearchFilters>
+            <label>
+              <H3>Name</H3>
+              <Input
+                placeholder="Weapon name..."
+              />
+            </label>
+            <CategoryFilters>
+              <H3>Category</H3>
+              {weaponTypes.map(type => (
+                <Checkmark
+                  title={type}
+                  key={type}                  
+                />
+              ))}
+              
+            </CategoryFilters>
+          </SearchFilters>
           <div className={css.items__container}>
             {items.map(item =>
               <Item
@@ -31,7 +55,7 @@ const Items = ({ items }) => {
               />
             )}
           </div>
-        </div>
+        </ItemsContainer>
       </div>
     </Layout>
   )
@@ -42,6 +66,21 @@ const Nav = styled.nav`
 `
 const NavLink = styled.a`
   margin-right: 15px;
+`
+const ItemsContainer = styled.article`
+  justify-content: space-between;
+  display: flex;
+`
+const H3 = styled.h3`
+  font-size: 12px;
+  letter-spacing: 2px;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+`
+const SearchFilters = styled.nav`
+`
+const CategoryFilters = styled.div`
+  margin-top: 40px;
 `
 
 Items.getInitialProps = async () => {
