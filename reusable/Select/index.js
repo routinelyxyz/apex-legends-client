@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-const Select = ({ children }) => (
-  <StyledSelect>
+const Select = ({ children, ...selectProps }) => (
+  <StyledSelect {...selectProps}>
     {children}
   </StyledSelect>
 );

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Item = ({ item }) => {
   return (
     <Container className={css.item_rare}>
-      <Name>{item.name}</Name>
+      <Name>{item.name} {item.bodyDamage}</Name>
       <div className={css.item__container}>
         <img
           className={css.item__img}

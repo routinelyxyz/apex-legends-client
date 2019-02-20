@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Layout from '../layouts';
 import css from '../assets/css/items.scss';
 import fetch from 'isomorphic-unfetch';
@@ -11,13 +12,41 @@ import Select from '../reusable/Select';
 import { SortDirection } from '../reusable/SortDirection';
 
 const Items = ({ items }) => {
-  const weaponTypes = items
-    .reduce((types, weapon) => {
-      if (!types.some(type => type === weapon.type)) {
-        types.push(weapon.type);
-      }
-      return types;
-    }, []);
+  const [phrase, setPhrase] = useState('');
+  const [sortDir, setSortDir] = useState(1);
+  const [sortProp, setSortProp] = useState(null);
+  const [selectedTypes, setTypes] = useState(
+    items.reduce((types, weapon) => ({
+      ...types,
+      [weapon.type]: false
+    }), {})
+  );
+
+  const sortProps = [
+    ['bodyDamage', 'Body damage'],
+    ['headshotDamage', 'Headshot damage'],
+    ['bodyDPS', 'Body DPS'],
+    ['headshotDPS', 'Headshot DPS'],
+    ['reload', 'Reload time'],
+    ['emptyReload', 'Empty reload time'],
+    ['magazine', 'Magazine size']
+  ];
+
+
+  const selectedTypesCount = Object.values(selectedTypes)
+    .filter(val => val === true).length;
+
+  const filteredWeapons = items
+    .filter(item =>
+      item.name.toLowerCase().includes(phrase.toLowerCase())
+    )
+    .filter(item => selectedTypesCount > 0
+        ? selectedTypes[item.type]
+        : true
+    )
+    .sort((a, b) => 
+      +(a[sortProp] > b[sortProp]) * sortDir
+    );
 
   return (
     <Layout>
@@ -30,21 +59,28 @@ const Items = ({ items }) => {
             <NavLink>Attachments</NavLink>
           </Link>
         </SubMenu>
+        {sortDir} sortDir
         <ItemsContainer>
           <SearchFilters>
             <label>
               <H3>Name</H3>
               <Input
                 placeholder="Weapon name..."
+                value={phrase}
+                onInput={e => setPhrase(e.target.value)}
               />
             </label>
             <CategoryFilters>
               <H3>Category</H3>
-              {weaponTypes.map(type => (
+              {Object.keys(selectedTypes).map(type => (
                 <Checkmark
                   title={type}
-                  key={type}                  
-                />
+                  key={type}
+                  onChange={e => setTypes({
+                    ...selectedTypes,
+                    [type]: e.target.checked
+                  })}
+                /> 
               ))}
             </CategoryFilters>
           </SearchFilters>
@@ -53,16 +89,29 @@ const Items = ({ items }) => {
               <H3 margin={'0 10px 0 0'}>
                 Sort By
               </H3>
-              <Select>
-                <option>Damage</option>
+              <Select onChange={e => setSortProp(
+                e.target.value
+              )}>
+                {sortProps.map(([prop, title]) => (
+                  <option
+                    value={prop}
+                    key={prop}
+                  >
+                    {title}
+                  </option>
+                ))}
               </Select>
               <H3 margin={'0 10px 0 40px'}>
                 Direction
               </H3>
-              <SortDirection/>
+              <SortDirection
+                onChange={e => setSortDir(
+                  e.target.checked ? 1 : -1
+                )}
+              />
             </div>
             <div className={css.items__container}>
-              {items.map(item =>
+              {filteredWeapons.map(item =>
                 <Item
                   key={item.id}
                   item={item}
