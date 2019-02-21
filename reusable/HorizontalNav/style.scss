@@ -1,0 +1,29 @@
+.nav_container {
+  margin: 40px 0;
+}
+
+.nav_list {
+  border-bottom: 1px solid #52525B;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  // padding: 25px 30px;
+  list-style-type: none;
+}
+
+.link {
+  position: relative;
+  text-transform: uppercase;
+  padding: 25px 40px;
+  box-sizing: border-box;
+  &:after {
+    content: "";
+    position: absolute;
+    background: #6770FA;
+    width: 100%;
+    height: 3px;
+    left: 0;
+    bottom: 0;
+    border-radius: 10px;
+  }
+}

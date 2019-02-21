@@ -2,6 +2,9 @@ import ItemsLayout from '../../../layouts/items';
 import 'isomorphic-unfetch';
 import css from './style.scss';
 import { weaponProps } from '../../../helpers';
+import Link from 'next/link';
+
+import { HorizontalNav } from '../../../reusable/HorizontalNav';
 
 const WeaponPage = ({ id, item }) => {
   return (
@@ -22,6 +25,11 @@ const WeaponPage = ({ id, item }) => {
           />
         </figure>
       </div>
+      <HorizontalNav>
+        <Link href={`/items/weapons/${id}`}>
+          Overview
+        </Link>
+      </HorizontalNav>
       <article>
         <ul className={css.props_list}>
           {weaponProps.map(([prop, name]) => (
