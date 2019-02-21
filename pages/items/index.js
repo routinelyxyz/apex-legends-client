@@ -12,19 +12,20 @@ import Select from '../../reusable/Select';
 import { SortDirection } from '../../reusable/SortDirection';
 
 const sortProps = [
+  ['name', 'Name'],
   ['bodyDamage', 'Body damage'],
   ['headshotDamage', 'Headshot damage'],
   ['bodyDPS', 'Body DPS'],
   ['headshotDPS', 'Headshot DPS'],
   ['reload', 'Reload time'],
   ['emptyReload', 'Empty reload time'],
-  ['magazine', 'Magazine size']
+  ['magazine', 'Magazine size'],
 ];
 
 const Items = ({ items }) => {
   const [phrase, setPhrase] = useState('');
   const [sortDir, setSortDir] = useState(1);
-  const [sortProp, setSortProp] = useState('');
+  const [sortProp, setSortProp] = useState('name');
   const [selectedTypes, setTypes] = useState(
     items.reduce((types, weapon) => ({
       ...types,
