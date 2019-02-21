@@ -115,8 +115,8 @@ const Items = ({ items }) => {
             {transitions.map(({ item, props, key }) =>
               <Link
                 key={key}
-                href={`/items/weapon?id=${item.id}`}
-                as={`/items/weapon/${item.id}`}
+                href={`/items/weapon?slug=${item.slug}`}
+                as={`/items/weapon/${item.slug}`}
                 passHref
               >
                 <Item

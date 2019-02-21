@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 import { HorizontalNav } from '../../../reusable/HorizontalNav';
 
-const WeaponPage = ({ id, item }) => {
+const WeaponPage = ({ slug, item }) => {
   return (
     <ItemsLayout>
       <div className={css.header}>
@@ -26,7 +26,7 @@ const WeaponPage = ({ id, item }) => {
         </figure>
       </div>
       <HorizontalNav>
-        <Link href={`/items/weapons/${id}`}>
+        <Link href={`/items/weapons/${slug}`}>
           Overview
         </Link>
       </HorizontalNav>
@@ -51,10 +51,10 @@ const WeaponPage = ({ id, item }) => {
   )
 }
 
-WeaponPage.getInitialProps = async ({ query: { id }}) => {
-  const data = await fetch(`http://localhost:4000/items/weapon/${id}`);
+WeaponPage.getInitialProps = async ({ query: { slug }}) => {
+  const data = await fetch(`http://localhost:4000/items/weapon/${slug}`);
   const item = await data.json();
-  return { id, item };
+  return { slug, item };
 }
 
 export default WeaponPage;
