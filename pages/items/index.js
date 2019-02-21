@@ -117,11 +117,17 @@ const Items = ({ items }) => {
           </div>
           <div className={css.items__container}>
             {transitions.map(({ item, props, key }) =>
-              <Item
+              <Link
                 key={key}
-                item={item}
-                style={props}
-              />
+                href={`/items/weapon?id=${item.id}`}
+                as={`/items/weapon/${item.id}`}
+                passHref
+              >
+                <Item
+                  item={item}
+                  style={props}
+                />
+              </Link>
             )}
           </div>
         </div>
