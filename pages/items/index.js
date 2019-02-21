@@ -27,8 +27,17 @@ const Items = ({ items }) => {
       [weapon.type]: false
     }), {})
   );
+  const [selectedAmmoTypes, setAmmoTypes] = useState(
+    items.reduce((types, weapon) => ({
+      ...types,
+      [weapon.ammoType]: false
+    }), {})
+  );
 
   const selectedTypesCount = Object.values(selectedTypes)
+    .filter(val => val === true).length;
+
+  const selectedAmmoTypesCount = Object.values(selectedAmmoTypes)
     .filter(val => val === true).length;
 
   const filteredWeapons = items
@@ -38,6 +47,10 @@ const Items = ({ items }) => {
     .filter(item => selectedTypesCount > 0
         ? selectedTypes[item.type]
         : true
+    )
+    .filter(item => selectedAmmoTypesCount > 0
+      ? selectedAmmoTypes[item.ammoType]  
+      : true
     )
     .sort((a, b) => 
       +(a[sortProp] > b[sortProp]) * sortDir
@@ -81,6 +94,20 @@ const Items = ({ items }) => {
                   [type]: e.target.checked
                 })}
               /> 
+            ))}
+          </CategoryFilters>
+          <CategoryFilters>
+            <H3>Ammo type</H3>
+            {Object.keys(selectedAmmoTypes).map(type => (
+              <Checkmark
+                title={type}
+                key={type}
+                value={selectedAmmoTypes[type]}
+                onChange={e => setAmmoTypes({
+                  ...selectedAmmoTypes,
+                  [type]: e.target.checked
+                })}
+              />
             ))}
           </CategoryFilters>
         </SearchFilters>
