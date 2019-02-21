@@ -1,12 +1,13 @@
 import ItemsLayout from '../../../layouts/items';
 import 'isomorphic-unfetch';
 import css from './style.scss';
-import { STATIC, weaponProps } from '../../../helpers';
+import { STATIC, weaponProps, ammoNames } from '../../../helpers';
 import Link from 'next/link';
 
 import { HorizontalNav } from '../../../reusable/HorizontalNav';
 
 const WeaponPage = ({ slug, item }) => {
+  const ammoName = ammoNames[item.ammo.name] || item.ammo.name;
   return (
     <ItemsLayout>
       <div className={css.header}>
@@ -17,6 +18,14 @@ const WeaponPage = ({ slug, item }) => {
           <p className={css.item_category}>
             {item.type}
           </p>
+          <p className={css.ammo_type}>
+            {ammoName}
+          </p>
+          <img
+            alt={`Apex Legends ${item.ammo.name} ammo`}
+            title={ammoName}
+            src={STATIC + item.ammo.img}
+          />
         </div>
         <figure className={css.img_container}>
           <img

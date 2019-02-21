@@ -9,5 +9,9 @@ export const weaponProps = [
   ['magazine', 'Magazine size'],
 ];
 
+export const ammoNames = {
+  Light: 'Light bullets'
+}
+
 export const HOST_URL = 'http://localhost:4000/';
 export const STATIC = HOST_URL + 'static';
