@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import css from './style.scss';
 import fetch from 'isomorphic-unfetch';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useTransition, animated } from 'react-spring';
-import { weaponProps } from '../../helpers';
+import { weaponProps, STATIC } from '../../helpers';
 
 import Item from '../../reusable/Item';
 import Input from '../../reusable/Input';
@@ -21,13 +21,22 @@ const Items = ({ items }) => {
   const [phrase, setPhrase] = useState('');
   const [sortDir, setSortDir] = useState(1);
   const [sortProp, setSortProp] = useState('name');
-  const [selectedTypes, setTypes] = useState(
+
+  const ammoTypes = useMemo(() => items
+    .reduce((ammoTypes, item) => ({
+      ...ammoTypes,
+      [item.ammo.name]: item.ammo
+    }), {})
+  , [items]);
+
+  const [selectedTypes, setTypes] = useState(() =>
     items.reduce((types, weapon) => ({
       ...types,
       [weapon.type]: false
     }), {})
   );
-  const [selectedAmmoTypes, setAmmoTypes] = useState(
+
+  const [selectedAmmoTypes, setAmmoTypes] = useState(() =>
     items.reduce((types, weapon) => ({
       ...types,
       [weapon.ammoType]: false
@@ -100,7 +109,15 @@ const Items = ({ items }) => {
             <H3>Ammo type</H3>
             {Object.keys(selectedAmmoTypes).map(type => (
               <Checkmark
-                title={type}
+                content={
+                  <div className={css.ammo_checkmark}>
+                    <img
+                      className={css.ammo_icon}
+                      src={STATIC + ammoTypes[type].img}
+                    />
+                    <span>{type}</span>
+                  </div>
+                }
                 key={type}
                 value={selectedAmmoTypes[type]}
                 onChange={e => setAmmoTypes({

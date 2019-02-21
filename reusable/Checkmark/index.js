@@ -1,6 +1,6 @@
 import css from './style.scss';
 
-const Checkmark = ({ title, ...inputProps }) => (
+const Checkmark = ({ title, content = title, ...inputProps }) => (
   <label className={css.check__container}>
     <input
       type="checkbox"
@@ -9,7 +9,7 @@ const Checkmark = ({ title, ...inputProps }) => (
     />
     <span className={css.check__mark}/>
     <span className={css.check__title}>
-      {title}
+      {content}
     </span>
   </label>
 );
