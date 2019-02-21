@@ -6,12 +6,22 @@ import { weaponProps } from '../../../helpers';
 const WeaponPage = ({ id, item }) => {
   return (
     <ItemsLayout>
-      <h1 className={css.header}>
-        {item.name}
-      </h1>
-      <p className={css.item_category}>
-        {item.type}
-      </p>
+      <div className={css.header}>
+        <div>
+          <h1 className={css.heading}>
+            {item.name}
+          </h1>
+          <p className={css.item_category}>
+            {item.type}
+          </p>
+        </div>
+        <figure className={css.img_container}>
+          <img
+            src="/static/VK-47 Flatline.png"
+            className={css.item_img}
+          />
+        </figure>
+      </div>
       <article>
         <ul className={css.props_list}>
           {weaponProps.map(([prop, name]) => (

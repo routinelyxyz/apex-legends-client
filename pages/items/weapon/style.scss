@@ -1,5 +1,11 @@
 
 .header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.heading {
   font-size: 40px;
   margin: 0;
 }
@@ -11,6 +17,11 @@
   color: rgba(255,255,255,.5);
   letter-spacing: 1px;
   word-spacing: 2.5px;
+}
+
+.img_container {
+  align-self: flex-start;
+  margin: 0;
 }
 
 .props_list {
