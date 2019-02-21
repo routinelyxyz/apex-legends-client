@@ -4,6 +4,7 @@ import fetch from 'isomorphic-unfetch';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useTransition, animated } from 'react-spring';
+import { weaponProps } from '../../helpers';
 
 import Item from '../../reusable/Item';
 import Input from '../../reusable/Input';
@@ -13,13 +14,7 @@ import { SortDirection } from '../../reusable/SortDirection';
 
 const sortProps = [
   ['name', 'Name'],
-  ['bodyDamage', 'Body damage'],
-  ['headshotDamage', 'Headshot damage'],
-  ['bodyDPS', 'Body DPS'],
-  ['headshotDPS', 'Headshot DPS'],
-  ['reload', 'Reload time'],
-  ['emptyReload', 'Empty reload time'],
-  ['magazine', 'Magazine size'],
+  ...weaponProps
 ];
 
 const Items = ({ items }) => {

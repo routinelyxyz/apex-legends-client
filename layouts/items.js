@@ -2,18 +2,24 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import Router from 'next/router';
 
-const ItemsLayout = ({ children }) => {
+const ItemsLayout = ({ children, activeLink }) => {
   return (
     <article>
       <SubMenu>
         <Link href="/items" passHref>
           <NavLink
-            active={Router.route === '/items'}
+            active={
+              activeLink === '/items' ||
+              Router.route === '/items'
+            }
           >Weapons</NavLink>
         </Link>
         <Link href="/items/attachments" passHref>
           <NavLink
-            active={Router.route === '/items/attachments'}
+            active={
+              activeLink === '/items/attachments' ||
+              Router.route === '/items/attachments'
+            }
           >Attachments</NavLink>
         </Link>
       </SubMenu>
