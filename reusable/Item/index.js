@@ -8,13 +8,18 @@ const Item = ({ item, ...springProps }) => {
     <Container
       className={css.item_rare}
       {...springProps}
-    >
+    > 
       <Name>{item.name}</Name>
       <div className={css.item__container}>
         <img
           className={css.item__img}
           src={STATIC + item.img}
-          alt={`Apex Legends - ${item.name}`}
+          alt={`${item.name} - Apex Legends`}
+        />
+        <img
+          alt={`${item.ammo.name} ammo - Apex Legends`}
+          className={css.ammo_img}
+          src={STATIC + item.ammo.img}
         />
       </div>
     </Container>
