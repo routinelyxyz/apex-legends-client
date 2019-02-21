@@ -1,6 +1,7 @@
 import css from './style.scss';
 import styled from 'styled-components';
 import { animated } from 'react-spring';
+import { STATIC } from '../../helpers';
 
 const Item = ({ item, ...springProps }) => {
   return (
@@ -12,7 +13,8 @@ const Item = ({ item, ...springProps }) => {
       <div className={css.item__container}>
         <img
           className={css.item__img}
-          src={"/static/VK-47%20Flatline.png"}
+          src={STATIC + item.img}
+          alt={`Apex Legends - ${item.name}`}
         />
       </div>
     </Container>

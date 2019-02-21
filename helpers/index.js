@@ -8,3 +8,6 @@ export const weaponProps = [
   ['emptyReload', 'Empty reload time'],
   ['magazine', 'Magazine size'],
 ];
+
+export const HOST_URL = 'http://localhost:4000/';
+export const STATIC = HOST_URL + 'static';

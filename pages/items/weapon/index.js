@@ -1,7 +1,7 @@
 import ItemsLayout from '../../../layouts/items';
 import 'isomorphic-unfetch';
 import css from './style.scss';
-import { weaponProps } from '../../../helpers';
+import { STATIC, weaponProps } from '../../../helpers';
 import Link from 'next/link';
 
 import { HorizontalNav } from '../../../reusable/HorizontalNav';
@@ -20,7 +20,7 @@ const WeaponPage = ({ slug, item }) => {
         </div>
         <figure className={css.img_container}>
           <img
-            src="/static/VK-47 Flatline.png"
+            src={STATIC + item.img}
             className={css.item_img}
           />
         </figure>
