@@ -110,9 +110,9 @@ const Items = ({ items }) => {
             {Object.keys(selectedAmmoTypes).map(type => (
               <Checkmark
                 content={
-                  <div className={css.ammo_checkmark}>
+                  <div className={`${css.ammo_checkmark}`}>
                     <img
-                      className={css.ammo_icon}
+                      className={`${css.ammo_icon} ${selectedAmmoTypes[type] && css.ammo_icon__checked}`}
                       src={STATIC + ammoTypes[type].img}
                     />
                     <span>{type}</span>

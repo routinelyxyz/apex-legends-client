@@ -22,7 +22,7 @@
   width: 24px;
   height: 24px;
   margin-right: 10px;
-  &:not(.ammo_icon__checked) {
+  :local &:not(.ammo_icon__checked) {
     filter: grayscale(100);
     opacity: .5;
   }
