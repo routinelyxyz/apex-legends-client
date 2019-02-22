@@ -1,24 +1,25 @@
 import styled from 'styled-components';
 import Link from 'next/link';
-import Router from 'next/router';
+// import Router from 'next/router';
+import React from 'react';
 
-const ItemsLayout = ({ children, activeLink }) => {
+const ItemsLayout = ({ children, route = '', activeLink }) => {
   return (
     <article>
       <SubMenu>
         <Link href="/items" passHref>
           <NavLink
             active={
-              activeLink === '/items' ||
-              Router.route === '/items'
+              route === '/items' ||
+              route.includes('/items?') ||
+              route.includes('/items/weapon')
             }
           >Weapons</NavLink>
         </Link>
         <Link href="/items/attachments" passHref>
           <NavLink
             active={
-              activeLink === '/items/attachments' ||
-              Router.route === '/items/attachments'
+              route === '/items/attachments'
             }
           >Attachments</NavLink>
         </Link>

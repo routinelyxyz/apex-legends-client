@@ -139,14 +139,6 @@ const Items = ({ items, router }) => {
 
   return (
     <div>
-      <SubMenu>
-        <Link href="/items" passHref>
-          <NavLink active>Weapons</NavLink>
-        </Link>
-        <Link href="/items/attachments" passHref>
-          <NavLink>Attachments</NavLink>
-        </Link>
-      </SubMenu>
       <ItemsContainer>
         <SearchFilters>
           <label>

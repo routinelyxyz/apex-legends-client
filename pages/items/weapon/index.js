@@ -22,7 +22,7 @@ const WeaponPage = ({ slug, avgValues, item }) => {
   const ammoName = ammoNames[item.ammo.name] || item.ammo.name;
   
   return (
-    <ItemsLayout>
+    <div>
       <div className={css.header}>
         <div>
           <h1 className={css.heading}>
@@ -90,7 +90,7 @@ const WeaponPage = ({ slug, avgValues, item }) => {
           ))}
         </ul>
       </article>
-    </ItemsLayout>
+    </div>
   )
 }
 

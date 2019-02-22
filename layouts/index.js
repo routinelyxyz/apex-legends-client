@@ -1,9 +1,13 @@
 import Header from '../components/Header';
 import css from '../assets/css/index.scss';
-// import Transition from 'react-spring/renderprops';
+import dynamic from 'next/dynamic';
+import React from 'react';
 import { useTransition, useSpring, animated } from 'react-spring';
 
+const ItemsLayout = dynamic(() => import('./items'));
+
 const MainLayout = ({ children, route }) => {
+
   const pageTransitions = useTransition(route, r => r, {
     // from: { opacity: 0, transform: 'translate3d(100%,0,0)' },
     // enter: { opacity: 1, transform: 'translate3d(0%,0,0)' },
@@ -16,6 +20,21 @@ const MainLayout = ({ children, route }) => {
   return (
     <div className={css.app_container}>
       <Header/>
+      <main className={css.app_content}>
+        {route.startsWith('/items')
+          ? <ItemsLayout
+              children={children}
+              route={route}
+            />
+          : children
+        }
+      </main>
+    </div>
+  )
+
+  return (
+    <div className={css.app_container}>
+      <Header/>
       {pageTransitions.map(({ item, key, props }) => {
         return item === route && (
           <animated.main
@@ -23,7 +42,13 @@ const MainLayout = ({ children, route }) => {
             style={props}
             key={key}
           >
-            {children}
+            {/* {route.includes('/items')
+              ? <ItemsLayout
+                  children={children}
+                  route={route}
+                />
+              : children
+            } */}
           </animated.main>
         )
       })}

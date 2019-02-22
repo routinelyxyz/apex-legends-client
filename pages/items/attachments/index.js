@@ -1,10 +1,10 @@
-import ItemsLayout from '../../../layouts/items';
+import React from 'react';
 
 
 const Attachements = () => (
-  <ItemsLayout>
+  <>
     Attachements
-  </ItemsLayout>
+  </>
 );
 
 export default Attachements;
