@@ -18,7 +18,7 @@ const Item = ({ item, ...springProps }) => {
         />
         <img
           alt={`${item.ammo.name} ammo - Apex Legends`}
-          className={css.ammo_img}
+          className={`${css.ammo_img} ${item.ammo.name === 'Unique' && css.unique}`}
           src={STATIC + item.ammo.img}
         />
       </div>

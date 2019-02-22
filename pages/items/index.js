@@ -1,10 +1,13 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import css from './style.scss';
 import fetch from 'isomorphic-unfetch';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useTransition, animated } from 'react-spring';
 import { weaponProps, STATIC } from '../../helpers';
+import { Router, withRouter } from 'next/router';
+import qs from 'querystringify';
+import { debounce } from '../../util';
 
 import Item from '../../reusable/Item';
 import Input from '../../reusable/Input';
@@ -12,12 +15,14 @@ import Checkmark from '../../reusable/Checkmark';
 import Select from '../../reusable/Select';
 import { SortDirection } from '../../reusable/SortDirection';
 
+const debounceA = debounce(500);
 const sortProps = [
   ['name', 'Name'],
   ...weaponProps
 ];
+const initialSort = 'name';
 
-const Items = ({ items }) => {
+const Items = ({ items, router }) => {
   const [phrase, setPhrase] = useState('');
   const [sortDir, setSortDir] = useState(1);
   const [sortProp, setSortProp] = useState('name');
@@ -43,8 +48,16 @@ const Items = ({ items }) => {
     }), {})
   );
 
-  const selectedTypesCount = Object.values(selectedTypes)
-    .filter(val => val === true).length;
+  const selectedAmmoTypes2 = useMemo(() => 
+    Object
+      .entries(selectedAmmoTypes)
+      .filter(([prop, val]) => val)
+      .map(([prop]) => prop)
+  , [selectedAmmoTypes]);
+  
+  // memoize it to prevent re-running useEffect
+  const selectedTypesArray = Object.values(selectedTypes)
+    .filter(val => val === true);
 
   const selectedAmmoTypesCount = Object.values(selectedAmmoTypes)
     .filter(val => val === true).length;
@@ -53,7 +66,7 @@ const Items = ({ items }) => {
     .filter(item =>
       item.name.toLowerCase().includes(phrase.toLowerCase())
     )
-    .filter(item => selectedTypesCount > 0
+    .filter(item => selectedTypesArray.length > 0
         ? selectedTypes[item.type]
         : true
     )
@@ -64,6 +77,39 @@ const Items = ({ items }) => {
     .sort((a, b) => 
       +(a[sortProp] > b[sortProp]) * sortDir
     );
+
+  useEffect(() => {
+    if (router.pathname !== '/items') return;
+    debounceA(() => {
+        const query = {};
+  
+        if (!phrase.length) delete query.name;
+        else query.name = phrase;
+        if (selectedAmmoTypes2.length) query.ammo = selectedAmmoTypes2;
+        if (sortProp !== 'name') query.sortBy = sortProp;
+        if (sortDir !== 1) query.sortDir = sortDir;
+  
+        const href = '/items' + qs.stringify(query, true);
+        const as = href;
+  
+        router.push(href, as, { shallow: true });
+    });
+  }, [phrase, sortDir, sortProp, selectedAmmoTypes2]);
+
+  useEffect(() => {
+    const { name, ammo, sortBy, sortDir } = router.query;
+    
+    if (name) setPhrase(name);
+    if (ammo) setAmmoTypes(ammo.split(',')
+      .reduce((updatedTypes, type) => ({
+        ...updatedTypes,
+        [type]: true
+      }), { ...selectedAmmoTypes })
+    );
+    if (sortBy != null && sortBy !== initialSort) setSortProp(sortBy);
+    if (sortDir != null && sortDir !== 1) setSortDir(sortDir);
+
+  }, []);
 
   const transitions = useTransition(filteredWeapons, item => item.id, {
     from: { opacity: 0, transform: 'scale(0)' },
@@ -236,4 +282,5 @@ Items.getInitialProps = async () => {
   return { items }
 }
 
-export default Items;
+// export default Items;
+export default withRouter(Items);
