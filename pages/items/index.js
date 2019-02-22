@@ -1,11 +1,10 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import css from './style.scss';
 import fetch from 'isomorphic-unfetch';
-import styled from 'styled-components';
 import Link from 'next/link';
-import { useTransition, animated } from 'react-spring';
+import { useTransition } from 'react-spring';
 import { weaponProps, STATIC } from '../../helpers';
-import { Router, withRouter } from 'next/router';
+import { withRouter } from 'next/router';
 import qs from 'querystringify';
 import { debounce, useDebounce } from '../../util';
 
@@ -135,7 +134,7 @@ const Items = ({ items, router }) => {
     <article className={css.container}>
       <nav className={css.search_filters}>
         <label className={css.filters_searcher}>
-          <H3>Name</H3>
+          <h3 className={css.h3}>Name</h3>
           <Input
             placeholder="Weapon name..."
             value={phrase}
@@ -143,7 +142,7 @@ const Items = ({ items, router }) => {
           />
         </label>
         <div className={css.filters_section}>
-          <H3>Category</H3>
+          <h3 className={css.h3}>Category</h3>
           {Object.keys(selectedTypes).map(type => (
             <Checkmark
               title={type}
@@ -157,7 +156,7 @@ const Items = ({ items, router }) => {
           ))}
         </div>
         <div className={css.filters_section}>
-          <H3>Ammo type</H3>
+          <h3 className={css.h3}>Ammo type</h3>
           {Object.keys(selectedAmmoTypes).map(type => (
             <Checkmark
               content={
@@ -230,25 +229,10 @@ const Items = ({ items, router }) => {
   )
 };
 
-const H3 = styled.h3`
-  font-size: 12px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin: ${props => props.margin ? props.margin : '0 0 10px 0'};
-
-`
-const SearchFilters = styled.nav`
-  margin-right: 20px;
-`
-const CategoryFilters = styled.div`
-  margin-top: 40px;
-`
-
 Items.getInitialProps = async () => {
   const data = await fetch('http://localhost:4000/items/weapons');
   const items = await data.json();
   return { items }
 }
 
-// export default Items;
 export default withRouter(Items);
