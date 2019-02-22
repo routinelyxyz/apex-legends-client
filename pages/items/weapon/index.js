@@ -2,9 +2,8 @@ import ItemsLayout from '../../../layouts/items';
 import 'isomorphic-unfetch';
 import css from './style.scss';
 import { useMemo } from 'react';
-import { STATIC, weaponProps, ammoNames } from '../../../helpers';
+import { STATIC, weaponProps, ammoNames, HOST_URL, weaponPropTitles } from '../../../helpers';
 import Link from 'next/link';
-import { HOST_URL } from '../../../helpers';
 import { round } from '../../../util';
 
 import { HorizontalNav } from '../../../reusable/HorizontalNav';
@@ -48,10 +47,10 @@ const WeaponPage = ({ slug, avgValues, item }) => {
               </a>
             </Link>
           </div>
-          <div className={css.w}>
+          <div className={css.stats_bars}>
             {ratioValues.map(({ name, value }) => (
               <ProgressBar
-                title={name}
+                title={weaponPropTitles[name]}
                 value={value}
                 key={name}
               />

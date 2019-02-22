@@ -9,6 +9,16 @@ export const weaponProps = [
   ['magazine', 'Magazine size'],
 ];
 
+export const weaponPropTitles = {
+  bodyDamage: 'Body damage',
+  headshotDamage: 'Headshot damage',
+  bodyDPS: 'Body DPS',
+  headshotDPS: 'Headshot DPS',
+  reload: 'Reload time',
+  emptyReload: 'Reload time (empty mag)',
+  magazine: 'Magazine size'
+}
+
 export const ammoNames = {
   Light: 'Light bullets'
 }
