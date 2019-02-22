@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Link from 'next/link';
-// import Router from 'next/router';
+import css from './style.scss';
 import React from 'react';
 
 const ItemsLayout = ({ children, route = '', activeLink }) => {
