@@ -12,3 +12,11 @@ export const parsePercent = val =>
     : val > 100
       ? 100
       : val;
+
+export const useDebounce = (delay = 250, timeout) => [
+  fn => {
+    clearTimeout(timeout);
+    timeout = setTimeout(fn, delay);
+  },
+  timeout
+];

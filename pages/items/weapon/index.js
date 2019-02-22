@@ -15,7 +15,7 @@ const WeaponPage = ({ slug, avgValues, item }) => {
       .entries(avgValues)
       .map(([prop, val]) => ({
         name: prop,
-        value: round(item[prop] / val * 100)
+        value: Math.round(item[prop] / val * 100)
       }))
   , [avgValues]);
 

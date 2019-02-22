@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import css from './style.scss';
 import fetch from 'isomorphic-unfetch';
 import styled from 'styled-components';
@@ -7,7 +7,7 @@ import { useTransition, animated } from 'react-spring';
 import { weaponProps, STATIC } from '../../helpers';
 import { Router, withRouter } from 'next/router';
 import qs from 'querystringify';
-import { debounce } from '../../util';
+import { debounce, useDebounce } from '../../util';
 
 import Item from '../../reusable/Item';
 import Input from '../../reusable/Input';
@@ -16,6 +16,7 @@ import Select from '../../reusable/Select';
 import { SortDirection } from '../../reusable/SortDirection';
 
 const debounceA = debounce(500);
+const [debounceB, timeoutB] = useDebounce(500);
 const sortProps = [
   ['name', 'Name'],
   ...weaponProps
@@ -26,6 +27,7 @@ const Items = ({ items, router }) => {
   const [phrase, setPhrase] = useState('');
   const [sortDir, setSortDir] = useState(1);
   const [sortProp, setSortProp] = useState('name');
+  const [isRedirecting, setRedirecting] = useState(false);
 
   const ammoTypes = useMemo(() => items
     .reduce((ammoTypes, item) => ({
@@ -79,7 +81,7 @@ const Items = ({ items, router }) => {
     );
 
   useEffect(() => {
-    debounceA(() => {
+    debounceB(() => {
       // Redirects even if router is on other page
       if (router.pathname === '/items') {
         const query = {};
@@ -92,11 +94,27 @@ const Items = ({ items, router }) => {
   
         const href = '/items' + qs.stringify(query, true);
         const as = href;
-  
-        router.push(href, as, { shallow: true });
+        
+        if (!isRedirecting) {
+          router.replace(href, as, { shallow: true });
+        }
       }
     });
   }, [phrase, sortDir, sortProp, selectedAmmoTypes2]);
+
+  useEffect(() => {
+    const handleRouteChange = url => {
+      if (
+        url !== '/items' ||
+        !url.includes('/items?')
+      ) {
+        setRedirecting(true);
+        clearTimeout(timeoutB);
+      }
+    }
+    router.events.on('routeChangeStart', handleRouteChange)
+    return () => router.events.off('routeChangeStart', handleRouteChange)
+  }, []);
 
   useEffect(() => {
     const { name, ammo, sortBy, sortDir } = router.query;
