@@ -1,13 +1,27 @@
 import ItemsLayout from '../../../layouts/items';
 import 'isomorphic-unfetch';
 import css from './style.scss';
+import { useMemo } from 'react';
 import { STATIC, weaponProps, ammoNames } from '../../../helpers';
 import Link from 'next/link';
+import { HOST_URL } from '../../../helpers';
+import { round } from '../../../util';
 
 import { HorizontalNav } from '../../../reusable/HorizontalNav';
+import { ProgressBar } from '../../../reusable/ProgressBar';
 
-const WeaponPage = ({ slug, item }) => {
+const WeaponPage = ({ slug, avgValues, item }) => {
+  const ratioValues = useMemo(() =>
+    Object
+      .entries(avgValues)
+      .map(([prop, val]) => ({
+        name: prop,
+        value: round(item[prop] / val * 100)
+      }))
+  , [avgValues]);
+
   const ammoName = ammoNames[item.ammo.name] || item.ammo.name;
+  
   return (
     <ItemsLayout>
       <div className={css.header}>
@@ -33,6 +47,15 @@ const WeaponPage = ({ slug, item }) => {
                 />
               </a>
             </Link>
+          </div>
+          <div className={css.w}>
+            {ratioValues.map(({ name, value }) => (
+              <ProgressBar
+                title={name}
+                value={value}
+                key={name}
+              />
+            ))}
           </div>
         </div>
         <figure className={css.img_container}>
@@ -69,9 +92,15 @@ const WeaponPage = ({ slug, item }) => {
 }
 
 WeaponPage.getInitialProps = async ({ query: { slug }}) => {
-  const data = await fetch(`http://localhost:4000/items/weapon/${slug}`);
-  const item = await data.json();
-  return { slug, item };
+  const [itemData, avgData] = await Promise.all([
+    fetch(`${HOST_URL}/items/weapon/${slug}`),
+    fetch(`${HOST_URL}/items/weapons/avg`)
+  ]);
+  const [item, avgValues] = await Promise.all([
+    itemData.json(),
+    avgData.json()
+  ]);
+  return { item, avgValues, slug };
 }
 
 export default WeaponPage;
