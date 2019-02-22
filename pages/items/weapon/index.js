@@ -29,7 +29,11 @@ const WeaponPage = ({ slug, avgValues, item }) => {
             {item.name}
           </h1>
           <p className={css.item_category}>
-            {item.type}
+            <Link href={{ pathname: `/items`, query: { category: item.type }}}>
+              <a className={css.category_link}>
+                {item.type}
+              </a>
+            </Link>
           </p>
           <div className={css.ammo_container}>
             <p className={css.ammo_type}>

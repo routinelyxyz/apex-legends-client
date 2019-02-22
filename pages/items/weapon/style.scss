@@ -12,11 +12,16 @@
 
 .item_category {
   margin: 5px 0 0 0;
+}
+
+.category_link {
   text-transform: uppercase;
   font-size: 13px;
-  color: rgba(255,255,255,.5);
   letter-spacing: 1px;
   word-spacing: 2.5px;
+  &:not(:hover) {
+    color: rgba(255,255,255,.5);
+  }
 }
 
 .img_container {
@@ -24,14 +29,14 @@
   margin: 0;
 }
 
-.ammo_type {
-  margin: 35px 0 8px 0;
-  font-size: 14px;
-  text-align: center;
-}
-          
 .ammo_container {
+  margin: 30px 0;
   display: inline-block;
+  .ammo_type {
+    margin: 8px 0;
+    font-size: 14px;
+    text-align: center;
+  }
 }
 
 .props_list {
@@ -68,5 +73,5 @@
 }
 
 .stats_bars {
-  margin-top: 40px;
+  margin-top: 16px;
 }

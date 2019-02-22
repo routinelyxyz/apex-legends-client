@@ -79,8 +79,9 @@ const Items = ({ items, router }) => {
     );
 
   useEffect(() => {
-    if (router.pathname !== '/items') return;
     debounceA(() => {
+      // Redirects even if router is on other page
+      if (router.pathname === '/items') {
         const query = {};
   
         if (!phrase.length) delete query.name;
@@ -93,6 +94,7 @@ const Items = ({ items, router }) => {
         const as = href;
   
         router.push(href, as, { shallow: true });
+      }
     });
   }, [phrase, sortDir, sortProp, selectedAmmoTypes2]);
 
