@@ -1,21 +1,79 @@
-.items__wrapper {
+@import "../../assets/css/rwd.scss";
+
+.container {
+  justify-content: space-between;
+  display: flex;
+  @include tablet {
+    flex-direction: column;
+  }
+}
+
+.search_filters {
+  margin-right: 20px;
+  @include tablet {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: 0;
+    justify-content: space-between;
+    .filters_section {
+      flex: 5;
+      margin-right: 40px;
+    }
+  }
+  .filters_searcher {
+    width: 100%;
+  }
+  .filters_section {
+    margin-top: 40px;
+  }
+}
+
+.items_wrapper {
   width: 100%;
   min-height: 80vh;
 }
 
-.sort__container {
+.sort_container {
   display: flex;
   align-items: center;
   margin-bottom: 40px;
   justify-content: flex-end;
+  flex-wrap: wrap;
+  @include tablet {
+    justify-content: flex-start;
+    margin: 40px 0;
+    .sort_item {
+      width: 100%;
+      &:first-child {
+        margin-bottom: 20px;
+      }
+    }
+  }
+  .sort_item {
+    display: flex;
+    align-items: center;
+    &:first-child {
+      margin-right: 20px;
+    }
+  }
 }
 
-.items__container {
+.h3 {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-right: 10px;
+}
+
+.items_container {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   padding: 40px 0 40px 40px;
+  @include tablet {
+    padding: 20px;
+  }
 }
 
 .ammo_icon {

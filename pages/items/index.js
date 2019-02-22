@@ -132,59 +132,59 @@ const Items = ({ items, router }) => {
   });
 
   return (
-    <div>
-      <ItemsContainer>
-        <SearchFilters>
-          <label>
-            <H3>Name</H3>
-            <Input
-              placeholder="Weapon name..."
-              value={phrase}
-              onChange={e => setPhrase(e.target.value)}
+    <article className={css.container}>
+      <nav className={css.search_filters}>
+        <label className={css.filters_searcher}>
+          <H3>Name</H3>
+          <Input
+            placeholder="Weapon name..."
+            value={phrase}
+            onChange={e => setPhrase(e.target.value)}
+          />
+        </label>
+        <div className={css.filters_section}>
+          <H3>Category</H3>
+          {Object.keys(selectedTypes).map(type => (
+            <Checkmark
+              title={type}
+              key={type}
+              checked={selectedTypes[type]}
+              onChange={e => setTypes({
+                ...selectedTypes,
+                [type]: e.target.checked
+              })}
+            /> 
+          ))}
+        </div>
+        <div className={css.filters_section}>
+          <H3>Ammo type</H3>
+          {Object.keys(selectedAmmoTypes).map(type => (
+            <Checkmark
+              content={
+                <div className={`${css.ammo_checkmark}`}>
+                  <img
+                    className={`${css.ammo_icon} ${selectedAmmoTypes[type] && css.ammo_icon__checked}`}
+                    src={STATIC + ammoTypes[type].img}
+                  />
+                  <span>{type}</span>
+                </div>
+              }
+              key={type}
+              checked={selectedAmmoTypes[type]}
+              onChange={e => setAmmoTypes({
+                ...selectedAmmoTypes,
+                [type]: e.target.checked
+              })}
             />
-          </label>
-          <CategoryFilters>
-            <H3>Category</H3>
-            {Object.keys(selectedTypes).map(type => (
-              <Checkmark
-                title={type}
-                key={type}
-                checked={selectedTypes[type]}
-                onChange={e => setTypes({
-                  ...selectedTypes,
-                  [type]: e.target.checked
-                })}
-              /> 
-            ))}
-          </CategoryFilters>
-          <CategoryFilters>
-            <H3>Ammo type</H3>
-            {Object.keys(selectedAmmoTypes).map(type => (
-              <Checkmark
-                content={
-                  <div className={`${css.ammo_checkmark}`}>
-                    <img
-                      className={`${css.ammo_icon} ${selectedAmmoTypes[type] && css.ammo_icon__checked}`}
-                      src={STATIC + ammoTypes[type].img}
-                    />
-                    <span>{type}</span>
-                  </div>
-                }
-                key={type}
-                checked={selectedAmmoTypes[type]}
-                onChange={e => setAmmoTypes({
-                  ...selectedAmmoTypes,
-                  [type]: e.target.checked
-                })}
-              />
-            ))}
-          </CategoryFilters>
-        </SearchFilters>
-        <div className={css.items__wrapper}>
-          <div className={css.sort__container}>
-            <H3 margin={'0 10px 0 0'}>
+          ))}
+        </div>
+      </nav>
+      <div className={css.items_wrapper}>
+        <div className={css.sort_container}>
+          <div className={css.sort_item}>
+            <h3 className={css.h3}>
               Sort By
-            </H3>
+            </h3>
             <Select
               value={sortProp}
               onChange={e => setSortProp(
@@ -197,9 +197,11 @@ const Items = ({ items, router }) => {
                 </option>
               ))}
             </Select>
-            <H3 margin={'0 10px 0 40px'}>
+          </div>
+          <div className={css.sort_item}>
+            <h3 className={css.h3}>
               Direction
-            </H3>
+            </h3>
             <SortDirection
               value={sortDir}
               onChange={e => setSortDir(
@@ -207,73 +209,33 @@ const Items = ({ items, router }) => {
               )}
             />
           </div>
-          <div className={css.items__container}>
-            {transitions.map(({ item, props, key }) =>
-              <Link
-                key={key}
-                href={`/items/weapon?slug=${item.slug}`}
-                as={`/items/weapon/${item.slug}`}
-                passHref
-              >
-                <Item
-                  item={item}
-                  style={props}
-                />
-              </Link>
-            )}
-          </div>
         </div>
-      </ItemsContainer>
-    </div>
+        <div className={css.items_container}>
+          {transitions.map(({ item, props, key }) =>
+            <Link
+              key={key}
+              href={`/items/weapon?slug=${item.slug}`}
+              as={`/items/weapon/${item.slug}`}
+              passHref
+            >
+              <Item
+                item={item}
+                style={props}
+              />
+            </Link>
+          )}
+        </div>
+      </div>
+    </article>
   )
 };
 
-const SubMenu = styled.nav`
-  margin: 25px 0 100px 0;
-`
-const NavLink = styled.a`
-  margin-right: 35px;
-  font-size: 18px;
-  color: ${props => props.active ? '#fff' : 'rgb(99, 99, 134)'};
-  position: relative;
-  padding: 20px;
-  &:hover {
-    color: #fff;
-  }
-  &:before {
-    content: ${props => props.active ? "''" : ''};
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    background: radial-gradient(
-      #8289ff 0, transparent 80%
-    ) no-repeat;
-    background-position-y: 20px;
-    left: 0;
-    bottom: -10px;
-    opacity: .15;
-  }
-  &:after {
-    content: ${props => props.active ? "''" : ''};
-    height: 3px;
-    width: 100%;
-    border-radius: 8px;
-    background: #6770FA;
-    position: absolute;
-    left: 0;
-    bottom: -10px;
-    /* box-shadow: 0 0 10px 5px #6770FA; */
-  }
-`
-const ItemsContainer = styled.article`
-  justify-content: space-between;
-  display: flex;
-`
 const H3 = styled.h3`
   font-size: 12px;
   letter-spacing: 2px;
-  margin: ${props => props.margin ? props.margin : '0 0 10px 0'};
   text-transform: uppercase;
+  margin: ${props => props.margin ? props.margin : '0 0 10px 0'};
+
 `
 const SearchFilters = styled.nav`
   margin-right: 20px;
