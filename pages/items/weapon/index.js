@@ -18,14 +18,22 @@ const WeaponPage = ({ slug, item }) => {
           <p className={css.item_category}>
             {item.type}
           </p>
-          <p className={css.ammo_type}>
-            {ammoName}
-          </p>
-          <img
-            alt={`Apex Legends ${item.ammo.name} ammo`}
-            title={ammoName}
-            src={STATIC + item.ammo.img}
-          />
+          <div className={css.ammo_container}>
+            <p className={css.ammo_type}>
+              {ammoName}
+            </p>
+            <Link
+              href={`/items?ammo=${item.ammo.name}`}
+            >
+              <a>
+                <img
+                  alt={`Apex Legends ${item.ammo.name} ammo`}
+                  title={ammoName}
+                  src={STATIC + item.ammo.img}
+                />
+              </a>
+            </Link>
+          </div>
         </div>
         <figure className={css.img_container}>
           <img

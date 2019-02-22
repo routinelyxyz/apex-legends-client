@@ -27,6 +27,11 @@
 .ammo_type {
   margin: 35px 0 8px 0;
   font-size: 14px;
+  text-align: center;
+}
+          
+.ammo_container {
+  display: inline-block;
 }
 
 .props_list {
