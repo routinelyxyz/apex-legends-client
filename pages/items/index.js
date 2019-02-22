@@ -27,7 +27,6 @@ const Items = ({ items, router }) => {
   const [phrase, setPhrase] = useState('');
   const [sortDir, setSortDir] = useState(1);
   const [sortProp, setSortProp] = useState('name');
-  const [isRedirecting, setRedirecting] = useState(false);
 
   const ammoTypes = useMemo(() => items
     .reduce((ammoTypes, item) => ({
@@ -81,25 +80,21 @@ const Items = ({ items, router }) => {
     );
 
   useEffect(() => {
-    debounceB(() => {
-      // Redirects even if router is on other page
-      if (router.pathname === '/items') {
-        const query = {};
-  
-        if (!phrase.length) delete query.name;
-        else query.name = phrase;
-        if (selectedAmmoTypes2.length) query.ammo = selectedAmmoTypes2;
-        if (sortProp !== 'name') query.sortBy = sortProp;
-        if (sortDir !== 1) query.sortDir = sortDir;
-  
-        const href = '/items' + qs.stringify(query, true);
-        const as = href;
-        
-        if (!isRedirecting) {
-          router.replace(href, as, { shallow: true });
-        }
-      }
-    });
+    // Redirects even if router is on other page
+    if (router.pathname === '/items') {
+      const query = {};
+
+      if (!phrase.length) delete query.name;
+      else query.name = phrase;
+      if (selectedAmmoTypes2.length) query.ammo = selectedAmmoTypes2;
+      if (sortProp !== 'name') query.sortBy = sortProp;
+      if (sortDir !== 1) query.sortDir = sortDir;
+
+      const href = '/items' + qs.stringify(query, true);
+      const as = href;
+      
+      router.replace(href, as, { shallow: true });
+    }
   }, [phrase, sortDir, sortProp, selectedAmmoTypes2]);
 
   useEffect(() => {
@@ -108,7 +103,6 @@ const Items = ({ items, router }) => {
         url !== '/items' ||
         !url.includes('/items?')
       ) {
-        setRedirecting(true);
         clearTimeout(timeoutB);
       }
     }
