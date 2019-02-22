@@ -143,7 +143,7 @@ const Items = ({ items, router }) => {
               <Checkmark
                 title={type}
                 key={type}
-                value={selectedTypes[type]}
+                checked={selectedTypes[type]}
                 onChange={e => setTypes({
                   ...selectedTypes,
                   [type]: e.target.checked
@@ -165,7 +165,7 @@ const Items = ({ items, router }) => {
                   </div>
                 }
                 key={type}
-                value={selectedAmmoTypes[type]}
+                checked={selectedAmmoTypes[type]}
                 onChange={e => setAmmoTypes({
                   ...selectedAmmoTypes,
                   [type]: e.target.checked
