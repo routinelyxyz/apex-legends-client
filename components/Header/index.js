@@ -1,6 +1,5 @@
 import css from './style.scss';
 import Link from 'next/link';
-import styled from 'styled-components';
 import { useState } from 'react';
 
 import RouteLink from '../RouteLink';
@@ -27,6 +26,9 @@ const Header = () => {
         <Link href="/items" passHref>
           <RouteLink>Items</RouteLink>
         </Link>
+        <Link href="/legends" passHref>
+          <RouteLink>Legends</RouteLink>
+        </Link>
       </nav>
       <div className={css.searcher}>
         <Searcher
@@ -41,10 +43,5 @@ const Header = () => {
     </header>
   );
 }
-const Container = styled.header`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`
 
 export default Header;

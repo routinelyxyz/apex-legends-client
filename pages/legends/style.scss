@@ -1,0 +1,19 @@
+
+.header {
+  font-size: 30px;
+}
+
+.legends {
+  display: flex;
+  flex-wrap: wrap;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.img {
+  height: 150px;
+  filter: drop-shadow(0 0 10px rgba(1,1,1,.4));
+  background: linear-gradient(to top, #0D1313, #3D5D63);
+  // box-shadow: 0 0 10px 0 rgba(1,1,1,.2);
+}
