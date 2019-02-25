@@ -44,7 +44,7 @@ const Items = ({ items, router }) => {
   const [selectedAmmoTypes, setAmmoTypes] = useState(() =>
     items.reduce((types, weapon) => ({
       ...types,
-      [weapon.ammoType]: false
+      [weapon.ammo.name]: false
     }), {})
   );
 
@@ -71,7 +71,7 @@ const Items = ({ items, router }) => {
         : true
     )
     .filter(item => selectedAmmoTypesCount > 0
-      ? selectedAmmoTypes[item.ammoType]  
+      ? selectedAmmoTypes[item.ammo.name]  
       : true
     )
     .sort((a, b) => 
