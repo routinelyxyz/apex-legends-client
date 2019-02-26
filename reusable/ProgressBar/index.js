@@ -1,18 +1,19 @@
 import css from './style.scss';
-import { animated, useSpring } from 'react-spring';
+import { animated, useSpring, config } from 'react-spring';
 import { parsePercent } from '../../util';
 
-export const ProgressBar = ({ title, value }) => {
+export const ProgressBar = ({ title, hoverTitle = () => '', value }) => {
   const percents = parsePercent(value);
   const props = useSpring({
-    from: { width: 0 },
-    to: { width: percents }
+    from: { percents: 0 },
+    to: { percents },
+    config: config.stiff
   });
 
   return (
     <div
       className={css.container}
-      title={`Better than ${percents}% weapons`}
+      title={hoverTitle(percents)}
     >
       {title && (
         <span className={css.title}>
@@ -21,9 +22,9 @@ export const ProgressBar = ({ title, value }) => {
       )}
       <animated.div
         style={{
-          width: props.width.interpolate(p => p + '%'),
-          opacity: props.width
-            .interpolate({ range: [25, 50, 100], output: [0.25, 0.4, 1] })
+          width: props.percents.interpolate(p => p + '%'),
+          opacity: props.percents
+            .interpolate({ range: [25, 100], output: [0.65, 1] })
         }}
         className={css.bar}
       >

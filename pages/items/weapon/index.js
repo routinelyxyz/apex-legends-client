@@ -17,7 +17,7 @@ const WeaponPage = ({ slug, item, ratios }) => {
           ? diff / valOutMin
           : valOutMin / diff
       * 100);
-      if (value < 5) value = 5;
+      if (value < 1) value = 1;
       return { name, value }
     })
   , []);
@@ -58,6 +58,9 @@ const WeaponPage = ({ slug, item, ratios }) => {
             {calcedRatio.map(({ name, value }) => (
               <ProgressBar
                 title={weaponPropTitles[name]}
+                hoverTitle={p => 
+                  `${weaponPropTitles[name]} - ${item[name]} (${p}%)`
+                }
                 value={value}
                 key={name}
               />
