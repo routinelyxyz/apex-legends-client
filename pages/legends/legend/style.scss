@@ -52,10 +52,11 @@
     margin-right: 0;
     margin-left: auto;
     position: relative;
-    left: 90px;
+    left: 80px;
   }
   @include phone {
     width: 200px;
+    left: 50px;
   }
 }
 
