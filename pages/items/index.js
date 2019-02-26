@@ -27,20 +27,45 @@ const Items = ({ items, router }) => {
   const [sortDir, setSortDir] = useState(1);
   const [sortProp, setSortProp] = useState('name');
 
-  const ammoTypes = useMemo(() => items
-    .reduce((ammoTypes, item) => ({
+  const ammoTypes = useMemo(() => 
+    items.reduce((ammoTypes, item) => ({
       ...ammoTypes,
       [item.ammo.name]: item.ammo
     }), {})
   , [items]);
 
-  const [selectedTypes, setTypes] = useState(() =>
-    items.reduce((types, weapon) => ({
-      ...types,
-      [weapon.type]: false
+  // const ammTypes = useMemo(() =>
+  //   Object.values(items
+  //     .reduce((ammoTypes, item) => ({
+  //       ...ammoTypes,
+  //       [item.ammo.name]: item.ammo
+  //     }), {})
+  //   )
+  // , [items]);
+
+  const weaponTypes = useMemo(() => items
+    .reduce((weaponTypes, weapon) => [
+      ...weaponTypes,
+      ...weaponTypes.includes(weapon.type)
+        ? []
+        : [weapon.type]
+    ], [])
+  , [items]);
+
+  const [selectedWeaponTypes, setWeaponTypes] = useState(() =>
+    weaponTypes.reduce((selected, type) => ({
+      ...selected,
+      [type]: false
     }), {})
   );
 
+  const selectedTypeNames = useMemo(() => 
+    Object.entries(selectedWeaponTypes)
+      .filter(([prop, val]) => val)
+      .map(([prop]) => prop)
+  , [selectedWeaponTypes]);
+
+  
   const [selectedAmmoTypes, setAmmoTypes] = useState(() =>
     items.reduce((types, weapon) => ({
       ...types,
@@ -48,29 +73,23 @@ const Items = ({ items, router }) => {
     }), {})
   );
 
-  const selectedAmmoTypes2 = useMemo(() => 
+  const selectedAmmoNames = useMemo(() => 
     Object
       .entries(selectedAmmoTypes)
       .filter(([prop, val]) => val)
       .map(([prop]) => prop)
   , [selectedAmmoTypes]);
-  
-  // memoize it to prevent re-running useEffect
-  const selectedTypesArray = Object.values(selectedTypes)
-    .filter(val => val === true);
 
-  const selectedAmmoTypesCount = Object.values(selectedAmmoTypes)
-    .filter(val => val === true).length;
 
   const filteredWeapons = items
     .filter(item =>
       item.name.toLowerCase().includes(phrase.toLowerCase())
     )
-    .filter(item => selectedTypesArray.length > 0
-        ? selectedTypes[item.type]
-        : true
+    .filter(item => selectedTypeNames.length
+      ? selectedWeaponTypes[item.type]
+      : true
     )
-    .filter(item => selectedAmmoTypesCount > 0
+    .filter(item => selectedAmmoNames.length
       ? selectedAmmoTypes[item.ammo.name]  
       : true
     )
@@ -85,16 +104,17 @@ const Items = ({ items, router }) => {
 
       if (!phrase.length) delete query.name;
       else query.name = phrase;
-      if (selectedAmmoTypes2.length) query.ammo = selectedAmmoTypes2;
+      if (selectedAmmoNames.length) query.ammo = selectedAmmoNames;
       if (sortProp !== 'name') query.sortBy = sortProp;
       if (sortDir !== 1) query.sortDir = sortDir;
+      if (selectedTypeNames.length) query.category = selectedTypeNames;
 
       const href = '/items' + qs.stringify(query, true);
       const as = href;
       
       router.replace(href, as, { shallow: true });
     }
-  }, [phrase, sortDir, sortProp, selectedAmmoTypes2]);
+  }, [phrase, sortDir, sortProp, selectedAmmoNames.length, selectedTypeNames.length]);
 
   useEffect(() => {
     const handleRouteChange = url => {
@@ -110,15 +130,25 @@ const Items = ({ items, router }) => {
   }, []);
 
   useEffect(() => {
-    const { name, ammo, sortBy, sortDir } = router.query;
+    const { name, ammo, sortBy, sortDir, category } = router.query;
     
     if (name) setPhrase(name);
-    if (ammo) setAmmoTypes(ammo.split(',')
-      .reduce((updatedTypes, type) => ({
-        ...updatedTypes,
-        [type]: true
-      }), { ...selectedAmmoTypes })
+    if (ammo) setAmmoTypes(
+      ammo
+        .split(',')
+        .reduce((updatedTypes, type) => ({
+          ...updatedTypes,
+          [type]: true
+        }), selectedAmmoTypes)
     );
+    if (category) setWeaponTypes(
+      category
+        .split(',')
+        .reduce((updatedCats, category) => ({
+          ...updatedCats,
+          [category]: true
+        }), selectedWeaponTypes)
+    )
     if (sortBy != null && sortBy !== initialSort) setSortProp(sortBy);
     if (sortDir != null && sortDir !== 1) setSortDir(sortDir);
 
@@ -143,13 +173,13 @@ const Items = ({ items, router }) => {
         </label>
         <div className={css.filters_section}>
           <h3 className={css.h3}>Category</h3>
-          {Object.keys(selectedTypes).map(type => (
+          {Object.keys(selectedWeaponTypes).map(type => (
             <Checkmark
               title={type}
               key={type}
-              checked={selectedTypes[type]}
-              onChange={e => setTypes({
-                ...selectedTypes,
+              checked={selectedWeaponTypes[type]}
+              onChange={e => setWeaponTypes({
+                ...selectedWeaponTypes,
                 [type]: e.target.checked
               })}
             /> 
