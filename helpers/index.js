@@ -27,3 +27,4 @@ export const HOST_URL = 'http://localhost:4000';
 export const STATIC = HOST_URL + '/static';
 
 export const getStatic = url => HOST_URL + '/static' + url;
+export const getUrl = url => HOST_URL + url;
