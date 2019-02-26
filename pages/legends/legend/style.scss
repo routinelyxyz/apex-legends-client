@@ -1,0 +1,45 @@
+.container {
+  position: relative;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  background: linear-gradient(
+    312.96deg, 
+    rgba(96, 123, 187, 0.2925) -14.34%,
+    rgba(122, 149, 214, 0) 73.05%
+  );
+
+}
+
+.h1 {
+  font-size: 40px;
+  margin: 0px;
+}
+
+.sub_heading {
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 1px;
+  word-spacing: 2.5px;
+}
+
+
+.legend_img {
+  width: 400px;
+  align-self: center;
+  filter: drop-shadow(-20px 0 0 rgba(1,1,1,.1));
+  margin-right: 150px;
+  align-self: flex-start;
+}
+
+.hor_nav {
+  position: relative;
+  width: 100%;
+  margin: 0 !important;
+  top: -69px;
+}
+

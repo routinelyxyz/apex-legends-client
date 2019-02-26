@@ -25,3 +25,5 @@ export const ammoNames = {
 
 export const HOST_URL = 'http://localhost:4000';
 export const STATIC = HOST_URL + '/static';
+
+export const getStatic = url => HOST_URL + '/static' + url;

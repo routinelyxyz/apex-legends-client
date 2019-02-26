@@ -1,6 +1,7 @@
 import css from './style.scss';
 import 'isomorphic-unfetch';
 import { HOST_URL, STATIC } from '../../helpers';
+import Link from 'next/link';
 
 import Legend from '../../components/Legend';
 
@@ -12,10 +13,17 @@ const Legends = ({ legends }) => {
       </h1>
       <ul className={css.legends}>
         {legends.map(legend => (
-          <Legend
+          <Link
             key={legend.id}
-            legend={legend}
-          />
+            href={`/legends/legend?slug=${legend.slug}`}
+            as={`/legends/${legend.slug}`}
+          > 
+            <a>
+              <Legend
+                legend={legend}
+              />
+            </a>
+          </Link>
         ))}
       </ul>
     </article>

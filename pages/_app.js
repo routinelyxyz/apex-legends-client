@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import App, { Container } from 'next/app'
 import LoadFonts from '../middleware/font';
+import '../assets/css/global.scss';
 
 import Layout from '../layouts';
 

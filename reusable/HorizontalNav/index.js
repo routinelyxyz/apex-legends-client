@@ -7,9 +7,9 @@ export const HorizontalNavLink = ({ children }) => (
   </li>
 );
 
-export const HorizontalNav = ({ children }) => {
+export const HorizontalNav = ({ children, className }) => {
   return (
-    <nav className={css.nav_container}>
+    <nav className={[css.nav_container, className].join(' ')}>
       <ul className={css.nav_list}>
         {React.Children.map(children, (child, index) => (
           <HorizontalNavLink key={index}>
