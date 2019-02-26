@@ -1,13 +1,12 @@
-
 .container {
-  width: 150px;
+  width: 180px;
+  min-height: 300px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   flex-direction: column;
   background: rgba(255,255,255,.03);
   border-radius: 5px;
-  padding: 20px;
+  padding: 20px 10px;
   list-style-type: none;
   margin: 0 15px 50px 0;
 }
@@ -19,6 +18,7 @@
   border-radius: 50%;
   position: relative;
   box-sizing: border-box;
+  margin: 8px 0;
   &:after {
     content: "";
     position: absolute;
@@ -66,7 +66,6 @@
 
 .description {
   width: 120px;
-  margin: 15px 0 0 0;
   color: #636386;
   font-size: 14px;
   text-align: center;
