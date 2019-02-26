@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import React from 'react';
 import { useTransition, useSpring, animated } from 'react-spring';
 
+import { Footer } from '../components/Footer';
 const ItemsLayout = dynamic(() => import('./items'));
 
 const MainLayout = ({ children, route }) => {
@@ -29,6 +30,7 @@ const MainLayout = ({ children, route }) => {
           : children
         }
       </main>
+      {/* <Footer/> */}
     </div>
   )
 
