@@ -1,23 +1,26 @@
-import ItemsLayout from '../../../layouts/items';
 import 'isomorphic-unfetch';
 import css from './style.scss';
 import { useMemo } from 'react';
-import { STATIC, weaponProps, ammoNames, HOST_URL, weaponPropTitles } from '../../../helpers';
+import { weaponProps, getUrl, ammoNames, weaponPropTitles, getStatic } from '../../../helpers';
 import Link from 'next/link';
-import { round } from '../../../util';
 
 import { HorizontalNav } from '../../../reusable/HorizontalNav';
 import { ProgressBar } from '../../../reusable/ProgressBar';
 
-const WeaponPage = ({ slug, avgValues, item }) => {
-  const ratioValues = useMemo(() =>
-    Object
-      .entries(avgValues)
-      .map(([prop, val]) => ({
-        name: prop,
-        value: Math.round(item[prop] / val * 100)
-      }))
-  , [avgValues]);
+const WeaponPage = ({ slug, item, ratios }) => {
+
+  const calcedRatio = useMemo(() => ratios
+    .map(({ name, min, diff }) => {
+      const valOutMin = item[name] - min;
+      let value = Math.round(
+        name === 'reload' || name === 'emptyReload'
+          ? diff / valOutMin
+          : valOutMin / diff
+      * 100);
+      if (value < 5) value = 5;
+      return { name, value }
+    })
+  , []);
 
   const ammoName = ammoNames[item.ammo.name] || item.ammo.name;
   
@@ -46,13 +49,13 @@ const WeaponPage = ({ slug, avgValues, item }) => {
                 <img
                   alt={`Apex Legends ${item.ammo.name} ammo`}
                   title={ammoName}
-                  src={STATIC + item.ammo.img}
+                  src={getStatic(item.ammo.img)}
                 />
               </a>
             </Link>
           </div>
           <div className={css.stats_bars}>
-            {ratioValues.map(({ name, value }) => (
+            {calcedRatio.map(({ name, value }) => (
               <ProgressBar
                 title={weaponPropTitles[name]}
                 value={value}
@@ -63,7 +66,7 @@ const WeaponPage = ({ slug, avgValues, item }) => {
         </div>
         <figure className={css.img_container}>
           <img
-            src={STATIC + item.img}
+            src={getStatic(item.img)}
             className={css.item_img}
           />
         </figure>
@@ -95,15 +98,15 @@ const WeaponPage = ({ slug, avgValues, item }) => {
 }
 
 WeaponPage.getInitialProps = async ({ query: { slug }}) => {
-  const [itemData, avgData] = await Promise.all([
-    fetch(`${HOST_URL}/items/weapon/${slug}`),
-    fetch(`${HOST_URL}/items/weapons/avg`)
+  const [itemData, ratiosData] = await Promise.all([
+    fetch(getUrl(`/items/weapon/${slug}`)),
+    fetch(getUrl('/items/weapons/ratio'))
   ]);
-  const [item, avgValues] = await Promise.all([
+  const [item, ratios] = await Promise.all([
     itemData.json(),
-    avgData.json()
+    ratiosData.json()
   ]);
-  return { item, avgValues, slug };
+  return { item, slug, ratios };
 }
 
 export default WeaponPage;
