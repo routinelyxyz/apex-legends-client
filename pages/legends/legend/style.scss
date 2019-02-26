@@ -6,13 +6,12 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-
   background: linear-gradient(
     312.96deg, 
     rgba(96, 123, 187, 0.2925) -14.34%,
     rgba(122, 149, 214, 0) 73.05%
-  );
-
+  ) no-repeat right bottom;
+  background-size: 100% 300px;
 }
 
 .h1 {
@@ -27,12 +26,18 @@
   word-spacing: 2.5px;
 }
 
+.abilities {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
 
 .legend_img {
   width: 400px;
   align-self: center;
   filter: drop-shadow(-20px 0 0 rgba(1,1,1,.1));
-  margin-right: 150px;
+  margin-right: 120px;
   align-self: flex-start;
 }
 

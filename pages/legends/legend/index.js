@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { HOST_URL, getStatic } from '../../../helpers';
 
 import { HorizontalNav } from '../../../reusable/HorizontalNav';
+import { LegendAbility } from '../../../components/LegendAbility';
 
 const LegendPage = ({ legend }) => {
   return (
@@ -29,9 +30,12 @@ const LegendPage = ({ legend }) => {
         </Link>
       </HorizontalNav>
       <ul className={css.abilities}>
-        <li>
-          
-        </li>
+        {legend.abilities.map(ability => (
+          <LegendAbility
+            key={ability.id}
+            ability={ability}
+          />
+        ))}
       </ul>
     </div>
   )
