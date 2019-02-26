@@ -2,10 +2,10 @@ import React, { useEffect } from 'react'
 import App, { Container } from 'next/app'
 import LoadFonts from '../middleware/font';
 import '../assets/css/global.scss';
+import { withReduxStore } from '../middleware/with-redux-store';
+import { Provider } from 'react-redux';
 
 import Layout from '../layouts';
-
-// Apply context / portal for sub-nested routing shared components
 
 class MyApp extends App {
 
@@ -24,15 +24,17 @@ class MyApp extends App {
   }
 
   render () {
-    const { Component, pageProps, router } = this.props;
+    const { Component, pageProps, router, store } = this.props;
     return (
       <Container>
-        <Layout route={router.route}>
-          <Component {...pageProps}/>
-        </Layout>
+        <Provider store={store}>
+          <Layout route={router.route}>
+            <Component {...pageProps}/>
+          </Layout>
+        </Provider>
       </Container>
     );
   }
 }
 
-export default MyApp;
+export default withReduxStore(MyApp);
