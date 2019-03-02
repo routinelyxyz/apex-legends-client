@@ -77,7 +77,7 @@ export const PlayerSearcher = () => {
           className={css.search_container}
           key={key}
         >
-          {phrase.length > 1
+          {phrase.length > 100
             ? 
               <div>
                 {playersFound.map(player => (
@@ -98,8 +98,8 @@ export const PlayerSearcher = () => {
                   ))}
                 </div>
                 <div>Popular players are here</div>
-                <div className={css.content_container}>
-                  {players.map(player => (
+                <div>
+                  {playersFound.map(player => (
                     <PlayerLabel
                       key={player.id}
                       player={player}
