@@ -5,6 +5,8 @@
   margin: 0 25px 15px 0;
   margin: 8px;
   padding: 8px 10px;
+  min-height: 50px;
+  box-sizing: border-box;
   flex: 2;
   border-radius: 4px;
   background: rgba(255,255,255,.6);
@@ -49,7 +51,7 @@
 
 .lvl {
   margin-left: auto;
-  margin-right: 20px;
+  margin-right: 15px;
 }
 
 .lvl_value {

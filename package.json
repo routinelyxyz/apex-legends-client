@@ -21,6 +21,7 @@
   "homepage": "https://github.com/alk831/apex-legends-client#readme",
   "dependencies": {
     "@zeit/next-sass": "^1.0.1",
+    "click-outside-hook": "^1.1.0",
     "dayjs": "^1.8.8",
     "fontfaceobserver": "^2.1.0",
     "isomorphic-unfetch": "^3.0.0",

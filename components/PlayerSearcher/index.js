@@ -1,12 +1,31 @@
 import css from './style.scss';
 import { useState } from 'react';
+import { debounce } from '../../util';
+import { getUrl } from '../../helpers';
+import useClickOutside from 'click-outside-hook';
 
 import { Menu } from '../../reusable/Menu';
 import { PlayerLabel } from '../../components/PlayerLabel';
 
+const debounceA = debounce(350);
+
 export const PlayerSearcher = () => {
   const [phrase, setPhrase] = useState('');
   const [focused, setFocused] = useState(false);
+  const [playersFound, setPlayersFound] = useState([]);
+  const ref = useClickOutside(() => setFocused(false));
+
+  const getPlayers = e => {
+    setPhrase(e.target.value);
+    if (!phrase && !phrase.length) return;
+    debounceA(async () => {
+      const res = await fetch(
+        getUrl(`/stats/players/${encodeURI(phrase)}`)
+      );
+      const data = await res.json();
+      setPlayersFound(data);
+    });
+  }
 
   const players = [
     {
@@ -26,28 +45,42 @@ export const PlayerSearcher = () => {
   ]
 
   return (
-    <div className={css.container}>
+    <div
+      className={css.container}
+      ref={ref}
+    >
       <input
         type="text"
         value={phrase}
-        onChange={e => setPhrase(e.target.value)}
+        onChange={getPlayers}
         onFocus={_ => setFocused(true)}
-        onBlur={_ => setFocused(false)}
         className={css.input}
       />
       {focused && 
         <div className={css.search_container}>
-          <Menu>
-            <div className={css.content_container}>
-              {players.map(player => (
-                <PlayerLabel
-                  key={player.id}
-                  player={player}
-                />
-              ))}
-            </div>
-            <div></div>
-          </Menu>
+          {phrase.length > 1
+            ? 
+              <div>
+                {playersFound.map(player => (
+                  <PlayerLabel
+                    key={player.id}
+                    player={player}
+                  />
+                ))}
+              </div>
+            :
+              <Menu>
+                <div className={css.content_container}>
+                  {players.map(player => (
+                    <PlayerLabel
+                      key={player.id}
+                      player={player}
+                    />
+                  ))}
+                </div>
+                <div></div>
+              </Menu>
+          }
         </div>
       }
     </div>
