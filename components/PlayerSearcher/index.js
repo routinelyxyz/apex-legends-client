@@ -97,7 +97,15 @@ export const PlayerSearcher = () => {
                     />
                   ))}
                 </div>
-                <div></div>
+                <div>Popular players are here</div>
+                <div className={css.content_container}>
+                  {players.map(player => (
+                    <PlayerLabel
+                      key={player.id}
+                      player={player}
+                    />
+                  ))}
+                </div>
               </Menu>
           }
         </animated.div>

@@ -1,13 +1,30 @@
 import css from './style.scss';
 import { Children, useState } from 'react';
+import { animated, useTransition } from 'react-spring';
 
-export const Menu = ({ children,  }) => {
+export const Menu = ({ children }) => {
   const [activeChild, setActiveChild] = useState(0);
+  const [toRight, setToRight] = useState(true);
+  const [initReveal, setInitReveal] = useState(true);
 
   const links = [
     'Favorites',
-    'Popular'
+    'Popular',
+    'Searcher'
   ]
+
+  const fromTr = initReveal
+    ? 0
+    : toRight ? -100 : 100;
+  const leaveTr = toRight ? 100 : -100;
+
+  const transitions = useTransition(activeChild, p => p, {
+    from: { opacity: 0, transform: 'translate3d(50%,0,0)', tr: fromTr },
+    enter: { opacity: 1, transform: 'translate3d(0%,0,0)', tr: 0 },
+    leave: { opacity: 0, transform: 'translate3d(-50%,0,0)', tr: leaveTr, position: 'absolute' },
+    // config: { tension: 125, friction: 50, precision: 0.1 },
+    config: { mass: .5, tension: 200, friction: 50 }
+  });
 
   return (
     <div>
@@ -15,16 +32,35 @@ export const Menu = ({ children,  }) => {
         {links.map((title, index) => (
           <li
             className={`${css.menu_item} ${activeChild === index && css.menu_item__active}`}
-            onClick={() => setActiveChild(index)}
+            onClick={() => {
+              setToRight(activeChild > index);
+              setActiveChild(index);
+              if (setInitReveal) setInitReveal(false);
+            }}
             key={index}
           >
             {title}
           </li>
         ))}
       </ul>
-      {children && children.map((child, index) =>
-        activeChild === index && child)
-      }
+      <div className={css.transitions_container}>
+        {transitions.map(({ item, props: { tr, opacity, position, ...style }, key }) => {
+          return (
+            <animated.div
+              style={{
+                opacity,
+                position,
+                transform: tr
+                  .interpolate(v => `translateX(${v}%)`)
+              }}
+              className={css.animated_container}
+              key={key}
+            >
+              {children[item]}
+            </animated.div>
+          )
+        })}
+      </div>
     </div>
   );
 }
