@@ -14,7 +14,7 @@
 
 .search_container {
   margin-top: 5px;
-  min-height: 157px;
+  // min-height: 157px;
   background: #fff;
   background: rgb(243, 243, 243);
   background: rgb(233, 233, 233);
@@ -25,10 +25,14 @@
   color: #23232F; 
   padding: 5px;
   box-sizing: border-box;
+  overflow: hidden;
+  will-change: max-height;
+  // overflow-y: auto;
 }
 
 .content_container {
   padding: 10px 5px;
   display: flex;
   flex-wrap: wrap;
+  overflow-y: auto;
 }

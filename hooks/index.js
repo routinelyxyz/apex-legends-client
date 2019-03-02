@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import ResizeObserver from 'resize-observer-polyfill';
 
 export const useWindowSize = () => {
   const [windowSize, setWindowSize] = useState([
@@ -19,4 +20,12 @@ export const useWindowSize = () => {
   }, []);
 
   return windowSize;
+}
+
+export const useMeasure = () => {
+  const ref = useRef();
+  const [bounds, set] = useState({ left: 0, top: 0, width: 0, height: 0 });
+  const [ro] = useState(() => new ResizeObserver(([entry]) => set(entry.contentRect)));
+  useEffect(() => (ro.observe(ref.current), ro.disconnect), []);
+  return [{ ref }, bounds];
 }
