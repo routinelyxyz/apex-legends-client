@@ -4,6 +4,9 @@ import LoadFonts from '../middleware/font';
 import '../assets/css/global.scss';
 import { withReduxStore } from '../middleware/with-redux-store';
 import { Provider } from 'react-redux';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import dayjs from 'dayjs';
+dayjs.extend(relativeTime);
 
 import Layout from '../layouts';
 
