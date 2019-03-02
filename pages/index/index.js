@@ -3,10 +3,13 @@ import 'isomorphic-unfetch';
 import { getUrl } from '../../helpers';
 import dayjs from 'dayjs';
 
+import { PlayerSearcher } from '../../components/PlayerSearcher';
+
 const HomePage = ({ recentUpdates }) => {
   console.log(recentUpdates)
   return (
     <article>
+      <PlayerSearcher/>
       <table className={css.players_table}>
         <thead></thead>
         <tbody>

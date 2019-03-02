@@ -1,0 +1,34 @@
+
+.container {
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  border-radius: 5px;
+  padding: 15px 10px;
+  border: none;
+  box-sizing: border-box;
+  font-family: Cabin;
+}
+
+.search_container {
+  margin-top: 5px;
+  min-height: 150px;
+  background: #fff;
+  background: rgb(243, 243, 243);
+  background: rgb(233, 233, 233);
+  position: absolute;
+  width: 100%;
+  border-radius: 5px;
+  box-shadow: 0 0 10px 0 rgba(1,1,1,.1);
+  color: #23232F; 
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.content_container {
+  padding: 10px 5px;
+  display: flex;
+  flex-wrap: wrap;
+}
