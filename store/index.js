@@ -8,7 +8,7 @@ const reducers = combineReducers({
   items
 });
 
-export const initializeStore = (intialState = { test: true }) => createStore(
+export const initializeStore = (intialState = {}) => createStore(
   reducers,
   intialState,
   composeWithDevTools(
