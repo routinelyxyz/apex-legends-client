@@ -13,9 +13,7 @@ export const Menu = ({ children }) => {
     'Searcher'
   ]
 
-  const fromTr = initReveal
-    ? 0
-    : toRight ? -100 : 100;
+  const fromTr = toRight ? -100 : 100;
   const leaveTr = toRight ? 100 : -100;
 
   const transitions = useTransition(activeChild, p => p, {
@@ -23,7 +21,8 @@ export const Menu = ({ children }) => {
     enter: { opacity: 1, transform: 'translate3d(0%,0,0)', tr: 0 },
     leave: { opacity: 0, transform: 'translate3d(-50%,0,0)', tr: leaveTr, position: 'absolute' },
     // config: { tension: 125, friction: 50, precision: 0.1 },
-    config: { mass: .5, tension: 200, friction: 50 }
+    config: { mass: .5, tension: 200, friction: 50 },
+    immediate: initReveal
   });
 
   return (
