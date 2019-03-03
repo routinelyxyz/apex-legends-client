@@ -3,10 +3,14 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 
 import items from './reducers/items';
+import stats from './reducers/stats';
 
 const reducers = combineReducers({
-  items
+  items,
+  stats
 });
+
+
 
 export const initializeStore = (intialState = {}) => createStore(
   reducers,
