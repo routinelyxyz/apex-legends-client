@@ -1,0 +1,43 @@
+
+
+.player {
+  display: flex;
+  align-items: center;
+}
+
+.badge {
+  position: relative;
+  margin-right: 15px;
+}
+
+.avatar {
+  border-radius: 50%;
+  position: absolute;
+  left: calc(50% - 35px);
+  top: calc(50% - 36px);
+  width: 70px;
+  height: 70px;
+}
+
+.name {
+  font-size: 35px;
+  margin: 0;
+
+}
+
+.lvl_container {
+  margin-top: 5px;
+  margin-left: auto;
+  display: inline-block;
+}
+
+.lvl_title {
+  margin-right: 5px;
+  color: #636386;
+  font-weight: medium;
+}
+
+.lvl_value {
+  font-size: 24px;
+  color: #9999c4;
+}
