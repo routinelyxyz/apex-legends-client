@@ -14,12 +14,12 @@ export const Menu = ({ children }) => {
   ]
 
   const fromTr = toRight ? -100 : 100;
-  const leaveTr = toRight ? 100 : -100;
+  const leaveTr = toRight ? 105 : -105;
 
   const transitions = useTransition(activeChild, p => p, {
-    from: { opacity: 0, transform: 'translate3d(50%,0,0)', tr: fromTr },
+    from: { opacity: 1, transform: 'translate3d(50%,0,0)', tr: fromTr },
     enter: { opacity: 1, transform: 'translate3d(0%,0,0)', tr: 0 },
-    leave: { opacity: 0, transform: 'translate3d(-50%,0,0)', tr: leaveTr, position: 'absolute' },
+    leave: { opacity: 1, transform: 'translate3d(-50%,0,0)', tr: leaveTr, position: 'absolute' },
     // config: { tension: 125, friction: 50, precision: 0.1 },
     config: { mass: .5, tension: 200, friction: 50 },
     immediate: initReveal

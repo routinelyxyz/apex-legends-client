@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import css from './style.scss';
 import fetch from 'isomorphic-unfetch';
 import Link from 'next/link';
@@ -13,6 +13,7 @@ import Input from '../../reusable/Input';
 import Checkmark from '../../reusable/Checkmark';
 import Select from '../../reusable/Select';
 import { SortDirection } from '../../reusable/SortDirection';
+import { WeaponsGrid } from '../../components/WeaponsGrid';
 
 const debounceA = debounce(500);
 const [debounceB, timeoutB] = useDebounce(500);
@@ -154,12 +155,6 @@ const Items = ({ items, router }) => {
 
   }, []);
 
-  const transitions = useTransition(filteredWeapons, item => item.id, {
-    from: { opacity: 0, transform: 'scale(0)' },
-    enter: { opacity: 1, transform: 'scale(1)' },
-    leave: { position: 'absolute', transform: 'scale(0)', opacity: 0 }
-  });
-
   return (
     <article className={css.container}>
       <nav className={css.search_filters}>
@@ -239,21 +234,7 @@ const Items = ({ items, router }) => {
             />
           </div>
         </div>
-        <div className={css.items_container}>
-          {transitions.map(({ item, props, key }) =>
-            <Link
-              key={key}
-              href={`/items/weapon?slug=${item.slug}`}
-              as={`/items/weapon/${item.slug}`}
-              passHref
-            >
-              <Item
-                item={item}
-                style={props}
-              />
-            </Link>
-          )}
-        </div>
+        <WeaponsGrid items={filteredWeapons}/>
       </div>
     </article>
   )

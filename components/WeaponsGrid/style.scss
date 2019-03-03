@@ -1,0 +1,12 @@
+@import "../../assets/css/rwd.scss";
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0 40px 40px;
+  @include tablet {
+    padding: 20px;
+  }
+}
