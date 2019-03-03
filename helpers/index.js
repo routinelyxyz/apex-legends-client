@@ -23,6 +23,11 @@ export const ammoNames = {
   Light: 'Light bullets'
 }
 
+export const statsPropTitles = {
+  damagePerKill: 'Damage / Kill',
+  headshotsPerKill: 'Headshots / Kill'
+}
+
 export const HOST_URL = 'http://localhost:4000';
 export const STATIC = HOST_URL + '/static';
 

@@ -25,5 +25,9 @@
     left: 0;
     bottom: 0;
     border-radius: 10px;
+    opacity: 0;
+  }
+  &:first-child:after {
+    opacity: 1;
   }
 }

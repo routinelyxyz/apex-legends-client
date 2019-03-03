@@ -2,13 +2,16 @@ import 'isomorphic-unfetch';
 import css from './style.scss';
 import { getUrl } from '../../helpers';
 import { animated, useSpring, config } from 'react-spring';
+import Link from 'next/link';
 
 const avatar = 'https://static-cdn.jtvnw.net/jtv_user_pictures/cef31105-8a6e-4211-a74b-2f0bbd9791fb-profile_image-70x70.png';
 
 import { ProgressRing } from '../../components/ProgressRing';
+import { HorizontalNav } from '../../reusable/HorizontalNav';
+import { LegendStats } from '../../components/LegendStats';
 
 
-const StatsPage = ({ name, stats: { stats }}) => {
+const StatsPage = ({ name, url, stats: { stats }}) => {
   const lvlProps = useSpring({
     from: { lvl: 0 },
     to: { lvl: stats.lvl },
@@ -45,16 +48,29 @@ const StatsPage = ({ name, stats: { stats }}) => {
           </p>
         </div>
       </div>
+      <HorizontalNav>
+        <Link href={url}>
+          Overview
+        </Link>
+        <Link href={url + '/match-history'}>
+          Match History
+        </Link>
+      </HorizontalNav>
+      {stats.legends.map(legendStats => (
+        <LegendStats
+          stats={legendStats}
+          key={legendStats.id}
+        />
+      ))}
     </div>
   )
 }
 
-StatsPage.getInitialProps = async ({ query: { platform, name, id }}) => {
-  const res = await fetch(
-    getUrl(`/stats/${platform}/${encodeURI(name)}?id=${id}`)
-  );
+StatsPage.getInitialProps = async ({ query: { platform, name, id = '' }}) => {
+  const url = getUrl(`/stats/${platform}/${encodeURI(name)}?id=${id}`);
+  const res = await fetch(url);
   const stats = await res.json();
-  return { stats, platform, name, id };
+  return { stats, platform, name, id, url };
 }
 
 export default StatsPage;
