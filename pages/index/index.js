@@ -3,6 +3,7 @@ import 'isomorphic-unfetch';
 import { getUrl } from '../../helpers';
 import dayjs from 'dayjs';
 import { useState, useEffect } from 'react';
+import { animated, useTransition, config } from 'react-spring';
 
 import { PlayerSearcher } from '../../components/PlayerSearcher';
 
@@ -11,30 +12,28 @@ import { PlayerSearcher } from '../../components/PlayerSearcher';
 */
 
 const HomePage = ({ recentUpdates }) => {
-  // const [stats, setStats] = useState(() => recentUpdates.slice(0, 5));
-  const [stats, setStats] = useState(() => []);
-  const [arr, setArr] = useState([1, 2, 3]);
+  const [stats, setStats] = useState(() => [recentUpdates[0]]);
 
   useEffect(() => {
-    let index = 3;
+    let index = 0;
     const interval = setInterval(() => {
       index++;
-      if (index === 10) {
+      if (index === recentUpdates.length) {
         return clearInterval(interval);
       }
-      const updatedStats = [
-        ...stats,
-        recentUpdates[index]
-      ];
-      const arx = arr;
-      setArr([...arx, 4])
-      // console.log(updatedStats)
-      // const updatedStats = [...stats, recentUpdates[index]];
-      // updatedStats.shift();
-      setStats(stats.concat(recentUpdates[index]));
+      setStats(prevStats => {
+        const updated = [recentUpdates[index], ...prevStats];
+        if (updated.length > 5) updated.splice(-1, 1);
+        return updated;
+      });
     }, 2000);
   }, []);
 
+  const transitions = useTransition(stats, s => s.player.id, {
+    from: { opacity: 0, transform: 'translateX(100px)' },
+    enter: { opacity: 1, transform: 'translateX(0px)' },
+    leave: { opacity: 0 }
+  });
 
   return (
     <article>
@@ -42,11 +41,11 @@ const HomePage = ({ recentUpdates }) => {
       <table className={css.players_table}>
         <thead></thead>
         <tbody>
-          {stats.map((stats, index) => (
-            <tr key={stats.player.id}>
-              <td>{stats.player.name}</td>
-              <td>{dayjs(stats.updatedAt).fromNow()}</td>
-            </tr>            
+          {transitions.map(({ item, key, props }) => (
+            <animated.tr key={key} style={props}>
+              <td>{item.player.name}</td>
+              <td>{dayjs(item.updatedAt).fromNow()}</td>
+            </animated.tr> 
           ))}
         </tbody>
       </table>
