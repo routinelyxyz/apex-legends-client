@@ -1,19 +1,10 @@
 import css from './style.scss';
 import Link from 'next/link';
-import { useState } from 'react';
-
 import RouteLink from '../RouteLink';
-import Input from '../../reusable/Input';
-import { Searcher } from '../../reusable/Searcher';
+
+import { PlayerSearcher } from '../PlayerSearcher';
 
 const Header = () => {
-  const [phrase, setPhrase] = useState('');
-  const results = [
-    { name: 'Ninja' },
-    { name: 'Shroud' },
-    { name: 'Lirik' }
-  ]
-
   return (
     <header className={css.container}>
       <div className={css.logo}>
@@ -31,14 +22,7 @@ const Header = () => {
         </Link>
       </nav>
       <div className={css.searcher}>
-        <Searcher
-          placeholder="Player nickname..."
-          value={phrase}
-          onChange={e => setPhrase(
-            e.target.value
-          )}
-          results={results}
-        />
+        <PlayerSearcher/>
       </div>
     </header>
   );
