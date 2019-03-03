@@ -7,6 +7,7 @@ import { animated, useTransition, config } from 'react-spring';
 
 import { Menu } from '../../reusable/Menu';
 import { PlayerLabel } from '../../components/PlayerLabel';
+import { BasicInput } from '../../reusable/Input';
 
 const debounceA = debounce(350);
 
@@ -57,12 +58,12 @@ export const PlayerSearcher = () => {
       className={css.container}
       ref={ref}
     >
-      <input
+      <BasicInput
         type="text"
+        placeholder="Search player..."
         value={phrase}
         onChange={getPlayers}
         onFocus={_ => setFocused(true)}
-        className={css.input}
       />
       {transitions.map(({ item, props, key }) => (
         item &&

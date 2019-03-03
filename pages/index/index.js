@@ -37,7 +37,9 @@ const HomePage = ({ recentUpdates }) => {
 
   return (
     <article>
-      <PlayerSearcher/>
+      <div className={css.searcher}>
+        <PlayerSearcher/>
+      </div>
       <table className={css.players_table}>
         <thead></thead>
         <tbody>
