@@ -20,3 +20,5 @@ export const useDebounce = (delay = 250, timeout) => [
   },
   timeout
 ];
+
+export const getTs = () => Math.floor(Date.now() / 1000); 
