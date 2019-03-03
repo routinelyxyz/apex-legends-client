@@ -123,10 +123,14 @@ const StatsPage = ({ name, url, ...props }) => {
 }
 
 StatsPage.getInitialProps = async ({ query: { platform, name, id = '' }}) => {
-  const url = getUrl(`/stats/${platform}/${encodeURI(name)}?id=${id}`);
-  const res = await fetch(url);
-  const stats = await res.json();
-  return { stats, platform, name, id, url };
+  try {
+    const url = getUrl(`/stats/${platform}/${encodeURI(name)}?id=${id}`);
+    const res = await fetch(url);
+    const stats = await res.json();
+    return { stats, platform, name, id, url };
+  } catch (err) {
+    return { stats: null, platform, name, err };
+  }
 }
 
 export default StatsPage;
