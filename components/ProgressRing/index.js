@@ -11,6 +11,8 @@ export const ProgressRing = ({ radius, stroke, progress }) => {
     to: { strokeDashoffset }
   });
 
+  // const dao = (277 * (100 - progress) / 100);
+
   const prog = useSpring({
     from: { progress: 0 },
     to: { progress },

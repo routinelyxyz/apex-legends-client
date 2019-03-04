@@ -31,8 +31,7 @@ export const statsPropTitles = {
 export const applyCss = (...inputs) => ({
   className: inputs
     .filter(input => 
-      typeof input === 'string' &&
-      input.length
+      typeof input === 'string' && input.length
     )
     .join(' ')
 });

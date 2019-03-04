@@ -1,70 +1,31 @@
-import styled from 'styled-components';
-import Link from 'next/link';
 import css from './style.scss';
 import React from 'react';
 
-const ItemsLayout = ({ children, route = '', activeLink }) => {
+import { NavLink } from '../../reusable/Elements';
+
+const ItemsLayout = ({ children, route = '' }) => {
   return (
     <article>
-      <SubMenu>
-        <Link href="/items" passHref>
-          <NavLink
-            active={
-              route === '/items' ||
-              route.includes('/items?') ||
-              route.includes('/items/weapon')
-            }
-          >Weapons</NavLink>
-        </Link>
-        <Link href="/items/attachments" passHref>
-          <NavLink
-            active={
-              route === '/items/attachments'
-            }
-          >Attachments</NavLink>
-        </Link>
-      </SubMenu>
+      <nav className={css.nav_menu}>
+        <NavLink
+          href="/items"
+          title="Weapons"
+          active={
+            route === '/items' ||
+            route.includes('/items?') ||
+            route.includes('/items/weapon')
+          }
+        />
+        <NavLink
+          href="/items/attachments"
+          title="Attachments"
+          active={route === '/items/attachments'}
+        />
+      </nav>
       {children}
     </article>
   )
-};
+}
 
-const SubMenu = styled.nav`
-  margin: 25px 0 100px 0;
-`
-const NavLink = styled.a`
-  margin-right: 35px;
-  font-size: 18px;
-  color: ${props => props.active ? '#fff' : 'rgb(99, 99, 134)'};
-  position: relative;
-  padding: 20px;
-  &:hover {
-    color: #fff;
-  }
-  &:before {
-    content: ${props => props.active ? "''" : ''};
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    background: radial-gradient(
-      #8289ff 0, transparent 80%
-    ) no-repeat;
-    background-position-y: 20px;
-    left: 0;
-    bottom: -10px;
-    opacity: .15;
-  }
-  &:after {
-    content: ${props => props.active ? "''" : ''};
-    height: 3px;
-    width: 100%;
-    border-radius: 8px;
-    background: #6770FA;
-    position: absolute;
-    left: 0;
-    bottom: -10px;
-    /* box-shadow: 0 0 10px 5px #6770FA; */
-  }
-`
 
 export default ItemsLayout;
