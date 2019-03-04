@@ -97,17 +97,12 @@ const Navigation = ({
       className={css.container}
       ref={container}
     >
+      {children}
       <PaginationMenu
         page={page}
         pages={pages}
         href={href}
       />
-      {children}
-      {/* <PaginationMenu
-        links={links}
-        href={'/leaderboards?page='}
-        pagesCount={pagesCount}
-      /> */}
     </div>
   )
 }

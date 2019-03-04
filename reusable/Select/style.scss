@@ -5,12 +5,18 @@
   border: 2px solid #6770FA;
   border: 2px solid rgb(99, 99, 134);
   color: #fff;
+  color: #b2b2d5;
   /* color: #636386; */
   // color: #636386;
   font-family: Cabin;
   padding: 8px;
   min-width: 170px;
   transition: opacity .2s ease;
+}
+
+.active {
+  border-color: #6770FA;
+  color: #fff;
 }
 
 .disabled {
