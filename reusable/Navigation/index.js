@@ -33,7 +33,7 @@ export const PaginationMenu = ({ page, pages, href = p => '?page=' + p }) => {
             key={button}
             className={css.menu_item}
           >
-            <span>...</span>
+            <span>{button}</span>
           </li>
         : <li
             key={button}

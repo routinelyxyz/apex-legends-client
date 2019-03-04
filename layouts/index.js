@@ -1,10 +1,11 @@
-import Header from '../components/Header';
 import css from '../assets/css/index.scss';
 import dynamic from 'next/dynamic';
 import React from 'react';
 import { useTransition, useSpring, animated } from 'react-spring';
 
 import { Footer } from '../components/Footer';
+import { Header } from '../components/Header';
+
 const ItemsLayout = dynamic(() => import('./items'));
 
 const MainLayout = ({ children, route }) => {
@@ -20,7 +21,7 @@ const MainLayout = ({ children, route }) => {
 
   return (
     <div className={css.app_container}>
-      <Header/>
+      <Header route={route}/>
       <main className={css.app_content}>
         {route.startsWith('/items')
           ? <ItemsLayout

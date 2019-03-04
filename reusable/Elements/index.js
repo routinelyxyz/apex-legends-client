@@ -12,16 +12,19 @@ export const H3 = ({ children }) => (
 export const NavLink = ({
   href, as, active,
   className, children,
-  title = children
+  title = children,
+  ...linkProps
 }) => (
   <Link
     as={as}
     href={href}
+    {...linkProps}
   >
     <a
       {...applyCss(
         css.navlink,
-        active && css.active
+        active && css.active,
+        className
       )}
     >{title}</a>
   </Link>

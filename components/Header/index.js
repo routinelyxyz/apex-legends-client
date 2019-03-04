@@ -1,28 +1,39 @@
 import css from './style.scss';
-import Link from 'next/link';
-import RouteLink from '../RouteLink';
 
 import { PlayerSearcher } from '../PlayerSearcher';
+import { NavLink } from '../../reusable/Elements';
 
-const Header = () => {
+export const Header = ({ route }) => {
   return (
     <header className={css.container}>
       <div className={css.logo}>
         Apex-Legends.win
       </div>
       <nav className={css.header__links}>
-        <Link href="/" passHref>
-          <RouteLink>Home</RouteLink>
-        </Link>
-        <Link href="/leaderboards" passHref>
-          <RouteLink>Leaderboards</RouteLink>
-        </Link>
-        <Link href="/items" passHref>
-          <RouteLink>Items</RouteLink>
-        </Link>
-        <Link href="/legends" passHref>
-          <RouteLink>Legends</RouteLink>
-        </Link>
+        <NavLink
+          title="Home"
+          href="/"
+          active={route === '/'}
+          prefetch
+        />
+        <NavLink
+          title="Leaderboards"
+          href="/leaderboards"
+          active={route.startsWith('/leaderboards')}
+          prefetch
+        />
+        <NavLink
+          title="Items"
+          href="/items"
+          active={route.startsWith('/items')}
+          prefetch
+        />
+        <NavLink
+          title="Legends"
+          href="/legends"
+          active={route.startsWith('/legends')}
+          prefetch
+        />
       </nav>
       <div className={css.searcher}>
         <PlayerSearcher
@@ -32,5 +43,3 @@ const Header = () => {
     </header>
   );
 }
-
-export default Header;

@@ -4,6 +4,7 @@
   padding: 10px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   @extend %rwd-sizing;
   margin-bottom: 50px;
 }
