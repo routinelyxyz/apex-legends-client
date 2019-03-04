@@ -6,7 +6,13 @@
   border: 2px solid rgb(99, 99, 134);
   color: #fff;
   /* color: #636386; */
+  // color: #636386;
   font-family: Cabin;
   padding: 8px;
   min-width: 170px;
+  transition: opacity .2s ease;
+}
+
+.disabled {
+  opacity: .3;
 }

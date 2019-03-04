@@ -3,6 +3,8 @@ import { getUrl } from '../../helpers';
 import qs from 'querystringify';
 import { useState, useEffect } from 'react';
 import { withRouter } from 'next/router';
+import { fetchify } from '../../util/fetchify';
+import { useMounted } from '../../hooks';
 
 import { Navigation } from '../../reusable/Navigation';
 import { Select } from '../../reusable/Select';
@@ -43,8 +45,12 @@ const LeadeboardsPage = ({ data, query, router }) => {
   const [platform, setPlatform] = useState(initialPlatform);
   const [legend, setLegend] = useState(initialLegend);
   const [prop, setProp] = useState(initialProp);
+  const [isFetching, setIsFetching] = useState(false);
+  const isMounted = useMounted();
+
 
   useEffect(() => {
+    if (isFetching || !isMounted) return;
     const query = {};
 
     if (platform !== initialPlatform) query.platform = platform;
@@ -54,8 +60,12 @@ const LeadeboardsPage = ({ data, query, router }) => {
     const href = '/leaderboards' + qs.stringify(query, true);
     const as = href;
 
-    router.replace(href, as, { shallow: false });
-    
+    setIsFetching(true);
+
+    router.replace(href, as, { shallow: false })
+      .catch(console.log)
+      .finally(_ => setIsFetching(false));
+
   }, [platform, legend, prop]);
 
   useEffect(() => {
@@ -68,14 +78,18 @@ const LeadeboardsPage = ({ data, query, router }) => {
     }
   }, [page]);
 
+
+
   return (
     <div>
-      <h1>Leadeboards</h1>
+      <h1>Leadeboards {isFetching.toString()}</h1>
+      {isMounted.toString()}
       <div className={css.query_container}>
         <div className={css.query_item}>
           <H3>Platform</H3>
           <Select
             value={platform}
+            disabled={isFetching}
             onChange={e => setPlatform(
               e.target.value
             )}
@@ -91,6 +105,7 @@ const LeadeboardsPage = ({ data, query, router }) => {
           <H3>Legend</H3>
           <Select
             value={legend}
+            disabled={isFetching}
             onChange={e => setLegend(
               e.target.value
             )}
@@ -107,6 +122,7 @@ const LeadeboardsPage = ({ data, query, router }) => {
           <H3>Property</H3>
           <Select
             value={prop}
+            disabled={isFetching}
             onChange={e => setProp(
               e.target.value
             )}
@@ -143,7 +159,9 @@ const LeadeboardsPage = ({ data, query, router }) => {
 LeadeboardsPage.getInitialProps = async (props) => {
   const { query } = props;
   console.log("INITIAL PROPS +++++");
-  const res = await fetch(getUrl('/stats' + props.asPath));
+  const res = await fetchify.get('/stats' + props.asPath);
+  await new Promise(r => setTimeout(r, 500));
+  // const res = await fetch(getUrl('/stats' + props.asPath));
   const { data } = await res.json();
   return { data, query: { page: 1, ...query }};
 }

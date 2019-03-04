@@ -28,6 +28,15 @@ export const statsPropTitles = {
   headshotsPerKill: 'Headshots / Kill'
 }
 
+export const applyCss = (...inputs) => ({
+  className: inputs
+    .filter(input => 
+      typeof input === 'string' &&
+      input.length
+    )
+    .join(' ')
+});
+
 export const HOST_URL = 'http://localhost:4000';
 export const STATIC = HOST_URL + '/static';
 

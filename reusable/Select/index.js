@@ -1,8 +1,14 @@
 import css from './style.scss';
+import { applyCss } from '../../helpers';
 
-export const Select = ({ children, className = '', ...selectProps }) => (
+export const Select = ({ children, className = '', disabled, ...selectProps }) => (
   <select
-    className={[css.container, className].join(' ')}
+    {...applyCss(
+      css.container,
+      disabled && css.disabled,
+      className
+    )}
+    disabled={disabled}
     {...selectProps}
   >
     {children}

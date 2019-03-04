@@ -29,3 +29,13 @@ export const useMeasure = () => {
   useEffect(() => (ro.observe(ref.current), ro.disconnect), []);
   return [{ ref }, bounds];
 }
+
+/* Does the order of useEffx matter? */
+export const useMounted = () => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+  return mounted;
+}
