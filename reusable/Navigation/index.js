@@ -5,39 +5,50 @@ import qs from 'querystringify';
 import Link from 'next/link';
 import { applyCss } from '../../helpers';
 
-export const PaginationMenu = ({ links = [], page: active, pagesCount, url, href = '', }) => {
-  const Button = page => {
-    if (typeof page === 'string') {
-      return (
-        <li
-          key={page}
-          className={css.menu_item}
-        >
-          <span>...</span>
-        </li>
-      );
-    }
+export const PaginationMenu = ({ page, pages, href = p => '?page=' + p }) => {
 
-    return (
-      <li
-        {...applyCss(
-          css.menu_item,
-          page === active && css.active
-        )}
-        key={page}
-      >
-        <Link href={href + page}>
-          <a className={css.menu_link}>
-            {page}
-          </a>
-        </Link>
-      </li>
-    );
+  const buttons = () => {
+    if (pages <= 5) return Array
+      .from({ length: pages })
+      .map((_, index) => index + 1);
+
+    const btns = pages - 3 >= page
+      ? page === 1
+        ? [page , page + 1, page + 2, pages]
+        : [page - 1, page, page + 1, pages]
+      : [1, pages - 2, pages - 1, pages];
+
+    page / pages <= 0.5
+      ? btns.splice(btns.length - 1, 0, '...')
+      : btns.splice(1, 0, '...');
+
+    return btns;
   }
 
   return (
     <ul className={css.menu}>
-      {links.map(Button)}
+      {buttons().map(button => (
+        typeof button === 'string'
+        ? <li
+            key={button}
+            className={css.menu_item}
+          >
+            <span>...</span>
+          </li>
+        : <li
+            key={button}
+            {...applyCss(
+              css.menu_item,
+              button === page && css.active
+            )}
+          >
+            <Link href={href(button)}>
+              <a className={css.menu_link}>
+                {button}
+              </a>
+            </Link>
+          </li>
+      ))}
     </ul>
   );
 }
@@ -74,29 +85,12 @@ useEffect(() => {
 const Navigation = ({
   router, page, pagesCount,
   isFetching,
-  href, pages,
+  pages,
   pagination = true,
+  href,
   count, children, ...props
 }) => {
   const container = useRef(null);
-
-  const buttons = () => {
-    if (pages <= 5) return Array
-      .from({ length: pages })
-      .map((_, index) => index + 1);
-
-    const btns = pages - 3 >= page
-      ? page === 1
-        ? [page , page + 1, page + 2, pages]
-        : [page - 1, page, page + 1, pages]
-      : [1, pages - 2, pages - 1, pages];
-
-    page / pages <= 0.5
-      ? btns.splice(btns.length - 1, 0, '...')
-      : btns.splice(1, 0, '...');
-
-    return btns;
-  }
 
   return (
     <div
@@ -104,10 +98,9 @@ const Navigation = ({
       ref={container}
     >
       <PaginationMenu
-        links={buttons()}
-        href={'/leaderboards?page='}
-        pagesCount={pagesCount}
         page={page}
+        pages={pages}
+        href={href}
       />
       {children}
       {/* <PaginationMenu

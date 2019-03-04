@@ -135,10 +135,9 @@ const LeadeboardsPage = ({ data, query, router }) => {
       </div>
       <Navigation
         page={page}
-        pagesCount={10}
         pages={data.pages}
         isFetching={isFetching}
-        href={'/leaderboards?page='}
+        href={p => '/leaderboards?page=' + p}
       >
         <table className={css.players_table}>
           <thead></thead>
