@@ -46,3 +46,11 @@
     }
   }
 }
+
+.query_container {
+  display: flex;
+  flex-wrap: wrap;
+  .query_item {
+    margin-right: 30px;
+  }
+}

@@ -1,21 +1,12 @@
-import styled from 'styled-components';
+import css from './style.scss';
 
-const Select = ({ children, ...selectProps }) => (
-  <StyledSelect {...selectProps}>
+export const Select = ({ children, className = '', ...selectProps }) => (
+  <select
+    className={[css.container, className].join(' ')}
+    {...selectProps}
+  >
     {children}
-  </StyledSelect>
+  </select>
 );
-
-const StyledSelect = styled.select`
-  background: #2B2B3C;
-  border-radius: 8px;
-  border: 2px solid #6770FA;
-  border: 2px solid rgb(99, 99, 134);
-  color: #fff;
-  /* color: #636386; */
-  font-family: Cabin;
-  padding: 8px;
-  min-width: 170px;
-`
 
 export default Select;
