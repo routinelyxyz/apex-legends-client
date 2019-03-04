@@ -63,7 +63,7 @@ const Navigation = ({ router, page, pagesCount, count, children, ...props }) => 
       rootMargin: '0px',
       threshold: 0.1
     });
-    observer.observe(container.current);
+    // observer.observe(container.current);
   }, []);
 
   const links = Array.from({ length: renderBtns });

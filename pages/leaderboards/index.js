@@ -2,6 +2,7 @@ import css from './style.scss';
 import { getUrl } from '../../helpers';
 import qs from 'querystringify';
 import { useState, useEffect } from 'react';
+import { withRouter } from 'next/router';
 
 import { Navigation } from '../../reusable/Navigation';
 import { Select } from '../../reusable/Select';
@@ -29,19 +30,33 @@ const initialPlatform = 'all';
 const initialLegend = 'all';
 const initialProp = 'kills';
 
-const LeadeboardsPage = ({ data, query }) => {
+const platforms = [
+  { name: 'All', value: 'all' },
+  { name: 'PC', value: 'pc' },
+  { name: 'PS4', value: 'ps4' },
+  { name: 'Xbox', value: 'xbox' }
+]
+
+const LeadeboardsPage = ({ data, query, router }) => {
   const [leaderboards, setLeadboards] = useState([]);
   const page = page != null ? Number(query.page) : 1;
-  const [platforms, setPlatforms] = useState({
-    pc: false,
-    psn: false,
-    xbox: false
-  });
   const [platform, setPlatform] = useState(initialPlatform);
   const [legend, setLegend] = useState(initialLegend);
   const [prop, setProp] = useState(initialProp);
 
+  useEffect(() => {
+    const query = {};
 
+    if (platform !== initialPlatform) query.platform = platform;
+    if (legend !== initialLegend) query.legend = legend;
+    if (prop !== initialProp) query.prop = prop;
+
+    const href = '/leaderboards' + qs.stringify(query, true);
+    const as = href;
+
+    router.replace(href, as, { shallow: false });
+    
+  }, [platform, legend, prop]);
 
   useEffect(() => {
     const lbLength = leaderboards.length;
@@ -65,10 +80,9 @@ const LeadeboardsPage = ({ data, query }) => {
               e.target.value
             )}
           >
-            <option value="All">All</option>
-            {Object.keys(platforms).map(platform => (
-              <option value={platform}>
-                {platform.toUpperCase()}
+            {platforms.map(platform => (
+              <option value={platform.value}>
+                {platform.name}
               </option>
             ))}
           </Select>
@@ -112,7 +126,7 @@ const LeadeboardsPage = ({ data, query }) => {
         <table className={css.players_table}>
           <thead></thead>
           <tbody>
-            {leaderboards.map(record => (
+            {data.map(record => (
               <tr key={record.id}>
                 <td>{record.player.name}</td>
                 <td>{record.player.platform}</td>
@@ -126,12 +140,12 @@ const LeadeboardsPage = ({ data, query }) => {
   )
 }
 
-LeadeboardsPage.getInitialProps = async ({ query }) => {
-  const url = '/stats/leaderboards' + qs.stringify(query, true);
-  // console.log(url, query);
-  const res = await fetch(getUrl(url));
+LeadeboardsPage.getInitialProps = async (props) => {
+  const { query } = props;
+  console.log("INITIAL PROPS +++++");
+  const res = await fetch(getUrl('/stats' + props.asPath));
   const { data } = await res.json();
   return { data, query: { page: 1, ...query }};
 }
 
-export default LeadeboardsPage;
+export default withRouter(LeadeboardsPage);
