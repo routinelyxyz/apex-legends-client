@@ -28,7 +28,7 @@ const players = [
   }
 ]
 
-export const PlayerSearcher = () => {
+export const PlayerSearcher = ({ height = 250 }) => {
   const [phrase, setPhrase] = useState('');
   const [focused, setFocused] = useState(false);
   const [playersFound, setPlayersFound] = useState([]);
@@ -36,7 +36,7 @@ export const PlayerSearcher = () => {
 
   const transitions = useTransition(focused, null, {
     from: { opacity: 0.7, height: 0 },
-    enter: { scale: 1, opacity: 1, height: 200 },
+    enter: { scale: 1, opacity: 1, height },
     leave: { scale: 0, opacity: 0, height: 0 },
     config: config.stiff
   });

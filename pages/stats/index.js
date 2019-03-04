@@ -90,9 +90,6 @@ const StatsPage = ({ name, url, ...props }) => {
             {stats.name}
           </h1>
           <p className={css.lvl_container}>
-            <span className={css.lvl_title}>
-              LVL
-            </span>
             <animated.span className={css.lvl_value}>
               {lvlProps.lvl.interpolate(v => v.toFixed())}
             </animated.span>

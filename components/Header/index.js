@@ -25,7 +25,9 @@ const Header = () => {
         </Link>
       </nav>
       <div className={css.searcher}>
-        <PlayerSearcher/>
+        <PlayerSearcher
+          height={300}
+        />
       </div>
     </header>
   );

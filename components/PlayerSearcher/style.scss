@@ -28,6 +28,9 @@
   overflow: hidden;
   will-change: max-height;
   min-width: 400px;
+  @include phone {
+    min-width: auto;
+  }
   z-index: 10;
   right: 0;
   // overflow-y: auto;

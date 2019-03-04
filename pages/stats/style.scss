@@ -31,15 +31,18 @@
   display: inline-block;
 }
 
-.lvl_title {
-  margin-right: 5px;
-  color: #636386;
-  font-weight: medium;
-}
-
 .lvl_value {
-  font-size: 24px;
+  font-size: 30px;
   color: #9999c4;
+  min-width: 50px;
+  &:after {
+    color: #6d6d92;
+    margin-left: 2px;
+    content: "lvl";
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
 }
 
 .update_container {
@@ -50,7 +53,7 @@
   text-align: right;
 }
 .update_title {
-  color: #636386;
+  color: #6d6d92;
   margin: 0 0 5px 0;
   font-size: 12px;
   text-transform: uppercase;
