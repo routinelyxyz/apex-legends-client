@@ -47,8 +47,8 @@ const StatsPage = ({ name, url, ...props }) => {
       getStats(stats)
       .then(({ stats }) => {
         setStats(stats);
-        setUpdating(false);
         setTo(getTs() + countdown);
+        setUpdating(false);
       })
       .catch(console.log)
     }
@@ -84,7 +84,7 @@ const StatsPage = ({ name, url, ...props }) => {
         </div>
         <div>
           <h1 className={css.name}>
-            {name}
+            {stats.name}
           </h1>
           <p className={css.lvl_container}>
             <span className={css.lvl_title}>
