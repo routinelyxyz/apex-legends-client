@@ -14,6 +14,9 @@ const Header = () => {
         <Link href="/" passHref>
           <RouteLink>Home</RouteLink>
         </Link>
+        <Link href="/leaderboards" passHref>
+          <RouteLink>Leaderboards</RouteLink>
+        </Link>
         <Link href="/items" passHref>
           <RouteLink>Items</RouteLink>
         </Link>
