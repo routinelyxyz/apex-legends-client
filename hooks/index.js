@@ -30,7 +30,10 @@ export const useMeasure = () => {
   return [{ ref }, bounds];
 }
 
-/* Does the order of useEffx matter? */
+/*
+  Does the order of useEffx matter?
+  Can also be an instance var (useRef)
+*/
 export const useMounted = () => {
   const [mounted, setMounted] = useState(false);
   useEffect(() => {

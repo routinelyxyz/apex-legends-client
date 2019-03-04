@@ -41,7 +41,7 @@ const platforms = [
 
 const LeadeboardsPage = ({ data, query, router }) => {
   const [leaderboards, setLeadboards] = useState([]);
-  const page = page != null ? Number(query.page) : 1;
+  const page = router.query.page != null ? Number(router.query.page) : 1;
   const [platform, setPlatform] = useState(initialPlatform);
   const [legend, setLegend] = useState(initialLegend);
   const [prop, setProp] = useState(initialProp);
@@ -68,17 +68,15 @@ const LeadeboardsPage = ({ data, query, router }) => {
 
   }, [platform, legend, prop]);
 
-  useEffect(() => {
-    const lbLength = leaderboards.length;
-    if (
-      !lbLength ||
-      data.length && leaderboards[lbLength - 1].id !== data[0].id
-    ) {
-      setLeadboards(lb => [...lb, ...data]);
-    }
-  }, [page]);
-
-
+  // useEffect(() => {
+  //   const lbLength = leaderboards.length;
+  //   if (
+  //     !lbLength ||
+  //     data.length && leaderboards[lbLength - 1].id !== data[0].id
+  //   ) {
+  //     setLeadboards(lb => [...lb, ...data]);
+  //   }
+  // }, [page]);
 
   return (
     <div>
@@ -138,11 +136,14 @@ const LeadeboardsPage = ({ data, query, router }) => {
       <Navigation
         page={page}
         pagesCount={10}
+        pages={data.pages}
+        isFetching={isFetching}
+        href={'/leaderboards?page='}
       >
         <table className={css.players_table}>
           <thead></thead>
           <tbody>
-            {data.map(record => (
+            {data.data.map(record => (
               <tr key={record.id}>
                 <td>{record.player.name}</td>
                 <td>{record.player.platform}</td>
@@ -160,9 +161,9 @@ LeadeboardsPage.getInitialProps = async (props) => {
   const { query } = props;
   console.log("INITIAL PROPS +++++");
   const res = await fetchify.get('/stats' + props.asPath);
-  await new Promise(r => setTimeout(r, 500));
+  // await new Promise(r => setTimeout(r, 500));
   // const res = await fetch(getUrl('/stats' + props.asPath));
-  const { data } = await res.json();
+  const data = await res.json();
   return { data, query: { page: 1, ...query }};
 }
 
