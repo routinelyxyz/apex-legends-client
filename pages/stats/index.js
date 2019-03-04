@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import { getTs } from '../../util';
+import { connect } from 'react-redux';
+import { mapDispatchToProps, mapStateDynamic } from '../../store/mappers';
 
 const avatar = 'https://static-cdn.jtvnw.net/jtv_user_pictures/cef31105-8a6e-4211-a74b-2f0bbd9791fb-profile_image-70x70.png';
 
@@ -24,6 +26,7 @@ const initialTs = getTs();
 const countdown = 179;
 
 const StatsPage = ({ name, url, ...props }) => {
+  if (!props.stats) return <div>Player not found</div>
   const [stats, setStats] = useState(() => props.stats.stats);
   const [now, setNow] = useState(() => initialTs);
   const [to, setTo] = useState(() => initialTs + countdown);
@@ -90,12 +93,15 @@ const StatsPage = ({ name, url, ...props }) => {
             <span className={css.lvl_title}>
               LVL
             </span>
-            <animated.span
-              className={css.lvl_value}
-            >
+            <animated.span className={css.lvl_value}>
               {lvlProps.lvl.interpolate(v => v.toFixed())}
             </animated.span>
           </p>
+          <div
+            onClick={() => props.actions.savePlayerAsync(
+              stats, 'favorite'
+            )}
+          >Add to fav</div>
         </div>
         <div className={css.update_container}>
           <p className={css.update_title}>
@@ -133,4 +139,6 @@ StatsPage.getInitialProps = async ({ query: { platform, name, id = '' }}) => {
   }
 }
 
-export default StatsPage;
+export default connect(
+  mapDispatchToProps
+)(StatsPage);

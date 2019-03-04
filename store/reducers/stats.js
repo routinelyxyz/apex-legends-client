@@ -1,5 +1,6 @@
 import {
-  LOAD_SAVED_PLAYERS
+  LOAD_SAVED_PLAYERS,
+  SAVE_PLAYER
 } from '../action-types';
 
 const initialState = {
@@ -10,6 +11,17 @@ const initialState = {
 
 const stats = (state = initialState, action) => {
   switch(action.type) {
+    case SAVE_PLAYER: {
+      const { payload, meta } = action;
+      const { [meta.target]: players } = state;
+      return {
+        ...state,
+        [meta.target]: {
+          ...players,
+          [payload.id]: payload
+        }
+      }
+    }
     case LOAD_SAVED_PLAYERS: {
       const { favoritePlayers, recentPlayers } = action.payload;
       return {

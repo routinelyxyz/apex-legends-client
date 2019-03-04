@@ -1,11 +1,12 @@
 import {
-  loadSavedPlayers
+  loadSavedPlayers,
+  savePlayer
 } from '../actions/stats';
 
 export const loadSavedPlayersAsync = () => dispatch => {
   
-  const favData = localStorage.getItem('fav_players');
-  const recData = localStorage.getItem('rec_players');
+  const favData = localStorage.getItem('favorite_players');
+  const recData = localStorage.getItem('recent_players');
 
   const payload = {
     favoritePlayers: favData ? JSON.parse(favData) : {},
@@ -13,5 +14,22 @@ export const loadSavedPlayersAsync = () => dispatch => {
   }
 
   dispatch(loadSavedPlayers(payload));
+}
+
+export const savePlayerAsync = (data, dest = 'recent') => (dispatch, getState) => {
+  if (dest !== 'recent' || dest !== 'favorite') {
+    throw new Error(`Invalid save player dest property ${dest}`);
+  }
+  const target = dest + 'Players';
+  const { id, name, platform, img } = data;
+  const payload = { id, name, platform, img };
+  const { stats: { [target]: players }} = getState();
+
+  dispatch(savePlayer(payload, target));
+
+  localStorage.setItem(
+    dest + '_players',
+    JSON.stringify({ ...players, [id]: payload })
+  );
 }
 
