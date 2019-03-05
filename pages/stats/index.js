@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import { getTs } from '../../util';
 import { connect } from 'react-redux';
 import { mapDispatchToProps, mapStateDynamic } from '../../store/mappers';
+import Head from 'next/head';
 
 const avatar = 'https://static-cdn.jtvnw.net/jtv_user_pictures/cef31105-8a6e-4211-a74b-2f0bbd9791fb-profile_image-70x70.png';
 
@@ -73,6 +74,9 @@ const StatsPage = ({ name, url, ...props }) => {
 
   return (
     <div>
+      <Head>
+        <title>{stats.name} - Stats | Apex-Legends.win</title>
+      </Head>
       <div className={css.player}>
         <div className={css.badge}>
           <ProgressRing

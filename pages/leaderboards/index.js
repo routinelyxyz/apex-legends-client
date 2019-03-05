@@ -7,6 +7,7 @@ import { fetchify } from '../../util/fetchify';
 import { useMounted } from '../../hooks';
 import { statsPropTitles } from '../../helpers';
 import Link from 'next/link';
+import Head from 'next/head';
 
 import { Navigation } from '../../reusable/Navigation';
 import { Select } from '../../reusable/Select';
@@ -82,6 +83,9 @@ const LeadeboardsPage = ({ data, query, router }) => {
 
   return (
     <div>
+      <Head>
+        <title>Leaderboards | Apex-Legends.win</title>
+      </Head>
       <h1>Leaderboards</h1>
       <div className={css.query_container}>
         <div className={css.query_item}>

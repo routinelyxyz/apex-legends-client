@@ -7,6 +7,7 @@ import { weaponProps, STATIC } from '../../helpers';
 import { withRouter } from 'next/router';
 import qs from 'querystringify';
 import { debounce, useDebounce } from '../../util';
+import Head from 'next/head';
 
 import Item from '../../reusable/Item';
 import Input from '../../reusable/Input';
@@ -157,6 +158,9 @@ const Items = ({ items, router }) => {
 
   return (
     <article className={css.container}>
+      <Head>
+        <title>Weapons explorer | Apex-Legends.win</title>
+      </Head>
       <nav className={css.search_filters}>
         <label className={css.filters_searcher}>
           <h3 className={css.h3}>Name</h3>

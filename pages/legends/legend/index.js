@@ -1,6 +1,7 @@
 import css from './style.scss';
 import '../../../assets/css/global.scss';
 import Link from 'next/link';
+import Head from 'next/head';
   // import Legend from "../../../components/Legend";
 import { HOST_URL, getStatic } from '../../../helpers';
 
@@ -10,6 +11,9 @@ import { LegendAbility } from '../../../components/LegendAbility';
 const LegendPage = ({ legend }) => {
   return (
     <div className={css.container}>
+      <Head>
+        <title>{legend.name} - Legends | Apex-Legends.win</title>
+      </Head>
       <div className={css.head}>
         <div>
           <h1 className={css.h1}>

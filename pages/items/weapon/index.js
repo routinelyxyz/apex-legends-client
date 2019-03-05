@@ -3,6 +3,7 @@ import css from './style.scss';
 import { useMemo } from 'react';
 import { weaponProps, getUrl, ammoNames, weaponPropTitles, getStatic } from '../../../helpers';
 import Link from 'next/link';
+import Head from 'next/head';
 
 import { HorizontalNav } from '../../../reusable/HorizontalNav';
 import { ProgressBar } from '../../../reusable/ProgressBar';
@@ -26,6 +27,9 @@ const WeaponPage = ({ slug, item, ratios }) => {
   
   return (
     <div>
+      <Head>
+        <title>{item.name} - Weapons explorer | Apex-Legends.win</title>
+      </Head>
       <div className={css.header}>
         <div>
           <h1 className={css.heading}>

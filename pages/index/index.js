@@ -4,6 +4,7 @@ import { getUrl } from '../../helpers';
 import dayjs from 'dayjs';
 import { useState, useEffect } from 'react';
 import { animated, useTransition, config } from 'react-spring';
+import Head from 'next/head';
 
 import { PlayerSearcher } from '../../components/PlayerSearcher';
 
@@ -38,6 +39,9 @@ const HomePage = ({ recentUpdates }) => {
 
   return (
     <article>
+      <Head>
+        <title>Homepage | Apex-Legends.win</title>
+      </Head>
       <div className={css.searcher}>
         <PlayerSearcher/>
       </div>

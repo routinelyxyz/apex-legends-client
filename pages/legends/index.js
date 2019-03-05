@@ -2,12 +2,16 @@ import css from './style.scss';
 import 'isomorphic-unfetch';
 import { HOST_URL, STATIC } from '../../helpers';
 import Link from 'next/link';
+import Head from 'next/head';
 
 import Legend from '../../components/Legend';
 
 const Legends = ({ legends }) => {
   return (
     <article>
+      <Head>
+        <title>Legends | Apex-Legends.win</title>
+      </Head>
       <h1 className={css.header}>
         Legends
       </h1>
