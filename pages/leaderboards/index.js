@@ -95,7 +95,10 @@ const LeadeboardsPage = ({ data, query, router }) => {
             )}
           >
             {platforms.map(platform => (
-              <option value={platform.value}>
+              <option
+                value={platform.value}
+                key={platform.value}
+              >
                 {platform.name}
               </option>
             ))}
@@ -113,7 +116,10 @@ const LeadeboardsPage = ({ data, query, router }) => {
           >
             <option value="all">All</option>
             {legends.map(legend => (
-              <option value={legend.slug}>
+              <option
+                value={legend.slug}
+                key={legend.id}
+              >
                 {legend.name}
               </option>
             ))}
@@ -130,7 +136,10 @@ const LeadeboardsPage = ({ data, query, router }) => {
             )}
           > 
             {props.map(prop => (
-              <option value={prop.value}>
+              <option
+                value={prop.value}
+                key={prop.value}
+              >
                 {prop.name}
               </option>
             ))}
