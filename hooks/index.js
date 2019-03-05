@@ -2,9 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import ResizeObserver from 'resize-observer-polyfill';
 
 export const useWindowSize = () => {
+  const client = typeof window !== 'undefined';
+
   const [windowSize, setWindowSize] = useState([
-    window.innerWidth,
-    window.innerHeight
+    client ? window.innerWidth : 0,
+    client ? window.innerHeight : 0
   ]);
 
   const handleResize = () => {
@@ -15,8 +17,10 @@ export const useWindowSize = () => {
   }
 
   useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    if (client) {
+      window.addEventListener('resize', handleResize);
+    }    
+    return () => client && window.removeEventListener('resize', handleResize);
   }, []);
 
   return windowSize;
@@ -48,12 +52,13 @@ export const useDevice = () => {
   const [device, setDevice] = useState({});
 
   useEffect(() => {
+    if (width === 0) return;
     if (width <= 480) {
-      setDevice({ isSmall: true });
+      setDevice({ ...device, isSmall: true });
     } else if (width <= 767 && width < 979) {
-      setDevice({ isPhone: true });
+      setDevice({ ...device, isPhone: true });
     } else if (width <= 979 && width < 1200) {
-      setDevice({ isTablet: true });
+      setDevice({  ...device, isTablet: true });
     } else {
       setDevice({ isDesktop: true });
     }

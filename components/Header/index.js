@@ -10,14 +10,6 @@ import { PlayerSearcher } from '../PlayerSearcher';
 import { NavLink } from '../../reusable/Elements';
 
 export const Header = ({ route }) => {
-  // const [windowSize, setWindowSize] = useState([]);
-
-  // useEffect(() => {
-  //   setWindowSize(
-  //     useWindowSize()
-  //   );
-  // }, []);
-
   return (
     <header className={css.container}>
       <div className={css.logo}>

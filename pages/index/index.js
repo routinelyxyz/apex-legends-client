@@ -5,6 +5,8 @@ import dayjs from 'dayjs';
 import { useState, useEffect } from 'react';
 import { animated, useTransition, config } from 'react-spring';
 import Head from 'next/head';
+import { useDevice, useWindowSize } from '../../hooks';
+
 
 import { PlayerSearcher } from '../../components/PlayerSearcher';
 
