@@ -6,7 +6,8 @@ import { useTransition, useSpring, animated } from 'react-spring';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 
-const ItemsLayout = dynamic(() => import('./items'));
+// const ItemsLayout = dynamic(() => import('./items'));
+import ItemsLayout from './items';
 
 const MainLayout = ({ children, route }) => {
 
