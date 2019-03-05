@@ -1,7 +1,6 @@
 .check__container {
   display: flex;
   align-items: center;
-  position: relative;
   padding: 10px 0;
 }
 
@@ -28,6 +27,7 @@
   border: 2px solid #3A3A4A;
   box-sizing: border-box;
   border-radius: 4px;
+  position: relative;
   // &:before {
   //   position: absolute;
   //   content: "";
@@ -49,8 +49,8 @@
     width: 6px;
     border-bottom: 3px solid #6770FA;
     border-right: 3px solid #6770FA;
-    left: 6px;
-    top: 6px;
+    left: 4px;
+    top: -6px;
   }
 }
 
