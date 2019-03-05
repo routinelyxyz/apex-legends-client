@@ -1,5 +1,6 @@
 import Document, { Head, Main, NextScript } from 'next/document';
 
+const title = 'Apex Legends Stats & Items Explorer & Leaderboards & Legends';
 const description = 'Apex Legends stats, leaderboards, interactive and detailed items explorer, legend details. Quick updates with live and daily match tracking.';
 
 class MyDocument extends Document {
@@ -17,7 +18,6 @@ class MyDocument extends Document {
           <meta name="description" content={description} key="description"/>
           <meta name="ogDescription" content={description} key="ogDescription"/>
           <meta name="theme-color" content="#23232F" key="theme-color"/>
-          <title>Apex Legends Stats & Items Explorer & Leaderboards & Legends</title>
         </Head>
         <body className="">
           <Main/>

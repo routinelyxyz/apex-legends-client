@@ -47,15 +47,17 @@ export const useDevice = () => {
   const [width] = useWindowSize();
   const [device, setDevice] = useState({});
 
-  if (width <= 480) {
-    setDevice({ isSmall: true });
-  } else if (width <= 767 && width < 979) {
-    setDevice({ isPhone: true });
-  } else if (width <= 979 && width < 1200) {
-    setDevice({ isTablet: true });
-  } else {
-    setDevice({ isDesktop: true });
-  }
+  useEffect(() => {
+    if (width <= 480) {
+      setDevice({ isSmall: true });
+    } else if (width <= 767 && width < 979) {
+      setDevice({ isPhone: true });
+    } else if (width <= 979 && width < 1200) {
+      setDevice({ isTablet: true });
+    } else {
+      setDevice({ isDesktop: true });
+    }
+  }, [width]);
 
   return device;
 }

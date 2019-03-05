@@ -1,15 +1,23 @@
 import css from './style.scss';
 import dynamic from 'next/dynamic';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 // const useDevice = dynamic(() => import('../../hooks').useDevice, {
 //   ssr: false
 // });
-import { useDevice } from '../../hooks';
+import { useDevice, useWindowSize } from '../../hooks';
 
 import { PlayerSearcher } from '../PlayerSearcher';
 import { NavLink } from '../../reusable/Elements';
 
 export const Header = ({ route }) => {
+  // const [windowSize, setWindowSize] = useState([]);
+
+  // useEffect(() => {
+  //   setWindowSize(
+  //     useWindowSize()
+  //   );
+  // }, []);
+
   return (
     <header className={css.container}>
       <div className={css.logo}>
