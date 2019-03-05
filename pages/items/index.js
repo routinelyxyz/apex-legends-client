@@ -24,10 +24,13 @@ const sortProps = [
 ];
 const initialSort = 'name';
 
-const Items = ({ items, router }) => {
+const initialSortProp = 'name';
+const initialSortAsc = true;
+
+const WeaponsPage = ({ items, router }) => {
   const [phrase, setPhrase] = useState('');
-  const [sortDir, setSortDir] = useState(1);
-  const [sortProp, setSortProp] = useState('name');
+  const [sortProp, setSortProp] = useState(initialSortProp);
+  const [sortAsc, setSortAsc] = useState(initialSortAsc);
 
   const ammoTypes = useMemo(() => 
     items.reduce((ammoTypes, item) => ({
@@ -83,7 +86,10 @@ const Items = ({ items, router }) => {
   , [selectedAmmoTypes]);
 
 
-  const filteredWeapons = items
+  const updateKey = phrase + selectedTypeNames.length + selectedAmmoNames.length + sortProp + sortAsc;
+
+
+  const filteredWeapons = useMemo(() => items
     .filter(item =>
       item.name.toLowerCase().includes(phrase.toLowerCase())
     )
@@ -95,28 +101,32 @@ const Items = ({ items, router }) => {
       ? selectedAmmoTypes[item.ammo.name]  
       : true
     )
-    .sort((a, b) => 
-      +(a[sortProp] > b[sortProp]) * sortDir
-    );
+    .sort((a, b) => {
+      const sortDir = sortAsc ? 1 : -1;
+      if (sortProp === 'name') {
+        return (a[sortProp] > b[sortProp] ? 1 : -1) * sortDir;
+      }
+      return (a[sortProp] - b[sortProp]) * sortDir;
+    })
+  , [updateKey]);
 
   useEffect(() => {
     // Redirects even if router is on other page
     if (router.pathname === '/items') {
       const query = {};
 
-      if (!phrase.length) delete query.name;
-      else query.name = phrase;
+      if (phrase.length) query.name = phrase;
       if (selectedAmmoNames.length) query.ammo = selectedAmmoNames;
-      if (sortProp !== 'name') query.sortBy = sortProp;
-      if (sortDir !== 1) query.sortDir = sortDir;
+      if (sortProp !== initialSortProp) query.sortBy = sortProp;
+      if (sortAsc !== initialSortAsc) query.sortDesc = true;
       if (selectedTypeNames.length) query.category = selectedTypeNames;
 
       const href = '/items' + qs.stringify(query, true);
       const as = href;
-      
+
       router.replace(href, as, { shallow: true });
     }
-  }, [phrase, sortDir, sortProp, selectedAmmoNames.length, selectedTypeNames.length]);
+  }, [updateKey]);
 
   useEffect(() => {
     const handleRouteChange = url => {
@@ -132,7 +142,7 @@ const Items = ({ items, router }) => {
   }, []);
 
   useEffect(() => {
-    const { name, ammo, sortBy, sortDir, category } = router.query;
+    const { name, ammo, sortBy, sortDesc, category } = router.query;
     
     if (name) setPhrase(name);
     if (ammo) setAmmoTypes(
@@ -152,7 +162,7 @@ const Items = ({ items, router }) => {
         }), selectedWeaponTypes)
     )
     if (sortBy != null && sortBy !== initialSort) setSortProp(sortBy);
-    if (sortDir != null && sortDir !== 1) setSortDir(sortDir);
+    if (sortDesc != null && sortDesc !== initialSortAsc) setSortAsc(false);
 
   }, []);
 
@@ -215,6 +225,7 @@ const Items = ({ items, router }) => {
             </h3>
             <Select
               value={sortProp}
+              active={sortProp !== initialSortProp}
               onChange={e => setSortProp(
                 e.target.value
               )}
@@ -231,9 +242,9 @@ const Items = ({ items, router }) => {
               Direction
             </h3>
             <SortDirection
-              value={sortDir}
-              onChange={e => setSortDir(
-                e.target.checked ? 1 : -1
+              checked={sortAsc}
+              onChange={e => setSortAsc(
+                e.target.checked
               )}
             />
           </div>
@@ -244,10 +255,10 @@ const Items = ({ items, router }) => {
   )
 };
 
-Items.getInitialProps = async () => {
+WeaponsPage.getInitialProps = async () => {
   const data = await fetch('http://localhost:4000/items/weapons');
   const items = await data.json();
   return { items }
 }
 
-export default withRouter(Items);
+export default withRouter(WeaponsPage);
