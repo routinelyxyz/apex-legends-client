@@ -17,8 +17,8 @@ export const loadSavedPlayersAsync = () => dispatch => {
 }
 
 export const savePlayerAsync = (data, dest = 'recent') => (dispatch, getState) => {
-  if (dest !== 'recent' || dest !== 'favorite') {
-    throw new Error(`Invalid save player dest property ${dest}`);
+  if (!['favorite', 'recent'].includes(dest)) {
+    throw new Error(`Invalid player destination property ${dest}`);
   }
   const target = dest + 'Players';
   const { id, name, platform, img } = data;

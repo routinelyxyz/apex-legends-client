@@ -38,6 +38,9 @@ const StatsPage = ({ name, url, ...props }) => {
     let interval = setInterval(() => {
       setNow(getTs());
     }, 1000);
+
+    props.actions.savePlayerAsync(stats);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -141,5 +144,6 @@ StatsPage.getInitialProps = async ({ query: { platform, name, id = '' }}) => {
 }
 
 export default connect(
+  mapStateDynamic(['stats']),
   mapDispatchToProps
 )(StatsPage);

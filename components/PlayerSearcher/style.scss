@@ -33,12 +33,12 @@
   }
   z-index: 10;
   right: 0;
-  // overflow-y: auto;
+  overflow-y: auto;
 }
 
 .content_container {
   padding: 10px 5px;
   display: flex;
   flex-wrap: wrap;
-  overflow-y: auto;
+  // overflow-y: auto;
 }

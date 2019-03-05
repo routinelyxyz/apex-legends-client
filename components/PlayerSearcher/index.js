@@ -4,6 +4,8 @@ import { debounce } from '../../util';
 import { getUrl } from '../../helpers';
 import useClickOutside from 'click-outside-hook';
 import { animated, useTransition, config } from 'react-spring';
+import { connect } from 'react-redux';
+import { mapStateDynamic, mapDispatchToProps } from '../../store/mappers';
 
 import { Menu } from '../../reusable/Menu';
 import { PlayerLabel } from '../../components/PlayerLabel';
@@ -28,11 +30,19 @@ const players = [
   }
 ]
 
-export const PlayerSearcher = ({ height = 250 }) => {
+const PlayerItem = player => (
+  <PlayerLabel
+    key={player.id}
+    player={player}
+  />
+);
+
+const PlayerSearcher = ({ height = 250, ...props }) => {
   const [phrase, setPhrase] = useState('');
   const [focused, setFocused] = useState(false);
   const [playersFound, setPlayersFound] = useState([]);
   const ref = useClickOutside(() => setFocused(false));
+  const { favoritePlayers, recentPlayers } = props.reducers.stats;
 
   const transitions = useTransition(focused, null, {
     from: { opacity: 0.7, height: 0 },
@@ -81,22 +91,15 @@ export const PlayerSearcher = ({ height = 250 }) => {
           {phrase.length > 100
             ? 
               <div>
-                {playersFound.map(player => (
-                  <PlayerLabel
-                    key={player.id}
-                    player={player}
-                  />
-                ))}
+                {playersFound.map(PlayerItem)}
               </div>
             :
               <Menu>
                 <div className={css.content_container}>
-                  {players.map(player => (
-                    <PlayerLabel
-                      key={player.id}
-                      player={player}
-                    />
-                  ))}
+                  {Object.values(recentPlayers).map(PlayerItem)}
+                </div>
+                <div className={css.content_container}>
+                  {Object.values(favoritePlayers).map(PlayerItem)}
                 </div>
                 <div>Popular players are here</div>
                 <div>
@@ -114,3 +117,6 @@ export const PlayerSearcher = ({ height = 250 }) => {
     </div>
   )
 }
+
+const SearcherWithRedux = connect(mapStateDynamic(['stats']), mapDispatchToProps)(PlayerSearcher);
+export { SearcherWithRedux as PlayerSearcher };

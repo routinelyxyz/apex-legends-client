@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 dayjs.extend(relativeTime);
+import { loadSavedPlayersAsync } from '../store/actions-async/stats';
 
 import Layout from '../layouts';
 
@@ -24,6 +25,9 @@ class MyApp extends App {
 
   componentDidMount() {
     LoadFonts();
+    this.props.store.dispatch(
+      loadSavedPlayersAsync()
+    );
   }
 
   render () {

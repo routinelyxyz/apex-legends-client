@@ -3,8 +3,9 @@ import {
   SAVE_PLAYER
 } from '../action-types';
 
-export const loadSavedPlayers = () => ({
-  type: LOAD_SAVED_PLAYERS
+export const loadSavedPlayers = payload => ({
+  type: LOAD_SAVED_PLAYERS,
+  payload
 });
 
 export const savePlayer = (payload, target) => ({

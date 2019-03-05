@@ -8,6 +8,7 @@ export const Menu = ({ children }) => {
   const [initReveal, setInitReveal] = useState(true);
 
   const links = [
+    'Recent',
     'Favorites',
     'Popular',
     'Searcher'
