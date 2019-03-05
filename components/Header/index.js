@@ -1,4 +1,10 @@
 import css from './style.scss';
+import dynamic from 'next/dynamic';
+import { useEffect } from 'react';
+// const useDevice = dynamic(() => import('../../hooks').useDevice, {
+//   ssr: false
+// });
+import { useDevice } from '../../hooks';
 
 import { PlayerSearcher } from '../PlayerSearcher';
 import { NavLink } from '../../reusable/Elements';
