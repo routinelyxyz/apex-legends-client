@@ -109,10 +109,10 @@ const StatsPage = ({ name, url, ...props }) => {
       </div>
       <HorizontalNav>
         <Link href={url}>
-          Overview
+          <a>Overview</a>
         </Link>
         <Link href={url + '/match-history'}>
-          Match History
+          <a>Match History</a>
         </Link>
       </HorizontalNav>
       {stats.legends.map(legendStats => (

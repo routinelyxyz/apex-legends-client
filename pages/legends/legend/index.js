@@ -26,7 +26,7 @@ const LegendPage = ({ legend }) => {
       </div>
       <HorizontalNav className={css.hor_nav}>
         <Link href={``}>
-          Abilities
+          <a>Abilities</a>
         </Link>
       </HorizontalNav>
       <ul className={css.abilities}>

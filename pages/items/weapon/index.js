@@ -76,7 +76,7 @@ const WeaponPage = ({ slug, item, ratios }) => {
       </div>
       <HorizontalNav>
         <Link href={`/items/weapons/${slug}`}>
-          Overview
+          <a>Overview</a>
         </Link>
       </HorizontalNav>
       <article>

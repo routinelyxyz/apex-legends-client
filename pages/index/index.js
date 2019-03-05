@@ -27,6 +27,7 @@ const HomePage = ({ recentUpdates }) => {
         return updated;
       });
     }, 2000);
+    return () => clearInterval(interval);
   }, []);
 
   const transitions = useTransition(stats, s => s.player.id, {
