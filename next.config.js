@@ -2,7 +2,10 @@ const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 const withSass = require('@zeit/next-sass');
 const withWorkbox = require('next-workbox');
 const compose = require('next-compose');
-const withOffline = require('next-offline');
+// const withOffline = require('next-offline');
+const withOffline = moduleExists('next-offline')
+  ? require('next-offline')
+  : {};
   // ? require('next-offline')
   // : {};
 
@@ -31,7 +34,7 @@ const nextConfig = {
 
 module.exports = compose([
   [withSass, { cssModules: true }],
-  [withOffline, nextConfig],
+  // [withOffline, nextConfig],
   {
     target: 'serverless',
     webpack: config => ({
