@@ -15,6 +15,9 @@ import Checkmark from '../../reusable/Checkmark';
 import Select from '../../reusable/Select';
 import { SortDirection } from '../../reusable/SortDirection';
 import { WeaponsGrid } from '../../components/WeaponsGrid';
+import { MobileModal } from '../../components/MobileModal';
+
+const initialUpdateKey = '00nametrue';
 
 const debounceA = debounce(500);
 const [debounceB, timeoutB] = useDebounce(500);
@@ -171,52 +174,54 @@ const WeaponsPage = ({ items, router }) => {
       <Head>
         <title>Weapons explorer | Apex-Legends.win</title>
       </Head>
-      <nav className={css.search_filters}>
-        <label className={css.filters_searcher}>
-          <h3 className={css.h3}>Name</h3>
-          <Input
-            placeholder="Weapon name..."
-            value={phrase}
-            onChange={e => setPhrase(e.target.value)}
-          />
-        </label>
-        <div className={css.filters_section}>
-          <h3 className={css.h3}>Category</h3>
-          {Object.keys(selectedWeaponTypes).map(type => (
-            <Checkmark
-              title={type}
-              key={type}
-              checked={selectedWeaponTypes[type]}
-              onChange={e => setWeaponTypes({
-                ...selectedWeaponTypes,
-                [type]: e.target.checked
-              })}
-            /> 
-          ))}
-        </div>
-        <div className={css.filters_section}>
-          <h3 className={css.h3}>Ammo type</h3>
-          {Object.keys(selectedAmmoTypes).map(type => (
-            <Checkmark
-              content={
-                <div className={`${css.ammo_checkmark}`}>
-                  <img
-                    className={`${css.ammo_icon} ${selectedAmmoTypes[type] && css.ammo_icon__checked}`}
-                    src={STATIC + ammoTypes[type].img}
-                  />
-                  <span>{type}</span>
-                </div>
-              }
-              key={type}
-              checked={selectedAmmoTypes[type]}
-              onChange={e => setAmmoTypes({
-                ...selectedAmmoTypes,
-                [type]: e.target.checked
-              })}
+      <MobileModal title={`Show filters ${updateKey === initialUpdateKey ? '' : '(*)'}`}>
+        <nav className={css.search_filters}>
+          <label className={css.filters_searcher}>
+            <h3 className={css.h3}>Name</h3>
+            <Input
+              placeholder="Weapon name..."
+              value={phrase}
+              onChange={e => setPhrase(e.target.value)}
             />
-          ))}
-        </div>
-      </nav>
+          </label>
+          <div className={css.filters_section}>
+            <h3 className={css.h3}>Category</h3>
+            {Object.keys(selectedWeaponTypes).map(type => (
+              <Checkmark
+                title={type}
+                key={type}
+                checked={selectedWeaponTypes[type]}
+                onChange={e => setWeaponTypes({
+                  ...selectedWeaponTypes,
+                  [type]: e.target.checked
+                })}
+              /> 
+            ))}
+          </div>
+          <div className={css.filters_section}>
+            <h3 className={css.h3}>Ammo type</h3>
+            {Object.keys(selectedAmmoTypes).map(type => (
+              <Checkmark
+                content={
+                  <div className={`${css.ammo_checkmark}`}>
+                    <img
+                      className={`${css.ammo_icon} ${selectedAmmoTypes[type] && css.ammo_icon__checked}`}
+                      src={STATIC + ammoTypes[type].img}
+                    />
+                    <span>{type}</span>
+                  </div>
+                }
+                key={type}
+                checked={selectedAmmoTypes[type]}
+                onChange={e => setAmmoTypes({
+                  ...selectedAmmoTypes,
+                  [type]: e.target.checked
+                })}
+              />
+            ))}
+          </div>
+        </nav>
+      </MobileModal>
       <div className={css.items_wrapper}>
         <div className={css.sort_container}>
           <div className={css.sort_item}>

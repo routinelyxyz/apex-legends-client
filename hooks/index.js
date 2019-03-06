@@ -53,15 +53,16 @@ export const useDevice = () => {
 
   useEffect(() => {
     if (width === 0) return;
-    if (width <= 480) {
-      setDevice({ ...device, isSmall: true });
-    } else if (width <= 767 && width < 979) {
-      setDevice({ ...device, isPhone: true });
-    } else if (width <= 979 && width < 1200) {
-      setDevice({  ...device, isTablet: true });
-    } else {
-      setDevice({ isDesktop: true });
-    }
+    if (width <= 480) setDevice({ ...device, isSmall: true });
+    // if (width < 979) setDevice({ ...device, isPhone: true });
+
+    setDevice({
+      ...device,
+      isPhone: width < 979
+    });
+
+    // if (width <= 979 && width < 1200) setDevice({  ...device, isTablet: true });
+    // else setDevice({ isDesktop: true });
   }, [width]);
 
   return device;
