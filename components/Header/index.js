@@ -15,7 +15,7 @@ export const Header = ({ route }) => {
       <div className={css.logo}>
         Apex-Legends.win
       </div>
-      <nav className={css.header__links}>
+      <nav className={css.header_nav}>
         <NavLink
           title="Home"
           href="/"
@@ -29,7 +29,17 @@ export const Header = ({ route }) => {
           prefetch
         />
         <NavLink
-          title="Items"
+          title={(
+            <>
+              <span className={css.title}>
+                Items
+              </span>
+              <img
+                className={css.icon}
+                src="/static/img/shotgun.svg"
+              />
+            </>
+          )}
           href="/items"
           active={route.startsWith('/items')}
           prefetch
