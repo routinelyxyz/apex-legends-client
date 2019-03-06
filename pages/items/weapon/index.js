@@ -2,13 +2,15 @@ import 'isomorphic-unfetch';
 import css from './style.scss';
 import { useMemo } from 'react';
 import { weaponProps, getUrl, ammoNames, weaponPropTitles, getStatic } from '../../../helpers';
-import Link from 'next/link';
+// import Link from 'next/link';
+import { Link } from '../../../routes';
 import Head from 'next/head';
 
 import { HorizontalNav } from '../../../reusable/HorizontalNav';
 import { ProgressBar } from '../../../reusable/ProgressBar';
 
 const WeaponPage = ({ slug, item, ratios }) => {
+  if (!item) return <div>Weapon {slug} not found</div>;
 
   const calcedRatio = useMemo(() => ratios
     .map(({ name, min, diff }) => {
@@ -79,7 +81,7 @@ const WeaponPage = ({ slug, item, ratios }) => {
         </figure>
       </div>
       <HorizontalNav>
-        <Link href={`/items/weapons/${slug}`}>
+        <Link route="/">
           <a>Overview</a>
         </Link>
       </HorizontalNav>

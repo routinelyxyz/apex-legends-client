@@ -1,4 +1,5 @@
-import Link from 'next/link';
+// import Link from 'next/link';
+import { Link } from '../../routes';
 import css from './style.scss';
 import { animated, useTransition } from 'react-spring';
 import { useRef, useEffect, useState } from 'react';
@@ -43,8 +44,10 @@ export const WeaponsGrid = ({ items }) => {
       {transitions.map(({ item, props: { deltaXX, ...rest }, key }) =>
         <Link
           key={key}
-          href={`/items/weapon?slug=${item.slug}`}
-          as={`/items/weapon/${item.slug}`}
+          route='items/weapon'
+          params={{ slug: item.slug }}
+          // href={`/items/weapon?slug=${item.slug}`}
+          // as={`/items/weapon/${item.slug}`}
           passHref
         > 
           <animated.div
