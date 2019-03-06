@@ -2,12 +2,10 @@ const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 const withSass = require('@zeit/next-sass');
 const withWorkbox = require('next-workbox');
 const compose = require('next-compose');
+const withPlugins = require('next-compose-plugins');
+const nextOffline = require('next-offline') 
 // const withOffline = require('next-offline');
-const withOffline = moduleExists('next-offline')
-  ? require('next-offline')
-  : {};
-  // ? require('next-offline')
-  // : {};
+const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
 
 const nextConfig = {
   workboxOpts: {
@@ -32,9 +30,11 @@ const nextConfig = {
   },
 }
 
-module.exports = compose([
-  [withSass, { cssModules: true }],
-  // [withOffline, nextConfig],
+module.exports = withPlugins(
+  [
+    [withSass, { cssModules: true }],
+    [nextOffline, nextConfig]
+  ],
   {
     target: 'serverless',
     webpack: config => ({
@@ -47,7 +47,7 @@ module.exports = compose([
       ]
     })
   }
-]);
+);
 
 function moduleExists(name) {
   try {

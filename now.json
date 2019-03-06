@@ -1,6 +1,8 @@
 {
   "version": 2,
-  "name": "my-nextjs-app",
+  "github": {
+    "enabled": false
+  },
   "routes": [
     { "src": "/stats/(?<platform>[^/]+)$/(?<name>[^/]+)$", "dest": "/stats?platform=$platform&name=$name" },
     { "src": "/items/weapon/(?<slug>[^/]+)$", "dest": "/items/weapon?slug=$slug" },
@@ -14,5 +16,7 @@
       }
     }
   ],
-  "builds": [{ "src": "next.config.js", "use": "@now/next" }]
+  "builds": [
+    { "src": "next.config.js", "use": "@now/next" }
+  ]
 }
