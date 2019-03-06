@@ -2,11 +2,14 @@ const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 const withSass = require('@zeit/next-sass');
 const withWorkbox = require('next-workbox');
 const compose = require('next-compose');
+const withOffline = require('next-offline');
+  // ? require('next-offline')
+  // : {};
 
 module.exports = compose([
   [withSass, { cssModules: true }],
-  [withWorkbox, {
-    workbox: { registerSW: true }
+  [withOffline, {
+    // workboxOpts: {}
   }],
   {
     webpack: config => ({
@@ -20,3 +23,11 @@ module.exports = compose([
     })
   }
 ]);
+
+function moduleExists(name) {
+  try {
+    return require.resolve(name);
+  } catch (err) {
+    return false;
+  }
+}
