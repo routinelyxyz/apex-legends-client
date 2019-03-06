@@ -1,8 +1,8 @@
 import css from './style.scss';
 import 'isomorphic-unfetch';
 import { HOST_URL, STATIC } from '../../helpers';
+import Link from 'next/link';
 import Head from 'next/head';
-import { Link } from '../../routes';
 
 import Legend from '../../components/Legend';
 
@@ -18,11 +18,9 @@ const Legends = ({ legends }) => {
       <ul className={css.legends}>
         {legends.map(legend => (
           <Link
-            route="legends/legend"
-            params={{ slug: legend.slug }}
             key={legend.id}
-            // href={`/legends/legend?slug=${legend.slug}`}
-            // as={`/legends/${legend.slug}`}
+            href={`/legends/legend?slug=${legend.slug}`}
+            as={`/legends/${legend.slug}`}
           > 
             <a>
               <Legend
