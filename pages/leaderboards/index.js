@@ -8,9 +8,6 @@ import { useMounted } from '../../hooks';
 import { statsPropTitles } from '../../helpers';
 import Link from 'next/link';
 import Head from 'next/head';
-import { Link as Linked, Router } from '../../routes';
-import { debounce } from '../../util';
-
 
 import { Navigation } from '../../reusable/Navigation';
 import { Select } from '../../reusable/Select';
@@ -43,14 +40,6 @@ const platforms = [
   { name: 'PS4', value: 'ps4' },
   { name: 'Xbox', value: 'xbox' }
 ]
-
-const debounceA = debounce(250);
-
-const handlePrefetch = ({ platform, name }) => {
-  debounceA(() => {
-    Router.prefetchRoute('stats', { platform, name });
-  });
-}
 
 const LeadeboardsPage = ({ data, query, router }) => {
   const { perPage = 100 } = data;
@@ -179,25 +168,17 @@ const LeadeboardsPage = ({ data, query, router }) => {
           </thead>
           <tbody>
             {data.data.map((record, index) => (
-              <tr
-                key={record.id}
-                // onMouseOver={_ => handlePrefetch(record.player)}
-              >
+              <tr key={record.id}>
                 <td>{(index + 1) + (page - 1) * perPage}</td>
                 <td className={css.player}>
-                  <Linked
-                    route="stats"
-                    params={{
-                      platform: record.player.platform,
-                      name: record.player.name,
-                    }}
-                    // href={`/stats?id=${record.player.id}`}
-                    // as={`/stats/${record.player.platform}/${encodeURI(record.player.name)?id=${record.player.id}}`}
+                  <Link
+                    href={`/stats?id=${record.player.id}`}
+                    as={`/stats/${record.player.platform}/${encodeURI(record.player.name)}`}
                   >
                     <a>
                       {record.player.name}
                     </a>
-                  </Linked>
+                  </Link>
                 </td>
                 <td className={css.prop_val}>
                   {Number(record[prop]).toLocaleString()}

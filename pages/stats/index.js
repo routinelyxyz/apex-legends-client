@@ -132,8 +132,7 @@ const StatsPage = ({ name, url, ...props }) => {
   )
 }
 
-StatsPage.getInitialProps = async ({ query }) => {
-  const { platform, name, id = '' } = query;
+StatsPage.getInitialProps = async ({ query: { platform, name, id = '' }}) => {
   try {
     const url = getUrl(`/stats/${platform}/${encodeURI(name)}?id=${id}`);
     const res = await fetch(url);
