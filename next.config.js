@@ -6,12 +6,34 @@ const withOffline = require('next-offline');
   // ? require('next-offline')
   // : {};
 
+const nextConfig = {
+  workboxOpts: {
+    swDest: 'static/service-worker.js',
+    runtimeCaching: [
+      {
+        urlPattern: /^https?.*/,
+        handler: 'networkFirst',
+        options: {
+          cacheName: 'https-calls',
+          networkTimeoutSeconds: 15,
+          expiration: {
+            maxEntries: 150,
+            maxAgeSeconds: 30 * 24 * 60 * 60, // 1 month
+          },
+          cacheableResponse: {
+            statuses: [0, 200],
+          },
+        },
+      },
+    ],
+  },
+}
+
 module.exports = compose([
   [withSass, { cssModules: true }],
-  [withOffline, {
-    // workboxOpts: {}
-  }],
+  [withOffline, nextConfig],
   {
+    target: 'serverless',
     webpack: config => ({
       ...config,
       plugins: [
