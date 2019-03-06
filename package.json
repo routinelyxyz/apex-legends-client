@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next",
+    "dev": "node server.js",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_ENV=production node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,9 +23,11 @@
     "@zeit/next-sass": "^1.0.1",
     "click-outside-hook": "^1.1.0",
     "dayjs": "^1.8.8",
+    "express": "^4.16.4",
     "fontfaceobserver": "^2.1.0",
     "isomorphic-unfetch": "^3.0.0",
     "next": "^8.0.1",
+    "next-routes": "^1.4.2",
     "node-sass": "^4.11.0",
     "querystringify": "^2.1.0",
     "react": "^16.8.2",
