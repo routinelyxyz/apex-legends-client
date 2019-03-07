@@ -38,13 +38,17 @@ export const useMeasure = () => {
   Does the order of useEffx matter?
   Can also be an instance var (useRef)
 */
-export const useMounted = () => {
-  const [mounted, setMounted] = useState(false);
+export const useMounted = (fn) => {
+  const mounted = useRef(false);
   useEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
+    if (mounted.current && fn) {
+      fn();
+    }
+    mounted.current = true;
+
+    return () => mounted.current = false;
   }, []);
-  return mounted;
+  return mounted.current;
 }
 
 export const useDevice = () => {

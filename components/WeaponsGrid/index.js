@@ -2,7 +2,7 @@ import Link from 'next/link';
 import css from './style.scss';
 import { animated, useTransition } from 'react-spring';
 import { useRef, useEffect, useState } from 'react';
-import { useMeasure } from '../../hooks';
+import { useMeasure, useMounted } from '../../hooks';
  
 import Item from '../../reusable/Item';
 
