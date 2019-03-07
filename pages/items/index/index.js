@@ -3,19 +3,19 @@ import css from './style.scss';
 import fetch from 'isomorphic-unfetch';
 import Link from 'next/link';
 import { useTransition } from 'react-spring';
-import { weaponProps, STATIC } from '../../helpers';
+import { weaponProps, STATIC } from '../../../helpers';
 import { withRouter } from 'next/router';
 import qs from 'querystringify';
-import { debounce, useDebounce } from '../../util';
+import { debounce, useDebounce } from '../../../util';
 import Head from 'next/head';
 
-import Item from '../../reusable/Item';
-import Input from '../../reusable/Input';
-import Checkmark from '../../reusable/Checkmark';
-import Select from '../../reusable/Select';
-import { SortDirection } from '../../reusable/SortDirection';
-import { WeaponsGrid } from '../../components/WeaponsGrid';
-import { MobileModal } from '../../components/MobileModal';
+import Item from '../../../reusable/Item';
+import Input from '../../../reusable/Input';
+import Checkmark from '../../../reusable/Checkmark';
+import Select from '../../../reusable/Select';
+import { SortDirection } from '../../../reusable/SortDirection';
+import { WeaponsGrid } from '../../../components/WeaponsGrid';
+import { MobileModal } from '../../../components/MobileModal';
 
 const initialUpdateKey = '00nametrue';
 

@@ -1,10 +1,10 @@
 import css from './style.scss';
 import 'isomorphic-unfetch';
-import { HOST_URL, STATIC } from '../../helpers';
+import { HOST_URL, STATIC } from '../../../helpers';
 import Link from 'next/link';
 import Head from 'next/head';
 
-import Legend from '../../components/Legend';
+import Legend from '../../../components/Legend';
 
 const Legends = ({ legends }) => {
   return (
