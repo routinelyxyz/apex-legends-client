@@ -1,0 +1,110 @@
+
+%triangle {
+  position: absolute;
+  content: "";
+  background: #7ED7F8;
+  width: 30px;
+  height: 30px;
+  transform: rotate(45deg);
+  box-shadow: 0px 4px 40px rgba(0, 0, 0, 0.5);
+}
+
+.container {
+  width: 195px;
+  position: relative;
+  &:before {
+    position: absolute;
+    content: "";
+    width: 123px;
+    height: 123px;
+    border-radius: 50%;
+    z-index: 9;
+    left: calc(50% - 123px / 2);
+    top: (-123px) / 2;
+    // top: calc(-50% - 120px / 2);
+    background: linear-gradient(138.33deg, #9CECFB 6.03%, #65C7F7 54.77%, #0052D4 95.13%);
+    box-shadow: 0px 0px 46px rgba(118, 179, 249, 0.348);
+  }
+}
+
+.avatar_container {
+  width: 115px;
+  height: 115px;
+  border-radius: 50%;
+  position: absolute;
+  top: (-115px) / 2;
+  left: calc(50% - 115px / 2);
+  margin: 0 auto;
+  z-index: 10;
+  // box-shadow: 0px 0px 36px rgba(118, 179, 249, 0.348);
+  .avatar {
+    width: 115px;
+    height: 115px; 
+    border-radius: 50%;
+    display: block;
+  }
+}
+
+.card {
+  /* Rectangle 2.6 */
+  // height: 245px;
+  padding: 57px 0 20px 0;
+  box-sizing: border-box;
+  // left: 618px;
+  // top: 420px;
+
+  background: radial-gradient(0.00px at 100% -2.04%, #7FD8F9 0%, #25273E 100%);
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(136.71deg, #383B57 0%, #25273E 98.38%);
+  border-radius: 7px;
+  // transform: matrix(-1, 0, 0, 1, 0, 0);
+  position: relative;
+  overflow: hidden;
+  &:before {
+    @extend %triangle;
+    left: -15px;
+    top: -15px;
+  }
+  &:after {
+    @extend %triangle;
+    right: -15px;
+    top: -15px;
+  }
+}
+
+.name {
+  font-weight: 500;
+  font-size: 18px;
+  text-align: center;
+  color: #FFFFFF;
+  text-shadow: 0px 4px 15px rgba(0, 0, 0, 0.40);
+  &:before {
+    @extend %triangle;
+    bottom: -15px;
+    left: -15px;
+  }
+  &:after {
+    @extend %triangle;
+    bottom: -15px;
+    right: -15px;
+  }
+}
+
+.data_list {
+  list-style-type: none;
+  padding: 0;
+  margin: 5px 15px;
+}
+
+.data_item {
+  border-bottom: 1px solid #333551;
+  &:last-child {
+    border-bottom-color: transparent;
+  }
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  .prop {
+    color: #7E81A7;
+  }
+}

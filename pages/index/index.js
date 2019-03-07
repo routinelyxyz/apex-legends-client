@@ -8,7 +8,7 @@ import Head from 'next/head';
 import { useDevice, useWindowSize } from '../../hooks';
 import { fetchify } from '../../util/fetchify';
 
-
+import { PlayerCard } from '../../components/PlayerCard';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
 
 /*
@@ -19,6 +19,7 @@ const HomePage = ({ recentUpdates }) => {
   const [stats, setStats] = useState(() => [recentUpdates[0]]);
 
   useEffect(() => {
+    return;
     let index = 0;
     const interval = setInterval(() => {
       index++;
@@ -48,6 +49,7 @@ const HomePage = ({ recentUpdates }) => {
       <div className={css.searcher}>
         <PlayerSearcher/>
       </div>
+      <PlayerCard/>
       <table className={css.players_table}>
         <thead></thead>
         <tbody>
