@@ -1,3 +1,4 @@
+@import "../../assets/css/rwd.scss";
 
 .header {
   font-size: 30px;
@@ -9,6 +10,13 @@
   list-style-type: none;
   margin: 50px 0;
   padding: 0;
+  @include phone {
+    justify-content: space-around;
+  }
+  @include small {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .img {

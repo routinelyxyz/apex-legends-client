@@ -1,12 +1,11 @@
 import css from './style.scss';
 import 'isomorphic-unfetch';
 import { HOST_URL, STATIC } from '../../helpers';
-import Link from 'next/link';
 import Head from 'next/head';
 
-import Legend from '../../components/Legend';
+import { Legend } from '../../components/Legend';
 
-const Legends = ({ legends }) => {
+const LegendsPage = ({ legends }) => {
   return (
     <article>
       <Head>
@@ -16,28 +15,16 @@ const Legends = ({ legends }) => {
         Legends
       </h1>
       <ul className={css.legends}>
-        {legends.map(legend => (
-          <Link
-            key={legend.id}
-            href={`/legends/legend?slug=${legend.slug}`}
-            as={`/legends/${legend.slug}`}
-          > 
-            <a>
-              <Legend
-                legend={legend}
-              />
-            </a>
-          </Link>
-        ))}
+        {legends.map(legend => <Legend legend={legend}/>)}
       </ul>
     </article>
   )
 }
 
-Legends.getInitialProps = async () => {
+LegendsPage.getInitialProps = async () => {
   const data = await fetch(HOST_URL + '/legends');
   const legends = await data.json();
   return { legends };
 }
 
-export default Legends;
+export default LegendsPage;
