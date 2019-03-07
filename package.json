@@ -31,6 +31,7 @@
     "next-offline": "^3.3.6",
     "next-routes": "^1.4.2",
     "next-workbox": "^1.4.1",
+    "next-workbox-webpack-plugin": "^1.1.0",
     "node-sass": "^4.11.0",
     "querystringify": "^2.1.0",
     "react": "^16.8.2",
