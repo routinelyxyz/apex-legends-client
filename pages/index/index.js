@@ -11,12 +11,13 @@ import { fetchify } from '../../util/fetchify';
 import { PlayerCard } from '../../components/PlayerCard';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
 
+const avatar = 'https://opgg-static.akamaized.net/images/profile_icons/profileIcon3379.jpg?image=c_scale,w_38&v=1518361200';
 /*
   Color for searcher phrase background #FFFAE0
 */
 
 const HomePage = ({ recentUpdates }) => {
-  const [stats, setStats] = useState(() => [recentUpdates[0]]);
+  const [stats, setStats] = useState(() => recentUpdates);
 
   useEffect(() => {
     return;
@@ -50,13 +51,25 @@ const HomePage = ({ recentUpdates }) => {
         <PlayerSearcher/>
       </div>
       <PlayerCard/>
-      <table className={css.players_table}>
-        <thead></thead>
+      <table className={css.rank_tab}>
+        <thead>
+          <th>Rank</th>
+          <th>Player</th>
+          <th>Kills</th>
+        </thead>
         <tbody>
           {transitions.map(({ item, key, props }) => (
             <animated.tr key={key} style={props}>
-              <td>{item.player.name}</td>
-              <td>{dayjs(item.updatedAt).fromNow()}</td>
+              <td>{key}</td>
+              <td className={css.player}>
+                <img
+                  src={avatar}
+                  className={css.avatar}
+                />
+                {item.player.name}
+              </td>
+              <td>2,3614</td>
+              {/* <td>{dayjs(item.updatedAt).fromNow()}</td> */}
             </animated.tr> 
           ))}
         </tbody>
