@@ -1,3 +1,5 @@
+@import "../../assets/css/rwd.scss";
+
 .h3 {
   font-size: 12px;
   letter-spacing: 2px;
@@ -45,6 +47,9 @@
     bottom: -10px;
     opacity: 0;
     transition: opacity .3s ease;
+    @include phone {
+      opacity: 1;
+    }
     /* box-shadow: 0 0 10px 5px #6770FA; */
   }
   &.active {

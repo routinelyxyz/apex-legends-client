@@ -1,13 +1,43 @@
 import css from './style.scss';
-import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
-// const useDevice = dynamic(() => import('../../hooks').useDevice, {
-//   ssr: false
-// });
 import { useDevice, useWindowSize } from '../../hooks';
+import { applyCss } from '../../helpers';
 
 import { PlayerSearcher } from '../PlayerSearcher';
 import { NavLink } from '../../reusable/Elements';
+
+const navigationLinks = [
+  {
+    title: 'Home',
+    href: '/',
+    icon: 'house',
+    active: route => route === '/'
+  },
+  {
+    title: 'Leaderboards',
+    href: '/leaderboards',
+    icon: 'medal',
+    active: route => route.startsWith('/leaderboards')
+  },
+  {
+    title: 'Items',
+    href: '/items',
+    icon: 'shotgun',
+    active: route => route.startsWith('/items')
+  },
+  {
+    title: 'Legends',
+    href: '/legends',
+    icon: 'mask',
+    active: route => route.startsWith('/legends')
+  },
+  {
+    title: 'Stats',
+    href: '/stats',
+    icon: 'rising',
+    active: route => route.startsWith('/stats')
+  }
+]
 
 export const Header = ({ route }) => {
   return (
@@ -16,40 +46,31 @@ export const Header = ({ route }) => {
         Apex-Legends.win
       </div>
       <nav className={css.header_nav}>
-        <NavLink
-          title="Home"
-          href="/"
-          active={route === '/'}
-          prefetch
-        />
-        <NavLink
-          title="Leaderboards"
-          href="/leaderboards"
-          active={route.startsWith('/leaderboards')}
-          prefetch
-        />
-        <NavLink
-          title={(
-            <>
-              <span className={css.title}>
-                Items
-              </span>
-              <img
-                className={css.icon}
-                src="/static/img/shotgun.svg"
-              />
-            </>
-          )}
-          href="/items"
-          active={route.startsWith('/items')}
-          prefetch
-        />
-        <NavLink
-          title="Legends"
-          href="/legends"
-          active={route.startsWith('/legends')}
-          prefetch
-        />
+        {navigationLinks.map(({ title, href, active, icon }) => {
+          const isActive = active(route);
+          return (
+            <NavLink
+              key={title}
+              {...applyCss(
+                css.phone_btn,
+                isActive && css.active
+              )}
+              href={href}
+              active={isActive}
+              prefetch
+            >
+              <>
+                <img
+                  className={css.icon}
+                  src={`/static/img/${icon}.svg`}
+                />
+                <span className={css.title}>
+                  {title}
+                </span>
+              </>
+            </NavLink>
+          );
+        })}
       </nav>
       <div className={css.searcher}>
         <PlayerSearcher
