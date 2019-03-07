@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { animated, useTransition, config } from 'react-spring';
 import Head from 'next/head';
 import { useDevice, useWindowSize } from '../../hooks';
+import { fetchify } from '../../util/fetchify';
 
 
 import { PlayerSearcher } from '../../components/PlayerSearcher';
@@ -66,7 +67,11 @@ HomePage.getInitialProps = async () => {
   const res = await fetch(getUrl('/stats/recently-updated'));
   const data = await res.json();
   const recentUpdates = data.reverse();
-  return { recentUpdates };
+
+  const res2 = await fetchify.get('/stats/trending');
+  const trending = await res2.json();
+
+  return { recentUpdates, trending };
 }
 
 export default HomePage;

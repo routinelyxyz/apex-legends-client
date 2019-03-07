@@ -11,12 +11,31 @@
 }
 
 .avatar {
+  width: 95px;
+  height: 95px;
   border-radius: 50%;
+  // margin: 10px;
+  // position: absolute;
+  // left: calc(50% - 35px);
+  // top: calc(50% - 37px);
+  // width: 80px;
+  // height: 80px;
+  // background: #23232F;
+}
+
+.avatar_container {
   position: absolute;
-  left: calc(50% - 35px);
-  top: calc(50% - 37px);
-  width: 70px;
-  height: 70px;
+  top: 10px;
+  left: 10px;
+  border-radius: 50%;
+  width: 110px;
+  height: 110px;
+  top: 18px;
+  left: 18px;
+  // left: calc(50%);
+  background: #23232F;
+  padding: 7px;
+  box-sizing: border-box;
 }
 
 .name {

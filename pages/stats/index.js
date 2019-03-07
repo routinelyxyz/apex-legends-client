@@ -83,14 +83,16 @@ const StatsPage = ({ name, url, ...props }) => {
       <div className={css.player}>
         <div className={css.badge}>
           <ProgressRing
-            radius={65}
+            radius={73}
             stroke={7}
             progress={stats.lvlProgress}
           />
-          <img
-            src={avatar}
-            className={css.avatar}
-          />
+          <div className={css.avatar_container}>
+            <img
+              src={avatar}
+              className={css.avatar}
+            />
+          </div>
         </div>
         <div>
           <h1 className={css.name}>
