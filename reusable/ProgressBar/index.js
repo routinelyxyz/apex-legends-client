@@ -1,8 +1,9 @@
 import css from './style.scss';
 import { animated, useSpring, config } from 'react-spring';
 import { parsePercent } from '../../util';
+import { applyCss } from '../../helpers';
 
-export const ProgressBar = ({ title, hoverTitle = () => '', value }) => {
+export const ProgressBar = ({ title, hoverTitle = () => '', value, className }) => {
   const percents = parsePercent(value);
   const props = useSpring({
     from: { percents: 0 },
@@ -12,8 +13,11 @@ export const ProgressBar = ({ title, hoverTitle = () => '', value }) => {
 
   return (
     <div
-      className={css.container}
       title={hoverTitle(percents)}
+      {...applyCss(
+        css.container,
+        className
+      )}
     >
       {title && (
         <span className={css.title}>

@@ -8,6 +8,13 @@ import Head from 'next/head';
 import { HorizontalNav } from '../../../reusable/HorizontalNav';
 import { ProgressBar } from '../../../reusable/ProgressBar';
 
+const halfLength = Math.ceil(weaponProps.length / 2);
+const splittedProps = [
+  weaponProps.slice(0, halfLength),
+  weaponProps.slice(halfLength, weaponProps.length)
+];
+
+
 const WeaponPage = ({ slug, item, ratios }) => {
 
   const calcedRatio = useMemo(() => ratios
@@ -51,6 +58,7 @@ const WeaponPage = ({ slug, item, ratios }) => {
             >
               <a>
                 <img
+                  className={css.ammo_img}
                   alt={`Apex Legends ${item.ammo.name} ammo`}
                   title={ammoName}
                   src={getStatic(item.ammo.img)}
@@ -62,6 +70,7 @@ const WeaponPage = ({ slug, item, ratios }) => {
             {calcedRatio.map(({ name, value }) => (
               <ProgressBar
                 title={weaponPropTitles[name]}
+                className={css.progress_bar}
                 hoverTitle={p => 
                   `${weaponPropTitles[name]} - ${item[name]} (${p}%)`
                 }
@@ -83,22 +92,24 @@ const WeaponPage = ({ slug, item, ratios }) => {
           <a>Overview</a>
         </Link>
       </HorizontalNav>
-      <article>
-        <ul className={css.props_list}>
-          {weaponProps.map(([prop, name]) => (
-            <li
-              key={prop}
-              className={css.prop_row}
-            >
-              <span className={css.prop_name}>
-                {name}
-              </span>
-              <span className={css.prop_value}>
-                {item[prop]}
-              </span>
-            </li>
-          ))}
-        </ul>
+      <article className={css.overview_container}>
+        {splittedProps.map((propsCol, index) => (
+          <ul className={css.props_list} key={index}>
+            {propsCol.map(([prop, name, parser]) => (
+              <li
+                key={prop}
+                className={css.prop_row}
+              >
+                <span className={css.prop_name}>
+                  {name}
+                </span>
+                <span className={css.prop_value}>
+                  {parser ? parser(item[prop]) : item[prop]}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ))}
       </article>
     </div>
   )

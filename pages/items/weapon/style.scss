@@ -1,13 +1,20 @@
+@import "../../../assets/css/rwd.scss";
 
 .header {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  @include phone {
+    flex-direction: column;
+  }
 }
 
 .heading {
   font-size: 40px;
   margin: 0;
+  @include small {
+    font-size: 30px;
+  }
 }
 
 .item_category {
@@ -27,15 +34,43 @@
 .img_container {
   align-self: flex-start;
   margin: 0;
+  @include phone {
+    margin: 40px auto 0 auto;
+  }
+  .item_img {
+    @include tablet {
+      width: 350px;
+    }
+    @include small {
+      width: 240px;
+    }
+  }
+}
+
+.progress_bar {
+  @include phone {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
 }
 
 .ammo_container {
-  margin: 30px 0;
+  margin: 25px 0 40px 0;
   display: inline-block;
   .ammo_type {
     margin: 8px 0;
     font-size: 14px;
     text-align: center;
+    @include phone {
+      font-size: 13px;
+    }
+  }
+  .ammo_img {
+    display: block;
+    margin: 0 auto;
+    @include small {
+      width: 55px;
+    }
   }
 }
 
@@ -43,6 +78,10 @@
   margin: 0;
   padding: 0;
   list-style-type: none;
+  min-width: 400px;
+  @include phone {
+    width: 100%;
+  }
 }
 
 .prop_row {
@@ -73,5 +112,12 @@
 }
 
 .stats_bars {
+  width: 100%;
   margin-top: 16px;
+}
+
+.overview_container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
 }
