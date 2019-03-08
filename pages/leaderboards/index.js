@@ -12,6 +12,7 @@ import Head from 'next/head';
 import { Navigation } from '../../reusable/Navigation';
 import { Select } from '../../reusable/Select';
 import { H3 } from '../../reusable/Elements';
+import { PlayersTable } from '../../components/PlayersTable';
 
 const legends = [
   {
@@ -156,6 +157,10 @@ const LeadeboardsPage = ({ data, query, router }) => {
         isFetching={isFetching}
         href={p => '/leaderboards?page=' + p}
       >
+        <PlayersTable
+          data={data.data}
+          prop={prop}
+        />
         <table className={css.players_table}>
           <thead>
             <tr>
