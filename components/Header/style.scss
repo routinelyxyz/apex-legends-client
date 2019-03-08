@@ -92,9 +92,9 @@ $height: 65px;
       height: 100% !important;
       background: linear-gradient(to bottom,rgb(76, 76, 102), transparent) !important;
     }
-  }
-  &:first-child:after {
-    display: none;
+    &:first-child:after {
+      display: none;
+    }
   }
   @include small {
     padding: 18px 10px !important;
