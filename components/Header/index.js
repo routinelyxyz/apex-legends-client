@@ -68,7 +68,7 @@ export const Header = ({ route }) => {
                 <span {...applyCss(css.title, css.title_long)}>
                   {title}
                 </span>
-                <span  className={css.title}>
+                <span  {...applyCss(css.title, css.title_short)}>
                   {short ? short : title}
                 </span>
               </>
