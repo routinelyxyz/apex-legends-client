@@ -15,6 +15,7 @@ const navigationLinks = [
   },
   {
     title: 'Leaderboards',
+    short: 'Lboards',
     href: '/leaderboards',
     icon: 'medal',
     active: route => route.startsWith('/leaderboards')
@@ -46,7 +47,7 @@ export const Header = ({ route }) => {
         Apex-Legends.win
       </div>
       <nav className={css.header_nav}>
-        {navigationLinks.map(({ title, href, active, icon }) => {
+        {navigationLinks.map(({ title, href, active, short, icon }) => {
           const isActive = active(route);
           return (
             <NavLink
@@ -64,8 +65,11 @@ export const Header = ({ route }) => {
                   className={css.icon}
                   src={`/static/img/${icon}.svg`}
                 />
-                <span className={css.title}>
+                <span {...applyCss(css.title, css.title_long)}>
                   {title}
+                </span>
+                <span  className={css.title}>
+                  {short ? short : title}
                 </span>
               </>
             </NavLink>

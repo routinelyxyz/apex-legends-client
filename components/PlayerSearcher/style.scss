@@ -26,7 +26,7 @@
   padding: 5px;
   box-sizing: border-box;
   overflow: hidden;
-  will-change: max-height;
+  will-change: height, opacity;
   min-width: 400px;
   @include phone {
     min-width: auto;

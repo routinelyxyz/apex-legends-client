@@ -20,6 +20,8 @@
   margin-left: auto;
 }
 
+$height: 65px;
+
 .header_nav {
   display: flex;
   padding: 20px 0;
@@ -37,7 +39,7 @@
     z-index: 90;
     background: #23232F;
     padding: 0;
-    height: 85px;
+    height: $height;
     border-top: 2px solid rgb(76, 76, 102);
     .icon {
       display: block;
@@ -46,7 +48,7 @@
       margin-bottom: 10px;
     }
     .title {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
       letter-spacing: 1px;
       text-transform: uppercase;
@@ -84,10 +86,13 @@
   &:first-child:after {
     display: none;
   }
+  .title_long {
+    display: none;
+  }
   @include small {
-    padding: 18px 20px !important;
+    padding: 18px 10px !important;
     .title {
-      font-size: 10px;
+      font-size: 9px;
     }
     .icon {
       width: 26px;
