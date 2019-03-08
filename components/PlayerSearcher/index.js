@@ -10,6 +10,7 @@ import { mapStateDynamic, mapDispatchToProps } from '../../store/mappers';
 import { Menu } from '../../reusable/Menu';
 import { PlayerLabel } from '../../components/PlayerLabel';
 import { BasicInput } from '../../reusable/Input';
+import { PhraseSelector } from '../../reusable/PhraseSelector';
 
 const debounceA = debounce(350);
 
@@ -101,7 +102,12 @@ const PlayerSearcher = ({ height = 250, ...props }) => {
                 <div className={css.content_container}>
                   {Object.values(favoritePlayers).map(PlayerItem)}
                 </div>
-                <div>Popular players are here</div>
+                <div>
+                  <PhraseSelector
+                    value="Popular players are here"
+                    phrase={phrase}
+                  />
+                </div>
                 <div>
                   {playersFound.map(player => (
                     <PlayerLabel
