@@ -6,6 +6,7 @@ import useClickOutside from 'click-outside-hook';
 import { animated, useTransition, config } from 'react-spring';
 import { connect } from 'react-redux';
 import { mapStateDynamic, mapDispatchToProps } from '../../store/mappers';
+import Router from 'next/router';
 
 import { Menu } from '../../reusable/Menu';
 import { PlayerLabel } from '../../components/PlayerLabel';
@@ -13,6 +14,7 @@ import { BasicInput } from '../../reusable/Input';
 import { PhraseSelector } from '../../reusable/PhraseSelector';
 
 const debounceA = debounce(350);
+const debounceB = debounce(100);
 
 const players = [
   {
@@ -42,6 +44,7 @@ const PlayerSearcher = ({ height = 250, ...props }) => {
   const [phrase, setPhrase] = useState('');
   const [focused, setFocused] = useState(false);
   const [playersFound, setPlayersFound] = useState([]);
+  const [platform, setPlatform] = useState('pc');
   const ref = useClickOutside(() => setFocused(false));
   const { favoritePlayers, recentPlayers } = props.reducers.stats;
 
@@ -64,6 +67,18 @@ const PlayerSearcher = ({ height = 250, ...props }) => {
     });
   }
 
+  const handleStatsSearch = e => {
+    if (e.key === 'Enter' && phrase.length) {
+      debounceB(() => {
+        setFocused(false);
+        Router.push(
+          `/stats?platform=${platform}&name=${phrase}&=id`,
+          `/stats/${platform}/${phrase}`
+        );
+      });
+    }
+  }
+
   return (
     <div
       className={css.container}
@@ -75,6 +90,7 @@ const PlayerSearcher = ({ height = 250, ...props }) => {
         value={phrase}
         onChange={getPlayers}
         onFocus={_ => setFocused(true)}
+        onKeyPress={handleStatsSearch}
       />
       {transitions.map(({ item, props, key }) => (
         item &&
