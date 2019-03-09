@@ -13,8 +13,27 @@ import Head from 'next/head';
 const avatar = 'https://static-cdn.jtvnw.net/jtv_user_pictures/cef31105-8a6e-4211-a74b-2f0bbd9791fb-profile_image-70x70.png';
 
 import { ProgressRing } from '../../components/ProgressRing';
-import { HorizontalNav } from '../../reusable/HorizontalNav';
+import { HorizontalNav, HorizontalNav2, StaticLink } from '../../reusable/HorizontalNav';
 import { LegendStats } from '../../components/LegendStats';
+
+const links = [
+  {
+    title: 'Overview',
+    active: r => !r.includes('/history'),
+    dynamic: ({ asPath = '' }) => ({
+      href: asPath,
+      as: asPath
+    }),
+  },
+  {
+    title: 'Match History',
+    active: r => r.includes('/history'),
+    dynamic: ({ asPath = '' }) => ({
+      href: asPath,
+      as: asPath
+    })
+  }
+];
 
 const getStats = async ({ platform, name, id = '' }) => {
   const url = getUrl(`/stats/${platform}/${encodeURI(name)}?id=${id}`);
@@ -26,13 +45,14 @@ const getStats = async ({ platform, name, id = '' }) => {
 const initialTs = getTs();
 const countdown = 179;
 
-const StatsPage = ({ name, url, ...props }) => {
+const StatsPage = ({ name, url, platform, ...props }) => {
   if (!props.stats) return <div>Player not found</div>
   const [stats, setStats] = useState(() => props.stats.stats);
   const [now, setNow] = useState(() => initialTs);
   const [to, setTo] = useState(() => initialTs + countdown);
   const [isUpdating, setUpdating] = useState(false);
   const counter = to - now;
+  const historyUrl = `/stats/history/${platform}/${encodeURI(name)}?id=${stats.player.id}`;
 
   useEffect(() => {
     let interval = setInterval(() => {
@@ -124,6 +144,18 @@ const StatsPage = ({ name, url, ...props }) => {
           <a>Match History</a>
         </Link>
       </HorizontalNav>
+      {/* <HorizontalNav2>
+        <StaticLink
+          title="Match history"
+          href={url}
+          as={url}
+        />
+        <StaticLink
+          title="Match history"
+          href={historyUrl}
+          as={historyUrl}
+        />
+      </HorizontalNav2> */}
       {stats.legends.map(legendStats => (
         <LegendStats
           stats={legendStats}

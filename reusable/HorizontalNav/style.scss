@@ -12,10 +12,14 @@
 }
 
 .link {
+  display: block;
   position: relative;
   text-transform: uppercase;
   padding: 25px 40px;
   box-sizing: border-box;
+  &.active:after {
+    opacity: 1;
+  }
   &:after {
     content: "";
     position: absolute;
