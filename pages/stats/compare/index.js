@@ -25,22 +25,44 @@ const comparProps = [
 ]
 
 
-const CompareStatsPage = () => {
-  const [players, setPlayers] = useState([]);
+const StatsColumn = ({ players, prop, stats, index }) => {
+  const value = players[index][prop];
+
+  const percentages = (
+    (players.length === 2 && index === 1)
+    || players.length > 2
+  ) && (
+    <span
+      {...applyCss(
+        css.perc_val,
+        stats[prop] < 0 ? css.perc_below : css.perc_above
+      )}
+    >
+      {stats[prop]}
+    </span>
+  );
+
+  return (
+    <td key={index}>
+      {value == null
+        ? 'NA'
+        : (
+        <>
+          <p className={css.value}>
+            {value.toLocaleString('en-US')}
+          </p>
+          {percentages}
+        </>
+      )}
+    </td> 
+  )
+}
+
+
+const CompareStatsPage = ({ playersData }) => {
+  const [players, setPlayers] = useState(playersData);
 
   useEffect(() => {
-    fetchPlayer(4)
-      .then(stats =>
-        setPlayers(p => [...p, stats])
-      )
-    fetchPlayer(2)
-      .then(stats =>
-        setPlayers(p => [...p, stats])
-      )
-    fetchPlayer(23)
-      .then(stats =>
-        setPlayers(p => [...p, stats])
-      )
   }, []);
 
 
@@ -75,7 +97,6 @@ const CompareStatsPage = () => {
     return statsRatios;
   }, [players.length]);
 
-
   return (
     <div>
       <h1>Compare stats</h1>
@@ -91,32 +112,19 @@ const CompareStatsPage = () => {
           </tr>
         </thead>
         <tbody>
-          {comparProps.map((prop, index) => (
+          {comparProps.map(prop => (
             <tr key={prop}>
               <td className={css.prop_title}>
                 {statsPropTitles[prop] || prop}
               </td>
               {comparedPlayers.map((stats, index) => (
-                <td key={index}>
-                  {players[index][prop] == null
-                    ? 'NA'
-                    : (
-                    <>
-                      <p className={css.value}>
-                        {players[index][prop].toLocaleString('en-US')}
-                      </p>
-                      <span
-                        {...applyCss(
-                          css.perc_val,
-                          stats[prop] < 0 ? css.perc_below : css.perc_above
-                        )}
-                      >
-                        {stats[prop]}
-                      </span>
-                    </>
-                  )}
-
-                </td> 
+                <StatsColumn
+                  key={index}
+                  stats={stats}
+                  index={index}
+                  prop={prop}
+                  players={players}
+                />
               ))}
             </tr>
           ))}
@@ -126,8 +134,14 @@ const CompareStatsPage = () => {
   )
 }
 
-// CompareStatsPage.getIntialProps = async () => {
+CompareStatsPage.getInitialProps = async ({ query: { player }}) => {
+  const players = Array.isArray(player) ? player : [player];
 
-// }
+  const playersData = await Promise.all(
+    players.map(id => fetchPlayer(id))
+  );
+
+  return { playersData };
+}
 
 export default CompareStatsPage;

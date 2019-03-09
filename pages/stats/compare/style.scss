@@ -5,6 +5,12 @@
   .prop_title {
     text-transform: capitalize;
   }
+  th {
+    padding: 15px 10px;
+    &:first-child {
+      text-align: left;
+    }
+  }
   td {
     padding: 20px 5px;
   }
