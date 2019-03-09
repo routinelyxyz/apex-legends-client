@@ -30,19 +30,9 @@ const StatsColumn = ({ players, prop, stats, index }) => {
   const value = players[index][prop];
   const percents = stats[prop];
 
-  const percentages = (
-    (players.length === 2 && index === 1)
-    || players.length > 2
-  ) && (
-    <span
-      {...applyCss(
-        css.perc_val,
-        percents < 0 ? css.perc_below : css.perc_above
-      )}
-    >
-      {percents}
-    </span>
-  );
+  const showPercents = percents != null &&
+    ((players.length === 2 && index === 1) ||
+    players.length > 2);
 
   return (
     <td key={index}>
@@ -53,7 +43,15 @@ const StatsColumn = ({ players, prop, stats, index }) => {
           <p className={css.value}>
             {value.toLocaleString('en-US')}
           </p>
-          {percentages}
+          <span
+            {...applyCss(
+              css.perc_val,
+              percents < 0 ? css.perc_below : css.perc_above,
+              !showPercents && css.perc_hide 
+            )}
+          >
+            {percents}
+          </span>
         </>
       )}
     </td> 
@@ -91,16 +89,25 @@ const CompareStatsPage = ({ playersData }) => {
         return sum;
       }, { damage: 0, kills: 0, damagePerKill: 0, headshots: 0, headshotsPerKill: 0, lvl: 0 });
 
-    const statsRatios = players.map(stats => {
+    const statsRatios = players.map((stats, index) => {
       const compared = {};
       for (let prop in comparableProps) {
-        const comparedVal = stats[prop] / summedStats[prop] * 100;
 
-        const changeDir = comparedVal < 100
-        ? (100 - comparedVal) * -1 
-        : comparedVal - 100
+        const comparableVals = players
+          .filter(stats => stats[prop] != null)
+          .length;
 
-        compared[prop] = round(changeDir);
+        if (index === 0 && comparableVals < 3) {
+          compared[prop] = null;
+        } else {
+
+          const comparedVal = stats[prop] / summedStats[prop] * 100;
+          const changeDir = comparedVal < 100
+            ? (100 - comparedVal) * -1
+            : comparedVal - 100;
+  
+          compared[prop] = round(changeDir);
+        }
       }
       return compared;
     });
