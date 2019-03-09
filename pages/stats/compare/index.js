@@ -3,6 +3,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { fetchify } from '../../../util/fetchify';
 import { round, applyCss } from '../../../util';
 import { statsPropTitles } from '../../../helpers';
+import Head from 'next/head';
 
 
 const fetchPlayer = async playerId => {
@@ -27,6 +28,7 @@ const comparProps = [
 
 const StatsColumn = ({ players, prop, stats, index }) => {
   const value = players[index][prop];
+  const percents = stats[prop];
 
   const percentages = (
     (players.length === 2 && index === 1)
@@ -35,10 +37,10 @@ const StatsColumn = ({ players, prop, stats, index }) => {
     <span
       {...applyCss(
         css.perc_val,
-        stats[prop] < 0 ? css.perc_below : css.perc_above
+        percents < 0 ? css.perc_below : css.perc_above
       )}
     >
-      {stats[prop]}
+      {percents}
     </span>
   );
 
@@ -61,6 +63,10 @@ const StatsColumn = ({ players, prop, stats, index }) => {
 
 const CompareStatsPage = ({ playersData }) => {
   const [players, setPlayers] = useState(playersData);
+  const playerNames = useMemo(() => players
+    .map(p => p.name)
+    .join(', ')
+  , [players.length]);
 
   useEffect(() => {
   }, []);
@@ -73,8 +79,12 @@ const CompareStatsPage = ({ playersData }) => {
         for (let prop in sum) {
           sum[prop] += stats[prop];
 
+          const divideBy = players
+            .filter(stats => stats[prop] != null)
+            .length;
+
           if (index === players.length - 1) {
-            sum[prop] = sum[prop] / players.length;
+            sum[prop] = sum[prop] / divideBy;
           }
         }
 
@@ -90,7 +100,7 @@ const CompareStatsPage = ({ playersData }) => {
         ? (100 - comparedVal) * -1 
         : comparedVal - 100
 
-        compared[prop] = round(changeDir)
+        compared[prop] = round(changeDir);
       }
       return compared;
     });
@@ -99,6 +109,9 @@ const CompareStatsPage = ({ playersData }) => {
 
   return (
     <div>
+      <Head>
+        <title>{playerNames} - Compare stats | Apex-Legends.win</title>
+      </Head>
       <h1>Compare stats</h1>
       <table className={css.comparison_table}>
         <thead>
