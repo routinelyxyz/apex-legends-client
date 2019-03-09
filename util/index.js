@@ -22,3 +22,5 @@ export const useDebounce = (delay = 250, timeout) => [
 ];
 
 export const getTs = () => Math.floor(Date.now() / 1000); 
+
+export { applyCss as applyCss } from '../helpers';
