@@ -14,22 +14,20 @@ import { Select } from '../../reusable/Select';
 import { H3 } from '../../reusable/Elements';
 import { PlayersTable } from '../../components/PlayersTable';
 
-const legends = [
-  {
-    name: 'Wraith',
-    slug: 'wraith',
-    id: 1
-  },
-  {
-    name: 'Bangalore',
-    slug: 'bangalore',
-    id: 2
-  }
-];
+const statsTitlesMap = {
+  kills: 'Kills',
+  damage: 'Damage',
+  headshots: 'Headshots',
+  matches: 'Matches',
+  damagePerKill: 'Damage / Kill',
+  headshotsPerKill: 'Headshots / Kill',
+  lvl: 'Lvl',
+}
 
-const props = [
-  { name: 'Kills', value: 'kills' }
-]
+const statsProps = {
+  lifetime: ['kills', 'damage', 'headshots', 'matches', 'lvl'],
+  legend: ['kills', 'damage', 'headshots', 'damagePerKill', 'headshotsPerKill']
+}
 
 const initialPlatform = 'all';
 const initialLegend = 'all';
@@ -42,7 +40,7 @@ const platforms = [
   { name: 'Xbox', value: 'xbox' }
 ]
 
-const LeadeboardsPage = ({ data, query, router }) => {
+const LeadeboardsPage = ({ data, query, legends, router }) => {
   const { perPage = 100 } = data;
   const [leaderboards, setLeadboards] = useState([]);
   const page = router.query.page != null ? Number(router.query.page) : 1;
@@ -51,6 +49,25 @@ const LeadeboardsPage = ({ data, query, router }) => {
   const [prop, setProp] = useState(initialProp);
   const [isFetching, setIsFetching] = useState(false);
   const isMounted = useMounted();
+
+  const statProps = statsProps[legend === 'all' ? 'lifetime' : 'legend'];
+
+  useEffect(() => {
+    if (legend !== 'all') {
+      setProp('kills');
+    }
+  }, [legend]);
+
+  const handleLegendSet = e => {
+    const { value } = e.target;
+    if (
+      legend === 'all' ||
+      (legend !== 'all' && value === 'all')
+    ) {
+      setProp(initialProp);
+    }
+    setLegend(value);
+  }
 
 
   useEffect(() => {
@@ -115,9 +132,7 @@ const LeadeboardsPage = ({ data, query, router }) => {
             value={legend}
             disabled={isFetching}
             active={legend !== initialLegend}
-            onChange={e => setLegend(
-              e.target.value
-            )}
+            onChange={handleLegendSet}
           >
             <option value="all">All</option>
             {legends.map(legend => (
@@ -140,12 +155,13 @@ const LeadeboardsPage = ({ data, query, router }) => {
               e.target.value
             )}
           > 
-            {props.map(prop => (
+            {statProps.map(prop => (
               <option
-                value={prop.value}
-                key={prop.value}
+                className={css.stats_props}
+                value={prop}
+                key={prop}
               >
-                {prop.name}
+                {statsTitlesMap[prop] || prop}
               </option>
             ))}
           </Select>
@@ -160,6 +176,7 @@ const LeadeboardsPage = ({ data, query, router }) => {
         <PlayersTable
           data={data.data}
           prop={prop}
+          renderRank={index => (index + 1) + (page - 1) * perPage}
         />
         <table className={css.players_table}>
           <thead>
@@ -199,12 +216,14 @@ const LeadeboardsPage = ({ data, query, router }) => {
 
 LeadeboardsPage.getInitialProps = async (props) => {
   const { query } = props;
-  console.log("INITIAL PROPS +++++");
-  const res = await fetchify.get('/stats' + props.asPath);
+
+  const [stats, legends] = await Promise.all([
+    fetchify.get('/stats' + props.asPath).then(s => s.json()),
+    fetchify.get('/legends').then(l => l.json()),
+  ]);
   await new Promise(r => setTimeout(r, 500));
-  // const res = await fetch(getUrl('/stats' + props.asPath));
-  const data = await res.json();
-  return { data, query: { page: 1, ...query }};
+
+  return { stats, data: stats, legends, query: { page: 1, ...query }};
 }
 
 export default withRouter(LeadeboardsPage);

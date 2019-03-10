@@ -5,9 +5,17 @@
   width: 100%;
   // max-width: 680px;
   margin: 50px auto;
+  .prop_name {
+    text-transform: capitalize;
+  }
   .player {
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    box-sizing: border-box;
+    vertical-align: middle;
+    &:hover {
+      text-decoration: underline;
+    }
     .avatar {
       width: 38px;
       height: 38px;
