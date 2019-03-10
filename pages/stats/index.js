@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import { getTs } from '../../util';
+import { fetchify } from '../../util/fetchify';
 import { connect } from 'react-redux';
 import { mapDispatchToProps, mapStateDynamic } from '../../store/mappers';
 import Head from 'next/head';
@@ -35,57 +36,63 @@ const links = [
   }
 ];
 
-const getStats = async ({ platform, name, id = '' }) => {
-  const url = getUrl(`/stats/${platform}/${encodeURI(name)}?id=${id}`);
-  const res = await fetch(url);
-  const stats = await res.json();
-  return { stats: stats.stats };
+const getStats = async (player, update = false) => {
+  const { platform, name, id = '' } = player;
+  const url = `/stats/${platform}/${encodeURI(name)}?id=${id}&update=${update}`;
+
+  const res = await fetchify.get(url);
+  return await res.json();
 }
 
 const initialTs = getTs();
-const countdown = 179;
+const countdown = 178;
 
 const StatsPage = ({ name, url, platform, ...props }) => {
   if (!props.stats) return <div>Player not found</div>
   const [stats, setStats] = useState(() => props.stats.stats);
   const [now, setNow] = useState(() => initialTs);
-  const [to, setTo] = useState(() => initialTs + countdown);
+  const [to, setTo] = useState(() => initialTs - 1);
   const [isUpdating, setUpdating] = useState(false);
   const counter = to - now;
-  const historyUrl = `/stats/history/${platform}/${encodeURI(name)}?id=${stats.player.id}`;
+  // const historyUrl = `/stats/history/${platform}/${encodeURI(name)}?id=${stats.player.id}`;
 
   useEffect(() => {
     let interval = setInterval(() => {
       setNow(getTs());
     }, 1000);
-
     props.actions.savePlayerAsync(stats);
 
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    if (counter < 0) {
-      const { platform, name, id } = stats;
+  const updateStats = () => {
+    if (isUpdating) return;
+    setUpdating(true);
 
-      if (isUpdating) return;
-      setUpdating(true);
-
-      getStats(stats)
-      .then(({ stats }) => {
-        setStats(stats);
+    /*
+      Normalize ENDPOINT stats object after update
+      + Add used props to test
+    */
+    getStats(stats.player, true)
+      .then(({ stats: data }) => {
+        setStats(data);
         setTo(getTs() + countdown);
         setUpdating(false);
       })
       .catch(console.log)
+  }
+
+  useEffect(() => {
+    if (counter < 0) {
+      updateStats();
     }
   }, [counter]);
 
   const updateIn = () => {
     const seconds = counter % 60;
     const minutes = Math.floor(counter / 60);
-    if (minutes <= 0 && seconds <= 0) return 'Just now';
-    return (minutes && `${minutes} min. ` || '') + `${seconds} sec.`;
+    if ((minutes <= 0 && seconds <= 0) || isUpdating) return 'Just now';
+    return (minutes ? `${minutes} min. ` : '') + `${seconds} sec.`;
   }
 
   const lvlProps = useSpring({
@@ -116,7 +123,7 @@ const StatsPage = ({ name, url, platform, ...props }) => {
         </div>
         <div>
           <h1 className={css.name}>
-            {stats.name}
+            {stats.name || stats.player.name}
           </h1>
           <p className={css.lvl_container}>
             <animated.span className={css.lvl_value}>
