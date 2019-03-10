@@ -32,12 +32,6 @@ const LeadeboardsPage = ({ data, query, legends, router }) => {
 
   const statProps = statsProps[legend === 'all' ? 'lifetime' : 'legend'];
 
-  useEffect(() => {
-    if (legend !== 'all') {
-      setProp('kills');
-    }
-  }, [legend]);
-
   const handleLegendSet = e => {
     const { value } = e.target;
     if (
