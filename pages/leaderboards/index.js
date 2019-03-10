@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { withRouter } from 'next/router';
 import { fetchify } from '../../util/fetchify';
 import { useMounted } from '../../hooks';
-import { statsPropTitles } from '../../helpers';
+import { statsPropTitles, statsProps, statsTitlesMap, platforms } from '../../helpers';
 import Link from 'next/link';
 import Head from 'next/head';
 
@@ -14,31 +14,11 @@ import { Select } from '../../reusable/Select';
 import { H3 } from '../../reusable/Elements';
 import { PlayersTable } from '../../components/PlayersTable';
 
-const statsTitlesMap = {
-  kills: 'Kills',
-  damage: 'Damage',
-  headshots: 'Headshots',
-  matches: 'Matches',
-  damagePerKill: 'Damage / Kill',
-  headshotsPerKill: 'Headshots / Kill',
-  lvl: 'Lvl',
-}
-
-const statsProps = {
-  lifetime: ['kills', 'damage', 'headshots', 'matches', 'lvl'],
-  legend: ['kills', 'damage', 'headshots', 'damagePerKill', 'headshotsPerKill']
-}
 
 const initialPlatform = 'all';
 const initialLegend = 'all';
 const initialProp = 'kills';
 
-const platforms = [
-  { name: 'All', value: 'all' },
-  { name: 'PC', value: 'pc' },
-  { name: 'PS4', value: 'ps4' },
-  { name: 'Xbox', value: 'xbox' }
-]
 
 const LeadeboardsPage = ({ data, query, legends, router }) => {
   const { perPage = 100 } = data;

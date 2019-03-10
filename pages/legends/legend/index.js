@@ -32,6 +32,9 @@ const LegendPage = ({ legend }) => {
         <Link href={``}>
           <a>Abilities</a>
         </Link>
+        <Link href={``}>
+          <a>Leaderboards</a>
+        </Link>
       </HorizontalNav>
       <ul className={css.abilities}>
         {legend.abilities.map(ability => (

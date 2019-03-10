@@ -1,4 +1,11 @@
 
+export const platforms = [
+  { name: 'All', value: 'all' },
+  { name: 'PC', value: 'pc' },
+  { name: 'PS4', value: 'ps4' },
+  { name: 'Xbox', value: 'xbox' }
+]
+
 export const weaponProps = [
   ['bodyDamage', 'Body damage'],
   ['headshotDamage', 'Headshot damage'],
@@ -27,6 +34,22 @@ export const statsPropTitles = {
   damagePerKill: 'Damage / Kill',
   headshotsPerKill: 'Headshots / Kill'
 }
+
+export const statsProps = {
+  lifetime: ['kills', 'damage', 'headshots', 'matches', 'lvl'],
+  legend: ['kills', 'damage', 'headshots', 'damagePerKill', 'headshotsPerKill']
+}
+
+export const statsTitlesMap = {
+  kills: 'Kills',
+  damage: 'Damage',
+  headshots: 'Headshots',
+  matches: 'Matches',
+  damagePerKill: 'Damage / Kill',
+  headshotsPerKill: 'Headshots / Kill',
+  lvl: 'Lvl',
+}
+
 
 export const applyCss = (...inputs) => ({
   className: inputs
