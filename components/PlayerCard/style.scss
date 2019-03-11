@@ -14,6 +14,36 @@
   margin: 30px auto;
   width: 195px;
   position: relative;
+  &.horizontal {
+    width: auto;
+    .name {
+      margin-right: 20px;
+    }
+    .card {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .data_item {
+      min-width: 120px;
+    }
+    .avatar_container {
+      width: 90px;
+      height: 90px;
+      top: (-90px) / 2;
+      left: calc(50% - 90px / 2);
+      .avatar {
+        width: 90px;
+        height: 90px;
+      }
+    }
+    &:before {
+      width: 100px;
+      height: 100px;
+      left: calc(50% - 100px / 2);
+      top: (-100px) / 2;
+    }
+  }
   &.scale {
     @include notPhone {
       &.top1 .card {
@@ -94,7 +124,9 @@
 .card {
   /* Rectangle 2.6 */
   // height: 245px;
-  padding: 57px 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  padding: 57px 10px 10px 10px;
   box-sizing: border-box;
   // left: 618px;
   // top: 420px;

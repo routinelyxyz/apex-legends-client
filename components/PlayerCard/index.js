@@ -5,7 +5,7 @@ import { PlayerLink } from '../../components/PlayerLink';
 
 const avatar = "http://opgg-static.akamaized.net/images/profile_icons/profileIcon3182.jpg";
 
-export const PlayerCard = ({ data, scaleSize, className, place = 1 }) => {
+export const PlayerCard = ({ data, scaleSize, className, horizontal, place = 1 }) => {
   const props = [
     { name: 'Kills', prop: 'kills' },
     { name: 'Damage', prop: 'damage' },
@@ -15,8 +15,9 @@ export const PlayerCard = ({ data, scaleSize, className, place = 1 }) => {
     <div {...applyCss(
       css.container,
       css[`top${place}`],
-      className,
-      scaleSize && css.scale
+      scaleSize && css.scale,
+      horizontal && css.horizontal,
+      className
     )}>
       <div className={css.avatar_container}>
         <img

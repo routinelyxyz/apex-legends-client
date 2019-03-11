@@ -4,11 +4,13 @@ import Link from 'next/link';
 import Head from 'next/head';
   // import Legend from "../../../components/Legend";
 import { HOST_URL, getStatic } from '../../../helpers';
+import { fetchify } from '../../../util/fetchify';
 
 import { HorizontalNav } from '../../../reusable/HorizontalNav';
 import { LegendAbility } from '../../../components/LegendAbility';
+import { PlayerCard } from '../../../components/PlayerCard';
 
-const LegendPage = ({ legend }) => {
+const LegendPage = ({ legend, top1 }) => {
   return (
     <div className={css.container}>
       <Head>
@@ -22,6 +24,10 @@ const LegendPage = ({ legend }) => {
           <h2 className={css.sub_heading}>
             {legend.title}
           </h2>
+          <PlayerCard
+            data={top1}
+            horizontal
+          />
         </div>
         <img
           src={getStatic(legend.img)}
@@ -49,9 +55,11 @@ const LegendPage = ({ legend }) => {
 }
 
 LegendPage.getInitialProps = async ({ query: { slug }}) => {
-  const data = await fetch(HOST_URL + `/legends/${slug}`);
-  const legend = await data.json();
-  return { legend }
+  const [top1, legend] = await Promise.all([
+    fetchify.get(`/stats/leaderboards?legend=${slug}&top1`).then(r => r.json()),
+    fetchify.get(`/legends/${slug}`).then(r => r.json())
+  ]);
+  return { legend, top1: top1.data[0] }
 }
 
 export default LegendPage;
