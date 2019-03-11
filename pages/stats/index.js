@@ -17,6 +17,7 @@ import { ProgressRing } from '../../components/ProgressRing';
 import { HorizontalNav, HorizontalNav2, StaticLink, HorizontalNavTab } from '../../reusable/HorizontalNav';
 import { LegendStats } from '../../components/LegendStats';
 import { StatsBanner } from '../../components/StatsBanner';
+import { StatsHistory } from '../../components/StatsHistory';
 
 const links = [
   {
@@ -180,11 +181,7 @@ const StatsPage = ({ name, url, platform, ...props }) => {
           },
           {
             title: 'Match history',
-            content: (
-              <>
-                Match history
-              </>
-            )
+            content: <StatsHistory player={stats.player || stats}/>
           },
           /*
           {

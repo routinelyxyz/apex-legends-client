@@ -9,6 +9,9 @@ import "../assets/css/global.scss";
 import dayjs from 'dayjs';
 dayjs.extend(relativeTime);
 import { loadSavedPlayersAsync } from '../store/actions-async/stats';
+import axios from 'axios';
+
+axios.defaults.baseURL = 'http://localhost:4000';
 
 import Layout from '../layouts';
 

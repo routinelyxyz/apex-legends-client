@@ -60,7 +60,7 @@
 .cards_container {
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
+  justify-content: space-around;
   flex-wrap: wrap;
   @include phone {
     flex-direction: column;
