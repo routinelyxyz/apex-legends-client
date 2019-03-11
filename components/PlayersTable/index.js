@@ -18,7 +18,7 @@ export const PlayersTable = ({ data, prop, renderRank = i => i + 1 }) => {
       </thead>
       <tbody>
         {data.map((row, index) => (
-          <tr key={row.id}>
+          <tr key={index}> 
             <td>{renderRank(index)}</td>
             <td>
               <PlayerLink player={row.player}>

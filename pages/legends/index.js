@@ -15,7 +15,12 @@ const LegendsPage = ({ legends }) => {
         Legends
       </h1>
       <ul className={css.legends}>
-        {legends.map(legend => <Legend legend={legend}/>)}
+        {legends.map(legend =>
+          <Legend
+            key={legend.id}
+            legend={legend}
+          />
+        )}
       </ul>
     </article>
   )
