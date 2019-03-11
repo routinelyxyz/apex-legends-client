@@ -16,6 +16,7 @@ const avatar = 'https://static-cdn.jtvnw.net/jtv_user_pictures/cef31105-8a6e-421
 import { ProgressRing } from '../../components/ProgressRing';
 import { HorizontalNav, HorizontalNav2, StaticLink, HorizontalNavTab } from '../../reusable/HorizontalNav';
 import { LegendStats } from '../../components/LegendStats';
+import { StatsBanner } from '../../components/StatsBanner';
 
 const links = [
   {
@@ -184,7 +185,13 @@ const StatsPage = ({ name, url, platform, ...props }) => {
                 Match history
               </>
             )
+          },
+          /*
+          {
+            title: 'Banner',
+            content: <StatsBanner playerId={stats.id || stats.player.id}/>
           }
+          */
         ]}
       >
         {/* {(tab, index) => (
