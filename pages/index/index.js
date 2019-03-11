@@ -10,6 +10,8 @@ import { fetchify } from '../../util/fetchify';
 
 import { PlayerCard } from '../../components/PlayerCard';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
+import { PlayersTable } from '../../components/PlayersTable';
+ 
 
 const avatar = 'https://opgg-static.akamaized.net/images/profile_icons/profileIcon3379.jpg?image=c_scale,w_38&v=1518361200';
 /*
@@ -43,8 +45,7 @@ const HomePage = ({ recentUpdates }) => {
   });
 
   const [top1, top2, top3, ...restPlayers] = recentUpdates;
-  const top3Players = [top1, top2, top3];
-  // const top3 = 
+  const top3Players = [top1, top2, top3]; 
 
   return (
     <article>
@@ -70,29 +71,11 @@ const HomePage = ({ recentUpdates }) => {
           </div>
         ))}
       </div>
-      <table className={css.rank_tab}>
-        <thead>
-          <th>Rank</th>
-          <th>Player</th>
-          <th>Kills</th>
-        </thead>
-        <tbody>
-          {transitions.map(({ item, key, props }) => (
-            <animated.tr key={key} style={props}>
-              <td>{key}</td>
-              <td className={css.player}>
-                <img
-                  src={avatar}
-                  className={css.avatar}
-                />
-                {item.player.name}
-              </td>
-              <td>2,3614</td>
-              {/* <td>{dayjs(item.updatedAt).fromNow()}</td> */}
-            </animated.tr> 
-          ))}
-        </tbody>
-      </table>
+      <PlayersTable
+        data={stats.slice(3, 10)}
+        renderRank={index => 4 + index}
+        prop="kills"
+      />
     </article>
   )
 }
