@@ -28,6 +28,12 @@
 	}
 }
 
+@mixin notPhone {
+  @media (min-width: 767px) {
+    @content;
+  }
+}
+
 %rwd-sizing {
   margin: 0 auto;
   box-sizing: border-box;

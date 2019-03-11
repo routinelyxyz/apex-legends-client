@@ -1,10 +1,11 @@
+@import "../../assets/css/rwd.scss";
 
 %triangle {
   position: absolute;
   content: "";
   background: #7ED7F8;
-  width: 30px;
-  height: 30px;
+  width: 27px;
+  height: 27px;
   transform: rotate(45deg);
   box-shadow: 0px 4px 40px rgba(0, 0, 0, 0.5);
 }
@@ -13,6 +14,16 @@
   margin: 30px auto;
   width: 195px;
   position: relative;
+  &.scale {
+    @include notPhone {
+      &.top1 .card {
+        min-height: 310px;
+      }
+      &.top2 .card {
+        min-height: 285px;
+      }
+    }
+  }
   &:before {
     position: absolute;
     content: "";
@@ -26,6 +37,40 @@
     background: linear-gradient(138.33deg, #9CECFB 6.03%, #65C7F7 54.77%, #0052D4 95.13%);
     box-shadow: 0px 0px 46px rgba(118, 179, 249, 0.348);
   }
+  &.top1 {
+    &:before {
+      background: linear-gradient(138.33deg, #FBE09C 6.03%, #F7D765 54.77%, #D46600 95.13%);
+      box-shadow: 0px 0px 36px rgba(255, 218, 85, 0.3), 0px 4px 6px rgba(226, 190, 61, 0.25);
+    }
+    $col: #FFE663;
+    .card:before { background: $col; }
+    .card:after { background: $col; }
+    .name:before { background: $col; }
+    .name:after { background: $col; }
+  }
+  &.top2 {
+    @include notPhone {
+      order: -1;
+    }
+  }
+  &.top3 {
+    // transform: scale(0.8);
+    // transition: transform .25s ease;
+    // &:hover { transform: scale(1); }
+    &:before {
+      background: linear-gradient(138.33deg, #C6FB9C 6.03%, #A5EB4B 40.49%, #0E6B44 95.13%);
+      box-shadow: 0px 0px 36px rgba(113, 183, 81, 0.348);
+    }
+    $col: #A8FF63;
+    .card:before { background: $col; }
+    .card:after { background: $col; }
+    .name:before { background: $col; }
+    .name:after { background: $col; }
+  }
+}
+
+.link:hover {
+  text-decoration: underline;
 }
 
 .avatar_container {

@@ -42,6 +42,10 @@ const HomePage = ({ recentUpdates }) => {
     leave: { opacity: 0 }
   });
 
+  const [top1, top2, top3, ...restPlayers] = recentUpdates;
+  const top3Players = [top1, top2, top3];
+  // const top3 = 
+
   return (
     <article>
       <Head>
@@ -50,7 +54,22 @@ const HomePage = ({ recentUpdates }) => {
       <div className={css.searcher}>
         <PlayerSearcher/>
       </div>
-      <PlayerCard/>
+      <h2 className={css.top_header}>Top of today</h2>
+      <div className={css.cards_container}>
+        {top3Players.map((stats, index) => (
+          <div className={css.card_container} key={index}>
+            <p className={css.place}>
+               {index + 1}
+            </p>
+            <PlayerCard
+              className={css.card}
+              place={index + 1}
+              data={stats}
+              scaleSize
+            />
+          </div>
+        ))}
+      </div>
       <table className={css.rank_tab}>
         <thead>
           <th>Rank</th>

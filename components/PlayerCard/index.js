@@ -1,15 +1,23 @@
 import css from './style.scss';
+import { applyCss } from '../../util';
+
+import { PlayerLink } from '../../components/PlayerLink';
 
 const avatar = "http://opgg-static.akamaized.net/images/profile_icons/profileIcon3182.jpg";
 
-export const PlayerCard = ({ player }) => {
-  const data = [
-    { name: 'Kills', value: 41 },
-    { name: 'Damage', value: 561 },
-    { name: 'Headshots', value: 12 },
+export const PlayerCard = ({ data, scaleSize, className, place = 1 }) => {
+  const props = [
+    { name: 'Kills', prop: 'kills' },
+    { name: 'Damage', prop: 'damage' },
+    { name: 'Headshots', prop: 'headshots' },
   ]
   return (
-    <div className={css.container}>
+    <div {...applyCss(
+      css.container,
+      css[`top${place}`],
+      className,
+      scaleSize && css.scale
+    )}>
       <div className={css.avatar_container}>
         <img
           className={css.avatar}
@@ -18,16 +26,20 @@ export const PlayerCard = ({ player }) => {
       </div>
       <div className={css.card}>
         <p className={css.name}>
-          RockAlone
+          <PlayerLink player={data.player}>
+            <a className={css.link}>
+              {data.player.name}
+            </a>
+          </PlayerLink>
         </p>
         <ul className={css.data_list}>
-          {data.map(({ name, value }) => (
+          {props.map(({ name, prop }) => (
             <li
               className={css.data_item}
               key={name}
             >
               <span className={css.prop}>{name}</span>
-              <span>{value}</span>
+              <span>{data[prop]}</span>
             </li>
           ))}
         </ul>
