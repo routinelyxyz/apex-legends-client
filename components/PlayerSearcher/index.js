@@ -113,10 +113,10 @@ const PlayerSearcher = ({ height = 250, ...props }) => {
             :
               <Menu>
                 <div className={css.content_container}>
-                  {Object.values(recentPlayers).map(PlayerItem)}
+                  {recentPlayers.map(PlayerItem)}
                 </div>
                 <div className={css.content_container}>
-                  {Object.values(favoritePlayers).map(PlayerItem)}
+                  {favoritePlayers.map(PlayerItem)}
                 </div>
                 <div>
                   <PhraseSelector

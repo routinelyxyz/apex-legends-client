@@ -5,8 +5,8 @@ import {
 
 const initialState = {
   storageLoaded: false,
-  favoritePlayers: {},
-  recentPlayers: {}
+  favoritePlayers: [],
+  recentPlayers: []
 }
 
 const stats = (state = initialState, action) => {
@@ -16,10 +16,7 @@ const stats = (state = initialState, action) => {
       const { [meta.target]: players } = state;
       return {
         ...state,
-        [meta.target]: {
-          ...players,
-          [payload.id]: payload
-        }
+        [meta.target]: payload
       }
     }
     case LOAD_SAVED_PLAYERS: {
@@ -27,8 +24,8 @@ const stats = (state = initialState, action) => {
       return {
         ...state,
         storageLoaded: true,
-        favoritePlayers: { ...state.favoritePlayers, ...favoritePlayers },
-        recentPlayers: { ...state.recentPlayers, ...recentPlayers }
+        favoritePlayers: [ ...state.favoritePlayers, ...favoritePlayers ],
+        recentPlayers: [ ...state.recentPlayers, ...recentPlayers ]
       }
     }
     default: return state;

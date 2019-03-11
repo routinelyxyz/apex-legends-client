@@ -55,7 +55,7 @@ const HomePage = ({ recentUpdates }) => {
       <div className={css.searcher}>
         <PlayerSearcher/>
       </div>
-      <h2 className={css.top_header}>Top of today</h2>
+      <h2 className={css.top_header}>Best players of day</h2>
       <div className={css.cards_container}>
         {top3Players.map((stats, index) => (
           <div className={css.card_container} key={index}>
