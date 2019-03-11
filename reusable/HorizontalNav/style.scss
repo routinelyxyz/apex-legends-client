@@ -9,6 +9,9 @@
   display: flex;
   // padding: 25px 30px;
   list-style-type: none;
+  &.margin {
+    margin: 40px 0;
+  }
 }
 
 .link {
@@ -17,6 +20,9 @@
   text-transform: uppercase;
   padding: 25px 40px;
   box-sizing: border-box;
+  &:hover {
+    cursor: pointer;
+  }
   &.active:after {
     opacity: 1;
   }
@@ -32,6 +38,6 @@
     opacity: 0;
   }
   &:first-child:after {
-    opacity: 1;
+    // opacity: 1;
   }
 }

@@ -14,7 +14,7 @@ import Head from 'next/head';
 const avatar = 'https://static-cdn.jtvnw.net/jtv_user_pictures/cef31105-8a6e-4211-a74b-2f0bbd9791fb-profile_image-70x70.png';
 
 import { ProgressRing } from '../../components/ProgressRing';
-import { HorizontalNav, HorizontalNav2, StaticLink } from '../../reusable/HorizontalNav';
+import { HorizontalNav, HorizontalNav2, StaticLink, HorizontalNavTab } from '../../reusable/HorizontalNav';
 import { LegendStats } from '../../components/LegendStats';
 
 const links = [
@@ -36,6 +36,11 @@ const links = [
   }
 ];
 
+const tabs = [
+  { title: 'Overview', content: <div>xd</div> },
+  { title: 'Match history', content: <div>12312321</div> },
+]
+
 const getStats = async (player, update = false) => {
   const { platform, name, id = '' } = player;
   const url = `/stats/${platform}/${encodeURI(name)}?id=${id}&update=${update}`;
@@ -54,6 +59,8 @@ const StatsPage = ({ name, url, platform, ...props }) => {
   const [to, setTo] = useState(() => initialTs - 1);
   const [isUpdating, setUpdating] = useState(false);
   const counter = to - now;
+  const histUrl = `/stats/${platform}/${encodeURI(name)}/history`;
+  const as = `/stats?platform=${platform}&name=${encodeURI(name)}&id=${stats.player && stats.player.id}/history`;
   // const historyUrl = `/stats/history/${platform}/${encodeURI(name)}?id=${stats.player.id}`;
 
   useEffect(() => {
@@ -143,14 +150,47 @@ const StatsPage = ({ name, url, platform, ...props }) => {
           {updateIn()}
         </div>
       </div>
-      <HorizontalNav>
+      {/* <HorizontalNav>
         <Link href={url}>
           <a>Overview</a>
         </Link>
-        <Link href={url + '/match-history'}>
+        <Link
+          href={histUrl}
+          as={as}
+        >
           <a>Match History</a>
         </Link>
-      </HorizontalNav>
+      </HorizontalNav> */}
+      <HorizontalNavTab
+        withMargin
+        tabs={[
+          {
+            title: 'Overview',
+            content: (
+              <>
+                {stats.legends.map(legendStats => (
+                  <LegendStats
+                    stats={legendStats}
+                    key={legendStats.id}
+                  />
+                ))}
+              </>
+            )
+          },
+          {
+            title: 'Match history',
+            content: (
+              <>
+                Match history
+              </>
+            )
+          }
+        ]}
+      >
+        {/* {(tab, index) => (
+          <div>{tab} {index}</div>
+        )} */}
+      </HorizontalNavTab>
       {/* <HorizontalNav2>
         <StaticLink
           title="Match history"
@@ -163,12 +203,6 @@ const StatsPage = ({ name, url, platform, ...props }) => {
           as={historyUrl}
         />
       </HorizontalNav2> */}
-      {stats.legends.map(legendStats => (
-        <LegendStats
-          stats={legendStats}
-          key={legendStats.id}
-        />
-      ))}
     </div>
   )
 }

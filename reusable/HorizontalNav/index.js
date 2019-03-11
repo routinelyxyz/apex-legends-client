@@ -1,5 +1,5 @@
 import css from './style.scss';
-import React from 'react';
+import React, { useState } from 'react';
 import { applyCss } from '../../util';
 import Link from 'next/link';
 import { withRouter } from 'next/router';
@@ -65,6 +65,33 @@ const HorizontalNav2 = ({ className, children, links, router }) => (
     </ul>
   </nav>
 )
+
+export const HorizontalNavTab = ({ tabs, withMargin, children = tab => tab }) => {
+  const [activeTab, setActiveTab] = useState(0);
+  return (
+    <>
+      <ul
+        {...applyCss(
+          css.nav_list,
+          withMargin && css.margin
+        )}
+      >
+        {tabs.map((tab, index) => (
+          <li
+            {...applyCss(css.link, activeTab === index ? css.active : '')}
+            onClick={() => {
+              setActiveTab(index)
+            }}
+            key={index}
+          >
+            {tab.title}
+          </li>
+        ))}
+      </ul>
+      {children(tabs[activeTab].content)}
+    </>
+  );
+}
 
 const NavWithRouter = withRouter(HorizontalNav2);
 

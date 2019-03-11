@@ -4,7 +4,7 @@ import { getStatic, statsPropTitles } from '../../helpers';
 export const LegendStats = ({ stats }) => {
   const { id, legend, ...data } = stats;
   return (
-    <div className={css.container}>
+    <div className={`box ${css.container}`}>
       <div className={css.legend_container}>
         <p className={css.legend_name}>
           {stats.legend.name}

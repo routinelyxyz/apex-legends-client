@@ -5,6 +5,7 @@ import '../assets/css/global.scss';
 import { withReduxStore } from '../middleware/with-redux-store';
 import { Provider } from 'react-redux';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import "../assets/css/global.scss";
 import dayjs from 'dayjs';
 dayjs.extend(relativeTime);
 import { loadSavedPlayersAsync } from '../store/actions-async/stats';
