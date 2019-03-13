@@ -59,7 +59,10 @@ export const applyCss = (...inputs) => ({
     .join(' ')
 });
 
-export const HOST_URL = 'http://localhost:4000';
+export const HOST_URL = process.env.NODE_ENV === 'production'
+  ? 'https://api.apex-legends.win'
+  : 'http://localhost:4000'
+
 export const STATIC = HOST_URL + '/static';
 
 export const getStatic = url => HOST_URL + '/static' + url;

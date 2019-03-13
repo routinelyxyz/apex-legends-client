@@ -24,10 +24,12 @@ const LegendPage = ({ legend, top1 }) => {
           <h2 className={css.sub_heading}>
             {legend.title}
           </h2>
-          <PlayerCard
-            data={top1}
-            horizontal
-          />
+          {top1 && 
+            <PlayerCard
+              data={top1}
+              horizontal
+            />
+          }
         </div>
         <img
           src={getStatic(legend.img)}

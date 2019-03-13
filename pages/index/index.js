@@ -44,8 +44,10 @@ const HomePage = ({ recentUpdates }) => {
     leave: { opacity: 0 }
   });
 
-  const [top1, top2, top3, ...restPlayers] = recentUpdates;
-  const top3Players = [top1, top2, top3]; 
+  const top3Players = recentUpdates.slice(0, 3);
+  const restPlayers = recentUpdates.slice(3, recentUpdates.length);
+  // const [top1, top2, top3, ...restPlayers] = recentUpdates;
+  // const top3Players = [top1, top2, top3]; 
 
   return (
     <article>

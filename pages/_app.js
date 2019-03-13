@@ -10,8 +10,9 @@ import dayjs from 'dayjs';
 dayjs.extend(relativeTime);
 import { loadSavedPlayersAsync } from '../store/actions-async/stats';
 import axios from 'axios';
+import { HOST_URL } from '../helpers';
 
-axios.defaults.baseURL = 'http://localhost:4000';
+axios.defaults.baseURL = HOST_URL;
 
 import Layout from '../layouts';
 
