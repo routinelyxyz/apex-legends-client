@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { weaponProps, getUrl, ammoNames, weaponPropTitles, getStatic } from '../../../helpers';
 import Link from 'next/link';
 import Head from 'next/head';
+import axios from 'axios';
 
 import { HorizontalNav } from '../../../reusable/HorizontalNav';
 import { ProgressBar } from '../../../reusable/ProgressBar';
@@ -117,14 +118,14 @@ const WeaponPage = ({ slug, item, ratios }) => {
 
 WeaponPage.getInitialProps = async ({ query: { slug }}) => {
   const [itemData, ratiosData] = await Promise.all([
-    fetch(getUrl(`/items/weapon/${slug}`)),
-    fetch(getUrl('/items/weapons/ratio'))
+    axios.get(`/items/weapon/${slug}`),
+    axios.get('/items/weapon/ratio'),
   ]);
-  const [item, ratios] = await Promise.all([
-    itemData.json(),
-    ratiosData.json()
-  ]);
-  return { item, slug, ratios };
+
+  const item = itemData.data.data;
+  const ratios = ratiosData.data.data;
+
+  return { slug, item, ratios };
 }
 
 export default WeaponPage;

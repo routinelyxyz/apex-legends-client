@@ -8,6 +8,7 @@ import { withRouter } from 'next/router';
 import qs from 'querystringify';
 import { debounce, useDebounce } from '../../util';
 import Head from 'next/head';
+import axios from 'axios';
 
 import Item from '../../reusable/Item';
 import Input from '../../reusable/Input';
@@ -261,9 +262,8 @@ const WeaponsPage = ({ items, router }) => {
 };
 
 WeaponsPage.getInitialProps = async () => {
-  const data = await fetch('http://localhost:4000/items/weapons');
-  const items = await data.json();
-  return { items }
+  const { data } = await axios.get('/items/weapons');
+  return { items: data.data };
 }
 
 export default withRouter(WeaponsPage);
