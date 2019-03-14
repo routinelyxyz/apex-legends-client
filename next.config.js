@@ -8,6 +8,8 @@ const nextOffline = require('next-offline')
 const NextWorkboxWebpackPlugin = require('next-workbox-webpack-plugin');
 const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
 
+const CDN_URL = 'https://api.apex-legends.win';
+
 const nextConfig = {
   workboxOpts: {
     swDest: 'static/service-worker.js',
@@ -27,7 +29,19 @@ const nextConfig = {
           },
         },
       },
-    ],
+      {
+        urlPattern: CDN_URL + '/items/.*',
+        handler: 'cacheFirst'
+      },
+      {
+        urlPattern: CDN_URL + '/legends/.*',
+        handler: 'cacheFirst'
+      },
+      {
+        urlPattern: CDN_URL + '/leaderboards/.*',
+        handler: 'staleWhileRevalidate'
+      }
+    ]
   },
 }
 
@@ -43,14 +57,14 @@ const workbox = {
 module.exports = withPlugins(
   [
     [withSass, { cssModules: true }],
-    // [nextOffline, nextConfig]
+    [nextOffline, nextConfig]
   ],
   {
     target: 'serverless',
     webpack(config, { isServer, dev, buildId, config: { distDir }}) {
       const plugins = [...config.plugins];
 
-      if (!isServer && !dev) {
+      if (false && !isServer && !dev) {
         config.plugins.push(
           new NextWorkboxWebpackPlugin({ distDir, buildId, ...workbox })
         );
