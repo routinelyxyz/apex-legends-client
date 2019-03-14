@@ -80,6 +80,7 @@
   list-style-type: none;
   min-width: 400px;
   @include phone {
+    min-width: auto;
     width: 100%;
   }
 }
