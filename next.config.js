@@ -7,7 +7,8 @@ const nextOffline = require('next-offline')
 // const withOffline = require('next-offline');
 const NextWorkboxWebpackPlugin = require('next-workbox-webpack-plugin');
 const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
-const withManifest = require('next-manifest')
+const withManifest = require('next-manifest');
+const { resolve } = require('path');
 
 const CDN_URL = 'https://api.apex-legends.win';
 
@@ -64,7 +65,7 @@ const manifest = {
   theme_color: "#23232F",
   description: "Apex Legends stats, leaderboards, interactive and detailed items explorer, legend details. Quick updates with live and daily match tracking.",
   icons: {
-    src: './assets/pwa-icon.png',
+    src: resolve(process.cwd(), './assets/pwa-icon.png'),
     cache: true
   }
 }
@@ -72,7 +73,7 @@ const manifest = {
 module.exports = withPlugins(
   [
     [withSass, { cssModules: true }],
-    [withManifest, ]
+    // [withManifest, manifest]
     [nextOffline, nextConfig]
   ],
   {
