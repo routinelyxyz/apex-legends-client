@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Head from 'next/head';
 import axios from 'axios';
 
-import { HorizontalNav } from '../../../reusable/HorizontalNav';
+import { HorizontalNavTab } from '../../../reusable/HorizontalNav';
 import { ProgressBar } from '../../../reusable/ProgressBar';
 
 const halfLength = Math.ceil(weaponProps.length / 2);
@@ -88,30 +88,34 @@ const WeaponPage = ({ slug, item, ratios }) => {
           />
         </figure>
       </div>
-      <HorizontalNav>
-        <Link href={`/items/weapons/${slug}`}>
-          <a>Overview</a>
-        </Link>
-      </HorizontalNav>
-      <article className={css.overview_container}>
-        {splittedProps.map((propsCol, index) => (
-          <ul className={css.props_list} key={index}>
-            {propsCol.map(([prop, name, parser]) => (
-              <li
-                key={prop}
-                className={css.prop_row}
-              >
-                <span className={css.prop_name}>
-                  {name}
-                </span>
-                <span className={css.prop_value}>
-                  {parser ? parser(item[prop]) : item[prop]}
-                </span>
-              </li>
-            ))}
-          </ul>
-        ))}
-      </article>
+      <HorizontalNavTab
+        tabs={[
+          {
+            title: 'Overview',
+            content: (
+              <article className={css.overview_container}>
+                {splittedProps.map((propsCol, index) => (
+                  <ul className={css.props_list} key={index}>
+                    {propsCol.map(([prop, name, parser]) => (
+                      <li
+                        key={prop}
+                        className={css.prop_row}
+                      >
+                        <span className={css.prop_name}>
+                          {name}
+                        </span>
+                        <span className={css.prop_value}>
+                          {parser ? parser(item[prop]) : item[prop]}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ))}
+              </article>
+            )
+          }
+        ]}
+      />
     </div>
   )
 }
@@ -119,11 +123,11 @@ const WeaponPage = ({ slug, item, ratios }) => {
 WeaponPage.getInitialProps = async ({ query: { slug }}) => {
   const [itemData, ratiosData] = await Promise.all([
     axios.get(`/items/weapon/${slug}`),
-    axios.get('/items/weapon/ratio'),
+    axios.get('/items/weapons/ratio'),
   ]);
 
-  const item = itemData.data.data;
-  const ratios = ratiosData.data.data;
+  const item = itemData.data;
+  const ratios = ratiosData.data;
 
   return { slug, item, ratios };
 }
