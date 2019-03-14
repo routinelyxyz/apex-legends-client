@@ -13,6 +13,7 @@ import axios from 'axios';
 import { HOST_URL } from '../helpers';
 
 axios.defaults.baseURL = HOST_URL;
+axios.defaults.timeout = 9000;
 
 import Layout from '../layouts';
 

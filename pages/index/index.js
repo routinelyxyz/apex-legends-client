@@ -7,6 +7,7 @@ import { animated, useTransition, config } from 'react-spring';
 import Head from 'next/head';
 import { useDevice, useWindowSize } from '../../hooks';
 import { fetchify } from '../../util/fetchify';
+import axios from 'axios';
 
 import { PlayerCard } from '../../components/PlayerCard';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
@@ -90,16 +91,16 @@ const HomePage = ({ recentUpdates }) => {
 
 HomePage.getInitialProps = async () => {
   try {
-    const res = await fetch(getUrl('/stats/recently-updated'));
-    const data = await res.json();
-    const recentUpdates = data.reverse();
+    /* Refactor to data */
+    const recentsRes = await axios.get('/stats/recently-updated');
+    const recentUpdates = recentsRes.data.reverse();
   
-    const res2 = await fetchify.get('/stats/trending');
-    const trending = await res2.json();
+    const trendingRes = await axios.get('/stats/trending');
+    const trending = trendingRes.data;
 
     return { recentUpdates, trending };
 
-  } catch {
+  } catch(err) {
     return { recentUpdates: [], trending: [] }
   }
 }
