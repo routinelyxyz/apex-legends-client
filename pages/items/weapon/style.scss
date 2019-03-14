@@ -78,7 +78,7 @@
   margin: 0;
   padding: 0;
   list-style-type: none;
-  min-width: 400px;
+  min-width: 350px;
   @include phone {
     min-width: auto;
     width: 100%;
@@ -121,4 +121,8 @@
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
+  padding: 15px 0;
+  @include phone {
+    padding: 10px 0;
+  }
 }
