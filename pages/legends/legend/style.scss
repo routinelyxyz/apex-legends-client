@@ -39,6 +39,8 @@
   align-items: flex-start;
   justify-content: space-around;
   flex-wrap: wrap;
+  padding: 10px;
+  margin: 20px 0;
 }
 
 .legend_img {
@@ -62,8 +64,6 @@
 
 .hor_nav {
   position: relative;
-  width: 100%;
-  margin: 0 !important;
   top: -69px;
 }
 

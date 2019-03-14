@@ -6,7 +6,7 @@ import Head from 'next/head';
 import { HOST_URL, getStatic } from '../../../helpers';
 import { fetchify } from '../../../util/fetchify';
 
-import { HorizontalNav } from '../../../reusable/HorizontalNav';
+import { HorizontalNav, HorizontalNavTab } from '../../../reusable/HorizontalNav';
 import { LegendAbility } from '../../../components/LegendAbility';
 import { PlayerCard } from '../../../components/PlayerCard';
 
@@ -24,7 +24,7 @@ const LegendPage = ({ legend, top1 }) => {
           <h2 className={css.sub_heading}>
             {legend.title}
           </h2>
-          {top1 && 
+          {false && 
             <PlayerCard
               data={top1}
               horizontal
@@ -36,7 +36,25 @@ const LegendPage = ({ legend, top1 }) => {
           className={css.legend_img}
         />
       </div>
-      <HorizontalNav className={css.hor_nav}>
+      <HorizontalNavTab
+        navCss={css.hor_nav}
+        tabs={[
+          {
+            title: 'Abilities',
+            content: (
+              <ul className={css.abilities}>
+                {legend.abilities.map(ability => (
+                  <LegendAbility
+                    key={ability.id}
+                    ability={ability}
+                  />
+                ))}
+              </ul>
+            )
+          }
+        ]}
+      />
+      {/* <HorizontalNav className={css.hor_nav}>
         <Link href={``}>
           <a>Abilities</a>
         </Link>
@@ -51,7 +69,7 @@ const LegendPage = ({ legend, top1 }) => {
             ability={ability}
           />
         ))}
-      </ul>
+      </ul> */}
     </div>
   )
 }

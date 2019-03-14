@@ -66,13 +66,14 @@ const HorizontalNav2 = ({ className, children, links, router }) => (
   </nav>
 )
 
-export const HorizontalNavTab = ({ tabs, withMargin, children = tab => tab }) => {
+export const HorizontalNavTab = ({ tabs, className, navCss, withMargin, children = tab => tab }) => {
   const [activeTab, setActiveTab] = useState(0);
   return (
-    <>
+    <div className={className}>
       <ul
         {...applyCss(
           css.nav_list,
+          navCss,
           withMargin && css.margin
         )}
       >
@@ -89,7 +90,7 @@ export const HorizontalNavTab = ({ tabs, withMargin, children = tab => tab }) =>
         ))}
       </ul>
       {children(tabs[activeTab].content)}
-    </>
+    </div>
   );
 }
 

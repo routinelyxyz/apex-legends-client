@@ -20,10 +20,6 @@ body {
   // overflow-x: hidden;
 }
 
-.app_content {
-  @extend %rwd-sizing;
-}
-
 .app_container {
   position: relative;
   min-height: 100vh;
@@ -39,6 +35,11 @@ body {
   // background-repeat: no-repeat;
   // overflow: hidden;
   color: #fff;
+  overflow-x: hidden;
+}
+
+.app_content {
+  @extend %rwd-sizing;
 }
 
 .disable_scroll {
