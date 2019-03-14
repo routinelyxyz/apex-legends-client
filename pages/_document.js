@@ -1,4 +1,5 @@
 import Document, { Head, Main, NextScript } from 'next/document';
+import Manifest from 'next-manifest/manifest';
 
 const title = 'Apex Legends Stats & Items Explorer & Leaderboards & Legends';
 const description = 'Apex Legends stats, leaderboards, interactive and detailed items explorer, legend details. Quick updates with live and daily match tracking.';
@@ -11,8 +12,9 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <html>
+      <html lang="en">
         <Head>
+          <Manifest/>
           <meta charset="UTF-8" key="charset"/>
           <meta name="viewport" content="width=device-width, initial-scale=1" key="viewport"/>
           <meta name="description" content={description} key="description"/>
