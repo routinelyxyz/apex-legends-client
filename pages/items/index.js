@@ -175,7 +175,7 @@ const WeaponsPage = ({ items, router }) => {
       <Head>
         <title>Weapons explorer | Apex-Legends.win</title>
       </Head>
-      <MobileModal title={`Show filters ${updateKey === initialUpdateKey ? '' : '(*)'}`}>
+      <MobileModal title={'Show filters ' + (updateKey === initialUpdateKey ? '' : '(*)')}>
         <nav className={css.search_filters}>
           <label className={css.filters_searcher}>
             <h3 className={css.h3}>Name</h3>

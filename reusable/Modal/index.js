@@ -6,12 +6,12 @@ export const ModalSlide = ({ children, opened, onClose, title }) => {
   return (
     <div
       className={css.container}
-      onClick={() => onClose()}
+      onClick={e =>
+        e.target === e.currentTarget && onClose() 
+      }
     >
       {title && <h3>{title}</h3>}
-      <div
-        className={css.slider}
-      >
+      <div className={css.slider}>
         {children}
       </div>
     </div>
