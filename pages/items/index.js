@@ -24,7 +24,8 @@ const debounceA = debounce(500);
 const [debounceB, timeoutB] = useDebounce(500);
 const sortProps = [
   ['name', 'Name'],
-  ...weaponProps
+  ...weaponProps,
+  ['ammoType', 'Ammo type']
 ];
 const initialSort = 'name';
 
@@ -92,6 +93,9 @@ const WeaponsPage = ({ items, router }) => {
 
   const updateKey = phrase + selectedTypeNames.length + selectedAmmoNames.length + sortProp + sortAsc;
 
+  const ammoTypeNames = useMemo(() => 
+    Object.keys(selectedAmmoTypes)
+  , []);
 
   const filteredWeapons = useMemo(() => items
     .filter(item =>
@@ -109,6 +113,12 @@ const WeaponsPage = ({ items, router }) => {
       const sortDir = sortAsc ? 1 : -1;
       if (sortProp === 'name') {
         return (a[sortProp] > b[sortProp] ? 1 : -1) * sortDir;
+      }
+      if (sortProp === 'ammoType') {
+        const indexA = ammoTypeNames.indexOf(a.ammo.name);
+        const indexB = ammoTypeNames.indexOf(b.ammo.name);
+
+        return (indexA > indexB ? 1 : -1) * sortDir;
       }
       return (a[sortProp] - b[sortProp]) * sortDir;
     })
