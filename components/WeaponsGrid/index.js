@@ -12,14 +12,15 @@ export const WeaponsGrid = ({ items }) => {
   const itemRef = useRef();
   const [first, setFirst] = useState();
   const [deltaXX, setDeltaX] = useState(0);
-
+  const afterInitialRender = useMounted();
 
   const [deltaY, setDeltaY] = useState(0);
 
   const transitions = useTransition(items, item => item.id, {
     from: { opacity: 0, transform: 'scale(0)' },
     enter: { opacity: 1, transform: 'scale(1)' },
-    leave: { position: 'absolute', transform: 'scale(0)', opacity: 0 }
+    leave: { position: 'absolute', transform: 'scale(0)', opacity: 0 },
+    immediate: !afterInitialRender
   });
 
   useEffect(() => {
