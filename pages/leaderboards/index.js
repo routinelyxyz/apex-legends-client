@@ -152,37 +152,6 @@ const LeadeboardsPage = ({ data, query, legends, router }) => {
           prop={prop}
           renderRank={index => (index + 1) + (page - 1) * perPage}
         />
-        <table className={css.players_table}>
-          <thead>
-            <tr>
-              <th className={css.rank}>Rank</th>
-              <th>Player</th>
-              <th className={css.head_prop}>
-                {statsPropTitles[prop] || prop}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.data.map((record, index) => (
-              <tr key={record.id}>
-                <td>{(index + 1) + (page - 1) * perPage}</td>
-                <td className={css.player}>
-                  <Link
-                    href={`/stats?id=${record.player.id}`}
-                    as={`/stats/${record.player.platform}/${encodeURI(record.player.name)}`}
-                  >
-                    <a>
-                      {record.player.name}
-                    </a>
-                  </Link>
-                </td>
-                <td className={css.prop_val}>
-                  {Number(record[prop]).toLocaleString()}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </Navigation>
     </div>
   )
