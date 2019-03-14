@@ -263,7 +263,7 @@ const WeaponsPage = ({ items, router }) => {
 
 WeaponsPage.getInitialProps = async () => {
   const { data } = await axios.get('/items/weapons');
-  return { items: data.data };
+  return { items: data };
 }
 
 export default withRouter(WeaponsPage);

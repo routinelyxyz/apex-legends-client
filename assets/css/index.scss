@@ -4,6 +4,9 @@ html {
   background-color: #23232F;
 }
 
+.wrapper {
+
+}
 body {
   font-family: Cabin, sans-serif;
   margin: 0;
@@ -13,22 +16,31 @@ body {
     color: #fff;
     text-decoration: none;
   }
-  overflow-x: hidden;
-  .app_container {
-    min-height: 100vh;
-    $bg-color: #23232F;
-    background: $bg-color;
-    background: #23232F url("/static/bgfinal.jpg") no-repeat top center;
-    // background: $bg-color radial-gradient(
-    //   ellipse at top,
-    //   rgb(43, 74, 160),
-    //   $bg-color 72%
-    // );
-    // background-size: 100vw 45vh;
-    // background-repeat: no-repeat;
-    color: #fff;
-  }
-  .app_content {
-    @extend %rwd-sizing;
-  }
+  // overflow: hidden;
+  // overflow-x: hidden;
+}
+
+.app_content {
+  @extend %rwd-sizing;
+}
+
+.app_container {
+  position: relative;
+  min-height: 100vh;
+  $bg-color: #23232F;
+  background: $bg-color;
+  background: #23232F url("/static/bgfinal.jpg") no-repeat top center;
+  // background: $bg-color radial-gradient(
+  //   ellipse at top,
+  //   rgb(43, 74, 160),
+  //   $bg-color 72%
+  // );
+  // background-size: 100vw 45vh;
+  // background-repeat: no-repeat;
+  // overflow: hidden;
+  color: #fff;
+}
+
+.disable_scroll {
+  overflow: hidden;
 }

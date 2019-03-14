@@ -5,6 +5,7 @@ import { applyCss } from '../../helpers';
 
 import { PlayerSearcher } from '../PlayerSearcher';
 import { NavLink } from '../../reusable/Elements';
+import { HeaderSearcher } from '../HeaderSearcher';
 
 const navigationLinks = [
   {
@@ -43,6 +44,7 @@ const navigationLinks = [
 export const Header = ({ route }) => {
   return (
     <header className={css.container}>
+      {/* <HeaderSearcher/> */}
       <div className={css.logo}>
         Apex-Legends.win
       </div>

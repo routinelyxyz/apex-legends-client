@@ -31,15 +31,15 @@ class MyApp extends App {
   componentDidMount() {
     LoadFonts();
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then(registration => {
-          console.log('service worker registration successful')
-          console.log(registration)
-        })
-        .catch(err => {
-          console.warn('service worker registration failed', err.message)
-        });
+      // navigator.serviceWorker
+      //   .register('/sw.js')
+      //   .then(registration => {
+      //     console.log('service worker registration successful')
+      //     console.log(registration)
+      //   })
+      //   .catch(err => {
+      //     console.warn('service worker registration failed', err.message)
+      //   });
     }
     this.props.store.dispatch(
       loadSavedPlayersAsync()
