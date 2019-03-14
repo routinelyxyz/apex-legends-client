@@ -1,4 +1,17 @@
 
+.not_found {
+  text-align: center;
+  margin: 50px 0;
+  .not_found_btn {
+    border-radius: 4px;
+    background: #6770FA;
+    border-style: none;
+    color: #fff;
+    padding: 12px 17px;
+    cursor: pointer;
+    font-family: Cabin;
+  }
+}
 
 .players_table {
   border-collapse: collapse;

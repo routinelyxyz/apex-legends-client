@@ -43,6 +43,11 @@ const LeadeboardsPage = ({ data, query, legends, router }) => {
     setLegend(value);
   }
 
+  const clearFilters = () => {
+    setPlatform(initialPlatform);
+    setLegend(initialLegend);
+    setProp(initialProp);
+  }
 
   useEffect(() => {
     if (isFetching || !isMounted) return;
@@ -151,6 +156,7 @@ const LeadeboardsPage = ({ data, query, legends, router }) => {
           data={data.data}
           prop={prop}
           renderRank={index => (index + 1) + (page - 1) * perPage}
+          clearFilters={clearFilters}
         />
       </Navigation>
     </div>

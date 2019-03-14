@@ -1,10 +1,26 @@
 import css from './style.scss';
+import { statsTitlesMap } from '../../helpers'
 
 import { PlayerLink } from '../../components/PlayerLink';
 
 const avatar = 'https://opgg-static.akamaized.net/images/profile_icons/profileIcon3379.jpg?image=c_scale,w_38&v=1518361200';
 
-export const PlayersTable = ({ data, prop, renderRank = i => i + 1 }) => {
+export const PlayersTable = ({ data, prop, clearFilters, renderRank = i => i + 1 }) => {
+  if (!data.length) return (
+    <div className={css.not_found}>
+      <p className={css.not_found_title}>
+        No players were found for provided filters
+      </p>
+      {clearFilters && (
+        <button
+          className={css.not_found_btn}
+          onClick={clearFilters}
+        >
+          Clear filters
+        </button>
+      )}
+    </div>
+  )
   return (
     <table className={css.players_table}>
       <thead>
@@ -12,7 +28,7 @@ export const PlayersTable = ({ data, prop, renderRank = i => i + 1 }) => {
           <th>Rank</th>
           <th>Player</th>
           <th className={css.prop_name}>
-            {prop}
+            {statsTitlesMap[prop] || prop}
           </th>
         </tr>
       </thead>
