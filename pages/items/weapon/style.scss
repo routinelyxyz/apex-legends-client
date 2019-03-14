@@ -9,6 +9,19 @@
   }
 }
 
+.header_details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 50px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  @include phone {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
 .heading {
   font-size: 40px;
   margin: 0;
@@ -54,8 +67,15 @@
   }
 }
 
+.heading_container {
+  margin-right: 25px;
+}
+
 .ammo_container {
-  margin: 25px 0 40px 0;
+  margin: 10px 0;
+  @include phone {
+    margin: 8px 0;
+  }
   display: inline-block;
   .ammo_type {
     margin: 8px 0;
@@ -69,7 +89,7 @@
     display: block;
     margin: 0 auto;
     @include small {
-      width: 55px;
+      width: 50px;
     }
   }
 }

@@ -40,32 +40,36 @@ const WeaponPage = ({ slug, item, ratios }) => {
       </Head>
       <div className={css.header}>
         <div>
-          <h1 className={css.heading}>
-            {item.name}
-          </h1>
-          <p className={css.item_category}>
-            <Link href={{ pathname: `/items`, query: { category: item.type }}}>
-              <a className={css.category_link}>
-                {item.type}
-              </a>
-            </Link>
-          </p>
-          <div className={css.ammo_container}>
-            <p className={css.ammo_type}>
-              {ammoName}
-            </p>
-            <Link
-              href={`/items?ammo=${item.ammo.name}`}
-            >
-              <a>
-                <img
-                  className={css.ammo_img}
-                  alt={`Apex Legends ${item.ammo.name} ammo`}
-                  title={ammoName}
-                  src={getStatic(item.ammo.img)}
-                />
-              </a>
-            </Link>
+          <div className={css.header_details}>
+            <div className={css.heading_container}>
+              <h1 className={css.heading}>
+                {item.name}
+              </h1>
+              <p className={css.item_category}>
+                <Link href={{ pathname: `/items`, query: { category: item.type }}}>
+                  <a className={css.category_link}>
+                    {item.type}
+                  </a>
+                </Link>
+              </p>
+            </div>
+            <div className={css.ammo_container}>
+              <p className={css.ammo_type}>
+                {ammoName}
+              </p>
+              <Link
+                href={`/items?ammo=${item.ammo.name}`}
+              >
+                <a>
+                  <img
+                    className={css.ammo_img}
+                    alt={`Apex Legends ${item.ammo.name} ammo`}
+                    title={ammoName}
+                    src={getStatic(item.ammo.img)}
+                  />
+                </a>
+              </Link>
+            </div>
           </div>
           <div className={css.stats_bars}>
             {calcedRatio.map(({ name, value }) => (
