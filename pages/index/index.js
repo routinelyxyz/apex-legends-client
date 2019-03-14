@@ -89,14 +89,19 @@ const HomePage = ({ recentUpdates }) => {
 }
 
 HomePage.getInitialProps = async () => {
-  const res = await fetch(getUrl('/stats/recently-updated'));
-  const data = await res.json();
-  const recentUpdates = data.reverse();
+  try {
+    const res = await fetch(getUrl('/stats/recently-updated'));
+    const data = await res.json();
+    const recentUpdates = data.reverse();
+  
+    const res2 = await fetchify.get('/stats/trending');
+    const trending = await res2.json();
 
-  const res2 = await fetchify.get('/stats/trending');
-  const trending = await res2.json();
+    return { recentUpdates, trending };
 
-  return { recentUpdates, trending };
+  } catch {
+    return { recentUpdates: [], trending: [] }
+  }
 }
 
 export default HomePage;
