@@ -4,6 +4,7 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  overflow-x: hidden;
   @include phone {
     flex-direction: column;
   }
@@ -72,9 +73,9 @@
 }
 
 .ammo_container {
-  margin: 10px 0;
+  margin: 10px 10px 10px 0;
   @include phone {
-    margin: 8px 0;
+    margin: 8px 8px 8px 0;
   }
   display: inline-block;
   .ammo_type {
