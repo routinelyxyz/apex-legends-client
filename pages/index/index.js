@@ -57,27 +57,33 @@ const HomePage = ({ recentUpdates }) => {
       <div className={css.searcher}>
         <PlayerSearcher/>
       </div>
-      <h2 className={css.top_header}>Best players of day</h2>
-      <div className={css.cards_container}>
-        {top3Players.map((stats, index) => (
-          <div className={css.card_container} key={index}>
-            <p className={css.place}>
-               {index + 1}
-            </p>
-            <PlayerCard
-              className={css.card}
-              place={index + 1}
-              data={stats}
-              scaleSize
-            />
+      {!!top3Players.length && (
+        <>
+          <h2 className={css.top_header}>Best players of day</h2>
+          <div className={css.cards_container}>
+            {top3Players.map((stats, index) => (
+              <div className={css.card_container} key={index}>
+                <p className={css.place}>
+                  {index + 1}
+                </p>
+                <PlayerCard
+                  className={css.card}
+                  place={index + 1}
+                  data={stats}
+                  scaleSize
+                />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <PlayersTable
-        data={stats.slice(3, 10)}
-        renderRank={index => 4 + index}
-        prop="kills"
-      />
+          {!!restPlayers.length && (
+            <PlayersTable
+              data={restPlayers}
+              renderRank={index => 4 + index}
+              prop="kills"
+            />
+          )}
+        </>
+      )}
     </article>
   )
 }
