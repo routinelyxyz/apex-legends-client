@@ -92,10 +92,11 @@ const HomePage = ({ recentUpdates }) => {
 HomePage.getInitialProps = async () => {
   try {
     /* Refactor to data */
-    const recentsRes = await axios.get('/stats/recently-updated');
+    const options = { timeout: 700 };
+    const recentsRes = await axios.get('/stats/recently-updated', options);
     const recentUpdates = recentsRes.data.reverse();
   
-    const trendingRes = await axios.get('/stats/trending');
+    const trendingRes = await axios.get('/stats/trending', options);
     const trending = trendingRes.data;
 
     return { recentUpdates, trending };
