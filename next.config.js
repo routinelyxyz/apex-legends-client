@@ -9,6 +9,7 @@ const NextWorkboxWebpackPlugin = require('next-workbox-webpack-plugin');
 const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
 const withManifest = require('next-manifest');
 const { resolve } = require('path');
+const withBundleAnalyzer = require("@zeit/next-bundle-analyzer");
 
 const CDN_URL = 'https://api.apex-legends.win';
 
@@ -74,7 +75,23 @@ module.exports = withPlugins(
   [
     [withSass, { cssModules: true }],
     // [withManifest, manifest]
-    [nextOffline, nextConfig]
+    [nextOffline, nextConfig],
+    /*
+    [withBundleAnalyzer, {
+      analyzeServer: ["server", "both"].includes(process.env.BUNDLE_ANALYZE),
+      analyzeBrowser: ["browser", "both"].includes(process.env.BUNDLE_ANALYZE),
+      bundleAnalyzerConfig: {
+        server: {
+          analyzerMode: 'static',
+          reportFilename: '../bundles/server.html'
+        },
+        browser: {
+          analyzerMode: 'static',
+          reportFilename: '../bundles/client.html'
+        }
+      }
+    }]
+    */
   ],
   {
     target: 'serverless',
