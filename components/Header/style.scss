@@ -1,5 +1,16 @@
 @import "../../assets/css/rwd.scss";
 
+.btn {
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: none;
+  > img {
+    width: 25px;
+    height: 25px;
+  }
+}
+
 .container {
   padding: 10px;
   display: flex;

@@ -6,6 +6,7 @@ import { applyCss } from '../../helpers';
 import { PlayerSearcher } from '../PlayerSearcher';
 import { NavLink } from '../../reusable/Elements';
 import { HeaderSearcher } from '../HeaderSearcher';
+import { TabNavigator } from '../TabNavigator';
 
 const navigationLinks = [
   {
@@ -41,9 +42,50 @@ const navigationLinks = [
   }
 ]
 
+
 export const Header = ({ route }) => {
+  const [op, setOp] = useState(true);
+  const [phrase, setPhrase] = useState('');
+
   return (
     <header className={css.container}>
+      <button
+        className={css.btn}
+        onClick={() => setOp(!op)}
+      >
+        <img src="/static/img/loupe.svg"/>
+      </button>
+      {op && (
+        <TabNavigator
+          pages={[
+            {
+              id: 'Home',
+              header: 'Main page',
+              content: (({ goTo }) => (
+                <>
+                  Ctx1`
+                  <a onClick={() => goTo('Home/Settings')}>
+                    Go to settings
+                  </a>
+                </>
+              )),
+              children: [
+                {
+                  id: 'Settings',
+                  content: ({ goTo }) => (
+                    <>
+                      <a onClick={() => goTo('Home')}>
+                        Go to Home
+                      </a>
+                    </>
+                  ),
+                  children: [{ id: 'Account', content: 'ABC' }]
+                }
+              ]
+            }
+          ]}
+        />
+      )}
       {/* <HeaderSearcher/> */}
       <div className={css.logo}>
         Apex-Legends.win
