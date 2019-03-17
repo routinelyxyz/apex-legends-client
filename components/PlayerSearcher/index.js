@@ -1,7 +1,7 @@
 import css from './style.scss';
 import { useState } from 'react';
 import { debounce } from '../../util';
-import { getUrl } from '../../helpers';
+import { getUrl, applyCss } from '../../helpers';
 import useClickOutside from 'click-outside-hook';
 import { animated, useTransition, config } from 'react-spring';
 import { connect } from 'react-redux';
@@ -40,7 +40,7 @@ const PlayerItem = player => (
   />
 );
 
-const PlayerSearcher = ({ height = 250, ...props }) => {
+const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
   const [phrase, setPhrase] = useState('');
   const [focused, setFocused] = useState(false);
   const [playersFound, setPlayersFound] = useState([]);
@@ -81,7 +81,10 @@ const PlayerSearcher = ({ height = 250, ...props }) => {
 
   return (
     <div
-      className={css.container}
+      {...applyCss(
+        css.container,
+        pageMode && css.page_mode
+      )}
       ref={ref}
     >
       <BasicInput

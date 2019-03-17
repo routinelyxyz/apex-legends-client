@@ -18,6 +18,7 @@ import { HorizontalNav, HorizontalNav2, StaticLink, HorizontalNavTab } from '../
 import { LegendStats } from '../../components/LegendStats';
 import { StatsBanner } from '../../components/StatsBanner';
 import { StatsHistory } from '../../components/StatsHistory';
+import { PlayerSearcher } from '../../components/PlayerSearcher';
 
 const links = [
   {
@@ -54,8 +55,20 @@ const getStats = async (player, update = false) => {
 const initialTs = getTs();
 const countdown = 178;
 
-const StatsPage = ({ name, url, platform, ...props }) => {
-  if (!props.stats) return <div>Player not found</div>
+const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
+  if (!props.stats || error) return (
+    <div className={css.searcher}>
+      <PlayerSearcher pageMode/>
+      {error && (
+        <>
+          <p>{status === 404
+            ? `Player with this name (${name}) doesn't exist. Platform - ${platform}.` 
+            : `Server error. Please try again after few minutes.` 
+          }</p>
+        </>
+      )}
+    </div>
+  );
   const [stats, setStats] = useState(() => props.stats.stats);
   const [now, setNow] = useState(() => initialTs);
   const [to, setTo] = useState(() => initialTs - 1);
@@ -213,12 +226,17 @@ const StatsPage = ({ name, url, platform, ...props }) => {
 
 StatsPage.getInitialProps = async ({ query: { platform, name, id = '' }}) => {
   try {
+    if ((!name || !platform) && !id) {
+      return { stats: null };
+    }
+
     const url = getUrl(`/stats/${platform}/${encodeURI(name)}?id=${id}`);
     const res = await fetch(url);
     const stats = await res.json();
     return { stats, platform, name, id, url };
   } catch (err) {
-    return { stats: null, platform, name, err };
+    const { status } = err.response;
+    return { stats: null, platform, name, error: true, status };
   }
 }
 

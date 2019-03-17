@@ -55,9 +55,7 @@ const HomePage = ({ recentUpdates }) => {
       <Head>
         <title>Homepage | Apex-Legends.win</title>
       </Head>
-      <div className={css.searcher}>
-        <PlayerSearcher/>
-      </div>
+      <PlayerSearcher pageMode/>
       {!!top3Players.length && (
         <>
           <h2 className={css.top_header}>Best players of day</h2>
