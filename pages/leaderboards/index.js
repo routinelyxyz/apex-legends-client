@@ -170,7 +170,7 @@ LeadeboardsPage.getInitialProps = async (props) => {
     fetchify.get('/stats' + props.asPath).then(s => s.json()),
     fetchify.get('/legends').then(l => l.json()),
   ]);
-  await new Promise(r => setTimeout(r, 500));
+  await new Promise(r => setTimeout(r, 250));
 
   return { stats, data: stats, legends, query: { page: 1, ...query }};
 }
