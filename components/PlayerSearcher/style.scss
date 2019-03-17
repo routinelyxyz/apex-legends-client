@@ -35,7 +35,7 @@
   @include phone {
     min-width: auto;
   }
-  max-height: calc(50vh - 47px);
+  max-height: calc(100vh - 47px);
   z-index: 50;
   right: 0;
   // overflow-y: auto;

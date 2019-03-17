@@ -104,7 +104,10 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
     }
   }
 
-  useEffect(() => () => mobileMenu.setVisible(true), []);
+  useEffect(() => () => {
+    mobileMenu.setVisible(true);
+    modal.setOpened(false);
+  }, []);
 
   return (
     <div
