@@ -49,10 +49,14 @@ class MyApp extends App {
       NProgress.start();
     });
     Router.events.on('routeChangeComplete', url => {
-      NProgress.done();
-      window.gtag('config', GA_ID, {
-        page_location: url
-      });
+      try {
+        NProgress.done();
+        window.gtag('config', GA_ID, {
+          page_location: url
+        });
+      } catch {
+        
+      }
     });
     Router.events.on('routeChangeError', () => NProgress.done());
     this.props.store.dispatch(
