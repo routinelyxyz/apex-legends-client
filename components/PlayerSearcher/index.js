@@ -1,12 +1,13 @@
 import css from './style.scss';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { debounce } from '../../util';
 import { getUrl, applyCss } from '../../helpers';
-import useClickOutside from 'click-outside-hook';
+import useClickOutside from 'use-onclickoutside';
 import { animated, useTransition, config } from 'react-spring';
 import { connect } from 'react-redux';
 import { mapStateDynamic, mapDispatchToProps } from '../../store/mappers';
 import Router from 'next/router';
+import { useDevice } from '../../hooks';
 
 import { Menu } from '../../reusable/Menu';
 import { PlayerLabel } from '../../components/PlayerLabel';
@@ -45,8 +46,10 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
   const [focused, setFocused] = useState(false);
   const [playersFound, setPlayersFound] = useState([]);
   const [platform, setPlatform] = useState('pc');
-  const ref = useClickOutside(() => setFocused(false));
   const { favoritePlayers, recentPlayers } = props.reducers.stats;
+  const refContainer = useRef();
+  useClickOutside(refContainer, () => setFocused(false));
+  const { isPhone } = useDevice();
 
   const transitions = useTransition(focused, null, {
     from: { opacity: 0.7, height: 0 },
@@ -79,20 +82,30 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
     }
   }
 
+  const handleFocus = () => {
+    setFocused(true);
+    if (isPhone) {
+      window.scrollTo({
+        top: refContainer.current.offsetTop,
+        behavior: 'smooth'
+      });
+    }
+  }
+
   return (
     <div
       {...applyCss(
         css.container,
         pageMode && css.page_mode
       )}
-      ref={ref}
+      ref={refContainer}
     >
       <BasicInput
         type="text"
         placeholder="Search player..."
         value={phrase}
         onChange={getPlayers}
-        onFocus={_ => setFocused(true)}
+        onFocus={handleFocus}
         onKeyPress={handleStatsSearch}
       />
       {transitions.map(({ item, props, key }) => (
