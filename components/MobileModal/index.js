@@ -1,26 +1,27 @@
 import css from './style.scss';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useDevice } from '../../hooks';
+import { ModalContext } from '../../helpers/context';
 
 import { ModalSlide } from '../../reusable/Modal';
 
 export const MobileModal = ({ children, title, modalTitle }) => {
   const { isPhone } = useDevice();
-  const [opened, setOpened] = useState(false);
+  const modal = useContext(ModalContext);
 
   if (isPhone) {
     return (
       <>
         <button
           className={css.btn}
-          onClick={() => setOpened(!opened)}
+          onClick={() => modal.setOpened(true)}
         >
           {title}
         </button>
         <ModalSlide
-          opened={opened}
+          opened={modal.opened}
           title={modalTitle}
-          onClose={() => setOpened(false)}
+          onClose={() => modal.setOpened(false)}
         >
           {children}
         </ModalSlide>
