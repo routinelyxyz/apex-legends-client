@@ -6,7 +6,7 @@ import { useTransition } from 'react-spring';
 import { weaponProps, STATIC } from '../../helpers';
 import { withRouter } from 'next/router';
 import qs from 'querystringify';
-import { debounce, useDebounce, useDispatch } from '../../util';
+import { debounce, useDebounce, useDispatch, filterUnique } from '../../util';
 import Head from 'next/head';
 import axios from 'axios';
 import { reducer, initialState } from './reducer';
@@ -33,7 +33,7 @@ const initialSort = 'name';
 const initialSortProp = 'name';
 const initialSortAsc = true;
 
-const WeaponsPage = ({ items, router }) => {
+const WeaponsPage = ({ items, router, categories }) => {
   const [phrase, setPhrase] = useState('');
   const [sortProp, setSortProp] = useState(initialSortProp);
   const [sortAsc, setSortAsc] = useState(initialSortAsc);
@@ -46,6 +46,7 @@ const WeaponsPage = ({ items, router }) => {
       [item.ammo.name]: item.ammo
     }), {})
   , [items]);
+
 
   useEffect(() => {
     dispatch('LOAD_DATA', { items });
@@ -280,7 +281,17 @@ const WeaponsPage = ({ items, router }) => {
 
 WeaponsPage.getInitialProps = async () => {
   const { data } = await axios.get('/items/weapons');
-  return { items: data };
+
+  const ammoTypes = data
+    .map(item => item.ammo.name)
+    .filter(filterUnique);
+
+  const categories = data
+    .map(item => item.type)
+    .filter(filterUnique)
+    .sort();
+
+  return { items: data, categories };
 }
 
 export default withRouter(WeaponsPage);

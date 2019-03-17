@@ -27,3 +27,5 @@ export { applyCss as applyCss } from '../helpers';
 
 export const useDispatch = dispatch => (type, payload, meta) => 
   dispatch({ type, payload, meta });
+
+export const filterUnique = (value, index, self) => self.indexOf(value) === index;
