@@ -1,6 +1,7 @@
 import Document, { Head, Main, NextScript } from 'next/document';
 // import Manifest from 'next-manifest/manifest';
 import { GA_ID } from '../helpers/consts';
+// import css from '../assets/css/_document.scss';
 
 const title = 'Apex Legends Stats & Items Explorer & Leaderboards & Legends';
 const description = 'Apex Legends stats, leaderboards, interactive and detailed items explorer, legend details. Quick updates with live and daily match tracking.';
@@ -38,7 +39,7 @@ class MyDocument extends Document {
           <link rel="manifest" href="/static/manifest.webmanifest"/>
           <link rel='stylesheet' type='text/css' href='/static/assets/nprogress.css' />
         </Head>
-        <body className="">
+        <body>
           <Main/>
           <NextScript/>
           {isProduction && (

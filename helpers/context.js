@@ -1,31 +1,6 @@
-import React, { useState, useMemo } from 'react';
-
-export const ScrollContext = React.createContext(true);
-
-
-class ScrollCtx extends React.Component {
-
-  constructor() {
-    super();
-    this.state = {
-      value: {
-        opened: true
-        
-      }
-    }
-  }
-
-  render() {
-    return (
-      <ScrollContext.Provider>
-        {this.props.children}
-      </ScrollContext.Provider>
-    )
-  }
-}
+import React, { useState, useMemo, useEffect } from 'react';
 
 export const ModalContext = React.createContext();
-
 
 export const ModalProvider = ({ children }) => {
   const [opened, setOpened] = useState(false);
@@ -36,18 +11,12 @@ export const ModalProvider = ({ children }) => {
     setOpened: (status = !opened) => setOpened(status)
   }), [opened]);
 
-  const val2 = {
-    opened,
-    scroll: !opened,
-    setOpened: (status = !opened) => setOpened(status)
-  }
+  useEffect(() => {
+    document.body.classList.toggle('hidden_scroll', opened);
+  }, [opened]);
 
   return (
-    <ModalContext.Provider value={{
-      opened,
-      scroll: !opened,
-      ok: false
-    }}>
+    <ModalContext.Provider value={value}>
       {children}
     </ModalContext.Provider>
   )

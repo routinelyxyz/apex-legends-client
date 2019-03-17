@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { mapStateDynamic, mapDispatchToProps } from '../../store/mappers';
 import Router from 'next/router';
 import { useDevice } from '../../hooks';
-import { MobileMenuContext } from '../../helpers/context';
+import { MobileMenuContext, ModalContext } from '../../helpers/context';
 
 import { Menu } from '../../reusable/Menu';
 import { PlayerLabel } from '../../components/PlayerLabel';
@@ -50,11 +50,13 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
   const { favoritePlayers, recentPlayers } = props.reducers.stats;
   const { isPhone } = useDevice();
   const mobileMenu = useContext(MobileMenuContext);
+  const modal = useContext(ModalContext);
   const refContainer = useRef();
   useClickOutside(refContainer, () => {
     setFocused(false);
     if (focused) {
       /* Weird behaviour */
+      modal.setOpened(false);
       mobileMenu.setVisible(true);
     }
   });
@@ -93,6 +95,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
   const handleFocus = () => {
     setFocused(true);
     mobileMenu.setVisible(false);
+    modal.setOpened(true);
     if (isPhone) {
       window.scrollTo({
         top: refContainer.current.offsetTop,

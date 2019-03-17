@@ -14,7 +14,7 @@ import { HOST_URL } from '../helpers';
 import { GA_ID } from '../helpers/consts';
 import Router from 'next/router';
 import NProgress from 'nprogress';
-import { MobileMenuProvider } from '../helpers/context';
+import { MobileMenuProvider, ModalProvider } from '../helpers/context';
 
 axios.defaults.baseURL = HOST_URL;
 axios.defaults.timeout = 9000;
@@ -71,9 +71,11 @@ class MyApp extends App {
       <Container>
         <Provider store={store}>
           <MobileMenuProvider>
-            <Layout route={router.route}>
-              <Component {...pageProps}/>
-            </Layout>
+            <ModalProvider>
+              <Layout route={router.route}>
+                <Component {...pageProps}/>
+              </Layout>
+            </ModalProvider>
           </MobileMenuProvider>
         </Provider>
       </Container>
