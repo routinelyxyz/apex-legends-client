@@ -24,3 +24,6 @@ export const useDebounce = (delay = 250, timeout) => [
 export const getTs = () => Math.floor(Date.now() / 1000); 
 
 export { applyCss as applyCss } from '../helpers';
+
+export const useDispatch = dispatch => (type, payload, meta) => 
+  dispatch({ type, payload, meta });

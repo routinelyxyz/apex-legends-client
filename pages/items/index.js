@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useReducer } from 'react';
 import css from './style.scss';
 import fetch from 'isomorphic-unfetch';
 import Link from 'next/link';
@@ -6,9 +6,10 @@ import { useTransition } from 'react-spring';
 import { weaponProps, STATIC } from '../../helpers';
 import { withRouter } from 'next/router';
 import qs from 'querystringify';
-import { debounce, useDebounce } from '../../util';
+import { debounce, useDebounce, useDispatch } from '../../util';
 import Head from 'next/head';
 import axios from 'axios';
+import { reducer, initialState } from './reducer';
 
 import Item from '../../reusable/Item';
 import Input from '../../reusable/Input';
@@ -36,6 +37,8 @@ const WeaponsPage = ({ items, router }) => {
   const [phrase, setPhrase] = useState('');
   const [sortProp, setSortProp] = useState(initialSortProp);
   const [sortAsc, setSortAsc] = useState(initialSortAsc);
+  const [state, dispatchProvider] = useReducer(reducer, initialState);
+  const dispatch = useDispatch(dispatchProvider);
 
   const ammoTypes = useMemo(() => 
     items.reduce((ammoTypes, item) => ({
@@ -44,6 +47,10 @@ const WeaponsPage = ({ items, router }) => {
     }), {})
   , [items]);
 
+  useEffect(() => {
+    dispatch('LOAD_DATA', { items });
+    // dispatchProvider({ type: 'LOAD_DATA', payload: { items }});
+  }, []);
   // const ammTypes = useMemo(() =>
   //   Object.values(items
   //     .reduce((ammoTypes, item) => ({
@@ -205,7 +212,7 @@ const WeaponsPage = ({ items, router }) => {
                 onChange={e => setWeaponTypes({
                   ...selectedWeaponTypes,
                   [type]: e.target.checked
-                })}
+                }) || dispatch('TOGGLE_CATEGORY', type)}
               /> 
             ))}
           </div>
@@ -227,7 +234,7 @@ const WeaponsPage = ({ items, router }) => {
                 onChange={e => setAmmoTypes({
                   ...selectedAmmoTypes,
                   [type]: e.target.checked
-                })}
+                }) || dispatch('TOGGLE_AMMO_TYPE', type)}
               />
             ))}
           </div>
@@ -261,7 +268,7 @@ const WeaponsPage = ({ items, router }) => {
               checked={sortAsc}
               onChange={e => setSortAsc(
                 e.target.checked
-              )}
+              ) || dispatch('TOGGLE_ORDER')}
             />
           </div>
         </div>
