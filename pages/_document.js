@@ -21,6 +21,7 @@ class MyDocument extends Document {
           <meta name="ogDescription" content={description} key="ogDescription"/>
           <meta name="theme-color" content="#23232F" key="theme-color"/>
           <link rel="manifest" href="/static/manifest.webmanifest"/>
+          <link rel='stylesheet' type='text/css' href='/static/assets/nprogress.css' />
         </Head>
         <body className="">
           <Main/>

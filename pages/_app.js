@@ -11,6 +11,8 @@ dayjs.extend(relativeTime);
 import { loadSavedPlayersAsync } from '../store/actions-async/stats';
 import axios from 'axios';
 import { HOST_URL } from '../helpers';
+import Router from 'next/router';
+import NProgress from 'nprogress';
 
 axios.defaults.baseURL = HOST_URL;
 axios.defaults.timeout = 9000;
@@ -42,6 +44,11 @@ class MyApp extends App {
       //     console.warn('service worker registration failed', err.message)
       //   });
     }
+    Router.events.on('routeChangeStart', url => {
+      NProgress.start();
+    });
+    Router.events.on('routeChangeComplete', () => NProgress.done());
+    Router.events.on('routeChangeError', () => NProgress.done());
     this.props.store.dispatch(
       loadSavedPlayersAsync()
     );
