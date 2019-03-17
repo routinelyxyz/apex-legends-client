@@ -1,7 +1,8 @@
 import css from './style.scss';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useDevice, useWindowSize } from '../../hooks';
 import { applyCss } from '../../helpers';
+import { MobileMenuContext } from '../../helpers/context';
 
 import { PlayerSearcher } from '../PlayerSearcher';
 import { NavLink } from '../../reusable/Elements';
@@ -42,13 +43,19 @@ const navigationLinks = [
 ]
 
 export const Header = ({ route }) => {
+  const mobileMenu = useContext(MobileMenuContext);
   return (
     <header className={css.container}>
       {/* <HeaderSearcher/> */}
       <div className={css.logo}>
         Apex-Legends.win
       </div>
-      <nav className={css.header_nav}>
+      <nav
+        {...applyCss(
+          css.header_nav,
+          !mobileMenu.visible && css.hidden
+        )}
+      >
         {navigationLinks.map(({ title, href, active, short, icon }) => {
           const isActive = active(route);
           return (

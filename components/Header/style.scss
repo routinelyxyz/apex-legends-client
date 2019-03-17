@@ -29,6 +29,7 @@ $height: 65px;
 .header_nav {
   display: flex;
   padding: 20px 0;
+  transition: transform .25s ease;
   .icon {
     width: 36px;
     color: #fff;
@@ -109,4 +110,11 @@ $height: 65px;
 
 .header__link {
   color: #fff;
+}
+
+.hidden {
+  @include phone {
+    transform: translateY(100%);
+    // display: none;
+  }
 }

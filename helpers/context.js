@@ -52,3 +52,20 @@ export const ModalProvider = ({ children }) => {
     </ModalContext.Provider>
   )
 }
+
+export const MobileMenuContext = React.createContext();
+
+export const MobileMenuProvider = ({ children }) => {
+  const [visible, setVisible] = useState(true);
+
+  const value = useMemo(() => ({
+    visible,
+    setVisible: (status = !visible) => setVisible(status)
+  }), [visible]);
+
+  return (
+    <MobileMenuContext.Provider value={value}>
+      {children}
+    </MobileMenuContext.Provider>
+  );
+}

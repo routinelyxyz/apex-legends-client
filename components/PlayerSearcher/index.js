@@ -1,5 +1,5 @@
 import css from './style.scss';
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 import { debounce } from '../../util';
 import { getUrl, applyCss } from '../../helpers';
 import useClickOutside from 'use-onclickoutside';
@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { mapStateDynamic, mapDispatchToProps } from '../../store/mappers';
 import Router from 'next/router';
 import { useDevice } from '../../hooks';
+import { MobileMenuContext } from '../../helpers/context';
 
 import { Menu } from '../../reusable/Menu';
 import { PlayerLabel } from '../../components/PlayerLabel';
@@ -47,9 +48,16 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
   const [playersFound, setPlayersFound] = useState([]);
   const [platform, setPlatform] = useState('pc');
   const { favoritePlayers, recentPlayers } = props.reducers.stats;
-  const refContainer = useRef();
-  useClickOutside(refContainer, () => setFocused(false));
   const { isPhone } = useDevice();
+  const mobileMenu = useContext(MobileMenuContext);
+  const refContainer = useRef();
+  useClickOutside(refContainer, () => {
+    setFocused(false);
+    if (focused) {
+      /* Weird behaviour */
+      mobileMenu.setVisible(true);
+    }
+  });
 
   const transitions = useTransition(focused, null, {
     from: { opacity: 0.7, height: 0 },
@@ -84,6 +92,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
 
   const handleFocus = () => {
     setFocused(true);
+    mobileMenu.setVisible(false);
     if (isPhone) {
       window.scrollTo({
         top: refContainer.current.offsetTop,
@@ -91,6 +100,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
       });
     }
   }
+
 
   return (
     <div
@@ -129,14 +139,14 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
             :
               <Menu>
                 <div className={css.content_container}>
-                  {recentPlayers.map(PlayerItem)}
+                  {[].map(PlayerItem)}
                 </div>
                 <div className={css.content_container}>
-                  {favoritePlayers.map(PlayerItem)}
+                  {[].map(PlayerItem)}
                 </div>
                 <div>
                   <PhraseSelector
-                    value="Popular players are here"
+                    value="Popular players"
                     phrase={phrase}
                   />
                 </div>
