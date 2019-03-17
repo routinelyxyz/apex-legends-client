@@ -1,5 +1,5 @@
 import css from './style.scss';
-import { useState, useRef, useContext } from 'react';
+import { useState, useRef, useContext, useEffect } from 'react';
 import { debounce } from '../../util';
 import { getUrl, applyCss } from '../../helpers';
 import useClickOutside from 'use-onclickoutside';
@@ -101,6 +101,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
     }
   }
 
+  useEffect(() => () => mobileMenu.setVisible(true), []);
 
   return (
     <div
