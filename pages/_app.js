@@ -11,6 +11,7 @@ dayjs.extend(relativeTime);
 import { loadSavedPlayersAsync } from '../store/actions-async/stats';
 import axios from 'axios';
 import { HOST_URL } from '../helpers';
+import { GA_ID } from '../helpers/consts';
 import Router from 'next/router';
 import NProgress from 'nprogress';
 
@@ -47,7 +48,12 @@ class MyApp extends App {
     Router.events.on('routeChangeStart', url => {
       NProgress.start();
     });
-    Router.events.on('routeChangeComplete', () => NProgress.done());
+    Router.events.on('routeChangeComplete', url => {
+      NProgress.done();
+      window.gtag('config', GA_ID, {
+        page_location: url
+      });
+    });
     Router.events.on('routeChangeError', () => NProgress.done());
     this.props.store.dispatch(
       loadSavedPlayersAsync()
