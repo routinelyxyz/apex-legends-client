@@ -10,6 +10,7 @@ import { fetchify } from '../../util/fetchify';
 import { connect } from 'react-redux';
 import { mapDispatchToProps, mapStateDynamic } from '../../store/mappers';
 import Head from 'next/head';
+import axios from 'axios';
 
 const avatar = 'https://static-cdn.jtvnw.net/jtv_user_pictures/cef31105-8a6e-4211-a74b-2f0bbd9791fb-profile_image-70x70.png';
 
@@ -62,7 +63,7 @@ const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
       {error && (
         <>
           <p>{status === 404
-            ? `Player with this name (${name}) doesn't exist. Platform - ${platform}.` 
+            ? `Player with name (${name}) doesn't exist on platform - ${platform}.` 
             : `Server error. Please try again after few minutes.` 
           }</p>
         </>
@@ -229,13 +230,14 @@ StatsPage.getInitialProps = async ({ query: { platform, name, id = '' }}) => {
     if ((!name || !platform) && !id) {
       return { stats: null };
     }
+    
+    const res = await axios.get(`/stats/${platform}/${encodeURIComponent(name)}?id=${id}`);
+    const stats = res.data;
 
-    const url = getUrl(`/stats/${platform}/${encodeURI(name)}?id=${id}`);
-    const res = await fetch(url);
-    const stats = await res.json();
-    return { stats, platform, name, id, url };
+    return { stats, platform, name, id, url: '' };
+  
   } catch (err) {
-    const { status } = err.response;
+    const { status } = err.response ? err.response : 500;
     return { stats: null, platform, name, error: true, status };
   }
 }
