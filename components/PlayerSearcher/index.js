@@ -146,7 +146,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
             :
               <Menu>
                 <div className={css.content_container}>
-                  {[].map(PlayerItem)}
+                  {recentPlayers.map(PlayerItem)}
                 </div>
                 <div className={css.content_container}>
                   {[].map(PlayerItem)}

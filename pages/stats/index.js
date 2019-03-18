@@ -83,7 +83,9 @@ const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
     let interval = setInterval(() => {
       setNow(getTs());
     }, 1000);
-    props.actions.savePlayerAsync(stats);
+    if (stats && !error) {
+      props.actions.savePlayerAsync(stats);
+    }
 
     return () => clearInterval(interval);
   }, []);
