@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import ResizeObserver from 'resize-observer-polyfill';
+import { ModalContext } from '../helpers/context';
 
 export const useWindowSize = () => {
   const client = typeof window !== 'undefined';
@@ -70,4 +71,12 @@ export const useDevice = () => {
   }, [width]);
 
   return device;
+}
+
+export const useModal = () => {
+  const modal = useContext(ModalContext);
+
+  useEffect(() => () => modal.setOpened(false), []);
+
+  return modal;
 }
