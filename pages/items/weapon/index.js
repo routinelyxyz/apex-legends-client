@@ -81,6 +81,7 @@ const WeaponPage = ({ slug, item, ratios }) => {
                 }
                 value={value}
                 key={name}
+                delay={150}
               />
             ))}
           </div>

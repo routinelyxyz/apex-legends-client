@@ -3,12 +3,13 @@ import { animated, useSpring, config } from 'react-spring';
 import { parsePercent } from '../../util';
 import { applyCss } from '../../helpers';
 
-export const ProgressBar = ({ title, hoverTitle = () => '', value, className }) => {
+export const ProgressBar = ({ title, hoverTitle = () => '', delay = 0, value, className }) => {
   const percents = parsePercent(value);
   const props = useSpring({
     from: { percents: 0 },
     to: { percents },
-    config: config.stiff
+    config: config.stiff,
+    delay
   });
 
   return (
