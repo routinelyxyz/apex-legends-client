@@ -6,6 +6,13 @@ export const platforms = [
   { name: 'Xbox', value: 'xbox' }
 ]
 
+export const platformNames = {
+  all: 'All',
+  pc: 'PC',
+  ps4: 'PS4',
+  xbox: 'Xbox'
+}
+
 export const weaponProps = [
   ['bodyDamage', 'Body damage'],
   ['headshotDamage', 'Headshot damage'],

@@ -1,7 +1,7 @@
 import css from './style.scss';
 import { useState, useRef, useContext, useEffect } from 'react';
-import { debounce } from '../../util';
-import { getUrl, applyCss } from '../../helpers';
+import { debounce, applyCss } from '../../util';
+import { getUrl, platformNames } from '../../helpers';
 import useClickOutside from 'use-onclickoutside';
 import { animated, useTransition, config } from 'react-spring';
 import { connect } from 'react-redux';
@@ -17,6 +17,10 @@ import { PhraseSelector } from '../../reusable/PhraseSelector';
 
 const debounceA = debounce(350);
 const debounceB = debounce(100);
+
+const platforms = [
+  'pc', 'ps4', 'xbox'
+]
 
 const players = [
   {
@@ -98,7 +102,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
     modal.setOpened(true);
     if (isPhone) {
       window.scrollTo({
-        top: refContainer.current.offsetTop,
+        top: refContainer.current.offsetTop - 5,
         behavior: 'smooth'
       });
     }
@@ -117,14 +121,34 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
       )}
       ref={refContainer}
     >
-      <BasicInput
-        type="text"
-        placeholder="Search player..."
-        value={phrase}
-        onChange={getPlayers}
-        onFocus={handleFocus}
-        onKeyPress={handleStatsSearch}
-      />
+      <div className={css.input_container}>
+        <BasicInput
+          type="text"
+          placeholder="Search player..."
+          value={phrase}
+          onChange={getPlayers}
+          onFocus={handleFocus}
+          onKeyPress={handleStatsSearch}
+        />
+        <ul {...applyCss(css.platforms, css[platform])}>
+          {platforms.map(platformType => (
+            <li
+              className={css.platform_btn}
+              key={platformType}
+              onClick={() => setPlatform(platformType)}
+              {...applyCss(
+                css.platform_btn,
+                platform === platformType && css.active
+              )}
+            >
+              <img
+                className={css.platform_img}
+                src={`/static/img/${platformType}.svg`}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
       {transitions.map(({ item, props, key }) => (
         item &&
         <animated.div
