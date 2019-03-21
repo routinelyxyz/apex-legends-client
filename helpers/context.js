@@ -9,7 +9,10 @@ export const ModalProvider = ({ children }) => {
 
   const value = useMemo(() => ({
     opened,
-    scroll: !opened || !isDesktop,
+    scroll: opened
+      ? isDesktop ? false : true
+      : false
+    ,
     setOpened: (status = !opened, options = {}) => {
       setOpened(status);
     }
