@@ -9,6 +9,7 @@ import { mapStateDynamic, mapDispatchToProps } from '../../store/mappers';
 import Router from 'next/router';
 import { useDevice } from '../../hooks';
 import { MobileMenuContext, ModalContext } from '../../helpers/context';
+import { Dropdown } from '../../reusable/Dropdown';
 
 import { Menu } from '../../reusable/Menu';
 import { PlayerLabel } from '../../components/PlayerLabel';
@@ -170,7 +171,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
             :
               <Menu>
                 <div className={css.content_container}>
-                  {recentPlayers.map(PlayerItem)}
+                  {[].map(PlayerItem)}
                 </div>
                 <div className={css.content_container}>
                   {[].map(PlayerItem)}
