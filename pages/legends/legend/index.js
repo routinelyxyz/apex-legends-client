@@ -79,7 +79,7 @@ LegendPage.getInitialProps = async ({ query: { slug }}) => {
     fetchify.get(`/stats/leaderboards?legend=${slug}&top1`).then(r => r.json()),
     fetchify.get(`/legends/${slug}`).then(r => r.json())
   ]);
-  return { legend, top1: top1.data[0] }
+  return { legend: legend.data, top1: top1.data[0] }
 }
 
 export default LegendPage;

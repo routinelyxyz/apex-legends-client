@@ -280,7 +280,7 @@ const WeaponsPage = ({ items, router, categories }) => {
 };
 
 WeaponsPage.getInitialProps = async () => {
-  const { data } = await axios.get('/items/weapons');
+  const { data: { data }} = await axios.get('/items/weapons');
 
   const ammoTypes = data
     .map(item => item.ammo.name)

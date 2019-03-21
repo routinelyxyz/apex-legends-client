@@ -131,8 +131,8 @@ WeaponPage.getInitialProps = async ({ query: { slug }}) => {
     axios.get('/items/weapons/ratio'),
   ]);
 
-  const item = itemData.data;
-  const ratios = ratiosData.data;
+  const item = itemData.data.data;
+  const ratios = ratiosData.data.data;
 
   return { slug, item, ratios };
 }
