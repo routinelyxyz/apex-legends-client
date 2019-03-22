@@ -1,11 +1,12 @@
 import css from './style.scss';
-import { statsTitlesMap } from '../../helpers'
+import { statsTitlesMap, getStatic, getAvatar } from '../../helpers'
 
 import { PlayerLink } from '../../components/PlayerLink';
 
 const avatar = 'https://opgg-static.akamaized.net/images/profile_icons/profileIcon3379.jpg?image=c_scale,w_38&v=1518361200';
 
 export const PlayersTable = ({ data, prop, clearFilters, renderRank = i => i + 1 }) => {
+  // const avatar = 
   if (!data.length) return (
     <div className={css.not_found}>
       <p className={css.not_found_title}>
@@ -40,7 +41,7 @@ export const PlayersTable = ({ data, prop, clearFilters, renderRank = i => i + 1
               <PlayerLink player={row.player}>
                 <a className={css.player}>
                   <img
-                    src={avatar}
+                    src={getAvatar(row.player, 35)}
                     className={css.avatar}
                   />
                   {row.player.name}

@@ -74,3 +74,6 @@ export const STATIC = HOST_URL + '/static';
 
 export const getStatic = url => HOST_URL + '/static' + url;
 export const getUrl = url => HOST_URL + url;
+export const getAvatar = (player, size = 115) => getStatic(
+  `/avatars/${player.avatar ? player.id : 'default'}-${size}.jpg`
+);

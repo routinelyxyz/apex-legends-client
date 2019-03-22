@@ -81,7 +81,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
         getUrl(`/stats/players/${encodeURI(phrase)}`)
       );
       const data = await res.json();
-      setPlayersFound(data);
+      setPlayersFound(data.data);
     });
   }
 

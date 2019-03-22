@@ -1,6 +1,6 @@
 import 'isomorphic-unfetch';
 import css from './style.scss';
-import { getUrl } from '../../helpers';
+import { getUrl, getStatic, getAvatar } from '../../helpers';
 import { animated, useSpring, config } from 'react-spring';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -41,8 +41,8 @@ const links = [
 ];
 
 const tabs = [
-  { title: 'Overview', content: <div>xd</div> },
-  { title: 'Match history', content: <div>12312321</div> },
+  { title: 'Overview', content: <div>abc</div> },
+  { title: 'Match history', content: <div>def</div> },
 ]
 
 const getStats = async (player, update = false) => {
@@ -141,7 +141,7 @@ const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
           />
           <div className={css.avatar_container}>
             <img
-              src={avatar}
+              src={getAvatar(stats.player)}
               className={css.avatar}
             />
           </div>
