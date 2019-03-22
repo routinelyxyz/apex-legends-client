@@ -16,6 +16,12 @@
 .input_container {
   position: relative;
   min-width: 230px;
+  .input_large {
+    font-size: 15px;
+    @include phone {
+      font-size: 14px;
+    }
+  }
 }
 
 .search_container {

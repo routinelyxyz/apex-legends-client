@@ -20,25 +20,6 @@ import { SearcherPlatforms } from '../../components/SearcherPlatforms';
 const debounceA = debounce(350);
 const debounceB = debounce(100);
 
-
-
-const players = [
-  {
-    id: 1,
-    name: 'Ninja',
-    lvl: 103,
-    platform: 'pc',
-    img: 'https://static-cdn.jtvnw.net/jtv_user_pictures/cef31105-8a6e-4211-a74b-2f0bbd9791fb-profile_image-70x70.png'
-  },
-  {
-    id: 2,
-    name: 'ApexLegend',
-    lvl: 41,
-    platform: 'ps4',
-    img: 'https://static-cdn.jtvnw.net/jtv_user_pictures/cef31105-8a6e-4211-a74b-2f0bbd9791fb-profile_image-70x70.png'
-  }
-]
-
 const PlayerItem = player => (
   <PlayerLabel
     key={player.id}
@@ -123,6 +104,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
     >
       <div className={css.input_container}>
         <BasicInput
+          className={pageMode && css.input_large}
           type="text"
           placeholder="Search player..."
           value={phrase}
