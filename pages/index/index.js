@@ -14,30 +14,12 @@ import { PlayerSearcher } from '../../components/PlayerSearcher';
 import { PlayersTable } from '../../components/PlayersTable';
  
 
-const avatar = 'https://opgg-static.akamaized.net/images/profile_icons/profileIcon3379.jpg?image=c_scale,w_38&v=1518361200';
 /*
   Color for searcher phrase background #FFFAE0
 */
 
 const HomePage = ({ recentUpdates }) => {
   const [stats, setStats] = useState(() => recentUpdates);
-
-  useEffect(() => {
-    return;
-    let index = 0;
-    const interval = setInterval(() => {
-      index++;
-      if (index === recentUpdates.length) {
-        return clearInterval(interval);
-      }
-      setStats(prevStats => {
-        const updated = [recentUpdates[index], ...prevStats];
-        if (updated.length > 5) updated.splice(-1, 1);
-        return updated;
-      });
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
 
   const transitions = useTransition(stats, s => s.player.id, {
     from: { opacity: 0, transform: 'translateX(100px)' },
@@ -89,15 +71,15 @@ const HomePage = ({ recentUpdates }) => {
 
 HomePage.getInitialProps = async () => {
   try {
-    /* Refactor to data */
     const options = { timeout: 700 };
-    const recentsRes = await axios.get('/stats/recently-updated', options);
-    const recentUpdates = recentsRes.data.reverse();
-  
-    const trendingRes = await axios.get('/stats/trending', options);
-    const trending = trendingRes.data;
 
-    return { recentUpdates, trending };
+    const recentUpdates = await axios.get('/stats/recently-updated', options);
+    const trending = await axios.get('/stats/trending', options);
+
+    return {
+      recentUpdates: recentUpdates.data.data.reverse(),
+      trending: trending.data.data
+    }
 
   } catch(err) {
     return { recentUpdates: [], trending: [] }

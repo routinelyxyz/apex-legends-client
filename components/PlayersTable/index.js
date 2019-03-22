@@ -41,7 +41,7 @@ export const PlayersTable = ({ data, prop, clearFilters, renderRank = i => i + 1
               <PlayerLink player={row.player}>
                 <a className={css.player}>
                   <img
-                    src={getAvatar(row.player, 35)}
+                    src={getAvatar(row.player, 40)}
                     className={css.avatar}
                   />
                   {row.player.name}
