@@ -15,13 +15,12 @@ import { Menu } from '../../reusable/Menu';
 import { PlayerLabel } from '../../components/PlayerLabel';
 import { BasicInput } from '../../reusable/Input';
 import { PhraseSelector } from '../../reusable/PhraseSelector';
+import { SearcherPlatforms } from '../../components/SearcherPlatforms';
 
 const debounceA = debounce(350);
 const debounceB = debounce(100);
 
-const platforms = [
-  'pc', 'ps4', 'xbox'
-]
+
 
 const players = [
   {
@@ -131,24 +130,11 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
           onFocus={handleFocus}
           onKeyPress={handleStatsSearch}
         />
-        <ul {...applyCss(css.platforms, css[platform])}>
-          {platforms.map(platformType => (
-            <li
-              className={css.platform_btn}
-              key={platformType}
-              onClick={() => setPlatform(platformType)}
-              {...applyCss(
-                css.platform_btn,
-                platform === platformType && css.active
-              )}
-            >
-              <img
-                className={css.platform_img}
-                src={`/static/img/${platformType}.svg`}
-              />
-            </li>
-          ))}
-        </ul>
+        <SearcherPlatforms
+          platform={platform}
+          setPlatform={platform => setPlatform(platform)}
+          small={!pageMode}
+        />
       </div>
       {transitions.map(({ item, props, key }) => (
         item &&
