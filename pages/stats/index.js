@@ -2,7 +2,7 @@ import 'isomorphic-unfetch';
 import css from './style.scss';
 import { getUrl, getStatic, getAvatar } from '../../helpers';
 import { animated, useSpring, config } from 'react-spring';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import { getTs } from '../../util';
@@ -11,8 +11,6 @@ import { connect } from 'react-redux';
 import { mapDispatchToProps, mapStateDynamic } from '../../store/mappers';
 import Head from 'next/head';
 import axios from 'axios';
-
-const avatar = 'https://static-cdn.jtvnw.net/jtv_user_pictures/cef31105-8a6e-4211-a74b-2f0bbd9791fb-profile_image-70x70.png';
 
 import { ProgressRing } from '../../components/ProgressRing';
 import { HorizontalNav, HorizontalNav2, StaticLink, HorizontalNavTab } from '../../reusable/HorizontalNav';
@@ -47,14 +45,16 @@ const tabs = [
 
 const getStats = async (player, update = false) => {
   const { platform, name, id = '' } = player;
-  const url = `/stats/${platform}/${encodeURI(name)}?id=${id}&update=${update}`;
 
-  const res = await fetchify.get(url);
-  return await res.json();
+  const url = `/stats/${platform}/${encodeURI(name)}?id=${id}&update=${update}`;
+  const stats = await axios.get(url);
+  
+  return stats.data.data;
 }
 
 const initialTs = getTs();
-const countdown = 178;
+// const countdown = 178;
+const countdown = 10;
 
 const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
   if (!props.stats || error) return (
@@ -70,21 +70,18 @@ const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
       )}
     </div>
   );
-  const [stats, setStats] = useState(() => props.stats.stats);
+  const [stats, setStats] = useState(() => props.stats);
   const [now, setNow] = useState(() => initialTs);
   const [to, setTo] = useState(() => initialTs - 1);
   const [isUpdating, setUpdating] = useState(false);
   const counter = to - now;
-  const histUrl = `/stats/${platform}/${encodeURI(name)}/history`;
-  const as = `/stats?platform=${platform}&name=${encodeURI(name)}&id=${stats.player && stats.player.id}/history`;
-  // const historyUrl = `/stats/history/${platform}/${encodeURI(name)}?id=${stats.player.id}`;
 
   useEffect(() => {
     let interval = setInterval(() => {
       setNow(getTs());
     }, 1000);
     if (stats && !error) {
-      props.actions.savePlayerAsync(stats);
+      props.actions.savePlayerAsync(stats.player);
     }
 
     return () => clearInterval(interval);
@@ -99,8 +96,8 @@ const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
       + Add used props to test
     */
     getStats(stats.player, true)
-      .then(({ stats: data }) => {
-        setStats(data);
+      .then(nextStats => {
+        setStats(nextStats);
         setTo(getTs() + countdown);
         setUpdating(false);
       })
@@ -113,12 +110,12 @@ const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
     }
   }, [counter]);
 
-  const updateIn = () => {
+  const updateIn = useMemo(() => {
     const seconds = counter % 60;
     const minutes = Math.floor(counter / 60);
     if ((minutes <= 0 && seconds <= 0) || isUpdating) return 'Just now';
     return (minutes ? `${minutes} min. ` : '') + `${seconds} sec.`;
-  }
+  }, [counter, isUpdating]);
 
   const lvlProps = useSpring({
     from: { lvl: 0 },
@@ -165,7 +162,7 @@ const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
           <p className={css.update_title}>
             Update in:
           </p>
-          {updateIn()}
+          {updateIn}
         </div>
       </div>
       {/* <HorizontalNav>
@@ -234,7 +231,7 @@ StatsPage.getInitialProps = async ({ query: { platform, name, id = '' }}) => {
     }
     
     const res = await axios.get(`/stats/${platform}/${encodeURIComponent(name)}?id=${id}`);
-    const stats = res.data;
+    const stats = res.data.data;
 
     return { stats, platform, name, id, url: '' };
   

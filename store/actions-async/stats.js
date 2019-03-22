@@ -21,8 +21,8 @@ export const savePlayerAsync = (data, dest = 'recent') => (dispatch, getState) =
     throw new Error(`Invalid player destination property ${dest}`);
   }
   const target = dest + 'Players';
-  const { id, name, platform, img } = data;
-  const player = { id, name, platform, img };
+  const { id, name, platform, avatar } = data;
+  const player = { id, name, platform, avatar };
   const { stats: { [target]: players }} = getState();
 
   const foundPlayer = players.findIndex(player => player.id == id);
