@@ -115,7 +115,7 @@ const StatsPage = ({ name, url, platform, empty, error, status, router, ...props
   return (
     <div>
       <Head>
-        <title>{stats.name} - Stats | Apex-Legends.win</title>
+        <title>{stats.player.name} - Stats | Apex-Legends.win</title>
       </Head>
       <div className={css.player}>
         <div className={css.badge}>
