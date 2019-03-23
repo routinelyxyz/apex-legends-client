@@ -10,6 +10,8 @@ import { connect } from 'react-redux';
 import { mapDispatchToProps, mapStateDynamic } from '../../store/mappers';
 import Head from 'next/head';
 import axios from 'axios';
+import { withRouter } from 'next/router';
+import { useFirstRender } from '../../hooks';
 
 import { ProgressRing } from '../../components/ProgressRing';
 import { HorizontalNavTab } from '../../reusable/HorizontalNav';
@@ -32,7 +34,7 @@ const initialTs = getTs();
 // const countdown = 178;
 const countdown = 10;
 
-const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
+const StatsPage = ({ name, url, platform, empty, error, status, router, ...props }) => {
   if (!props.stats || error) return (
     <div className={css.searcher}>
       <PlayerSearcher pageMode/>
@@ -46,38 +48,48 @@ const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
       )}
     </div>
   );
+  const afterFirstRender = useFirstRender();
   const [stats, setStats] = useState(() => props.stats);
   const [now, setNow] = useState(() => initialTs);
   const [to, setTo] = useState(() => initialTs - 1);
   const [isUpdating, setUpdating] = useState(false);
   const counter = to - now;
 
+  const updateStats = (player = stats.player) => {
+    if (isUpdating) return;
+    setUpdating(true);
+
+    return getStats(player, true)
+      .then(nextStats => {
+        if (router.query.name === stats.player.name) {
+          setStats(nextStats);
+        }
+        setTo(getTs() + countdown);
+        setUpdating(false);
+      })
+      .catch(console.log);
+  }
+
   useEffect(() => {
     let interval = setInterval(() => {
       setNow(getTs());
     }, 1000);
+
     if (stats && !error) {
-      props.actions.savePlayerAsync(stats.player);
+      if (afterFirstRender) {
+        setStats(props.stats);
+        setTo(getTs() + countdown);
+        props.actions.savePlayerAsync(props.stats.player);
+      } else {
+        props.actions.savePlayerAsync(stats.player);
+      }
     }
 
     return () => clearInterval(interval);
-  }, []);
-
-  const updateStats = () => {
-    if (isUpdating) return;
-    setUpdating(true);
-
-    getStats(stats.player, true)
-      .then(nextStats => {
-        setStats(nextStats);
-        setTo(getTs() + countdown);
-        setUpdating(false);
-      })
-      .catch(console.log)
-  }
+  }, [props.stats, afterFirstRender]);
 
   useEffect(() => {
-    if (counter < 0) {
+    if (counter < 0 && !isUpdating) {
       updateStats();
     }
   }, [counter]);
@@ -190,4 +202,4 @@ StatsPage.getInitialProps = async ({ query: { platform, name, id = '' }}) => {
 export default connect(
   mapStateDynamic(['stats']),
   mapDispatchToProps
-)(StatsPage);
+)(withRouter(StatsPage));

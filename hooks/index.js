@@ -51,6 +51,7 @@ export const useMounted = (fn) => {
   }, []);
   return mounted.current;
 }
+export { useMounted as useFirstRender };
 
 export const useDevice = () => {
   const [width] = useWindowSize();
