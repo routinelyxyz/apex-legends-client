@@ -69,6 +69,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
     if (e.key === 'Enter' && phrase.length) {
       debounceB(() => {
         setFocused(false);
+        modal.setOpened(false);
         Router.push(
           `/stats?platform=${platform}&name=${phrase}&=id`,
           `/stats/${platform}/${phrase}`
