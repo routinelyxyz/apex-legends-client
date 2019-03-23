@@ -6,42 +6,18 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import { getTs } from '../../util';
-import { fetchify } from '../../util/fetchify';
 import { connect } from 'react-redux';
 import { mapDispatchToProps, mapStateDynamic } from '../../store/mappers';
 import Head from 'next/head';
 import axios from 'axios';
 
 import { ProgressRing } from '../../components/ProgressRing';
-import { HorizontalNav, HorizontalNav2, StaticLink, HorizontalNavTab } from '../../reusable/HorizontalNav';
+import { HorizontalNavTab } from '../../reusable/HorizontalNav';
 import { LegendStats } from '../../components/LegendStats';
 import { StatsBanner } from '../../components/StatsBanner';
 import { StatsHistory } from '../../components/StatsHistory';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
 
-const links = [
-  {
-    title: 'Overview',
-    active: r => !r.includes('/history'),
-    dynamic: ({ asPath = '' }) => ({
-      href: asPath,
-      as: asPath
-    }),
-  },
-  {
-    title: 'Match History',
-    active: r => r.includes('/history'),
-    dynamic: ({ asPath = '' }) => ({
-      href: asPath,
-      as: asPath
-    })
-  }
-];
-
-const tabs = [
-  { title: 'Overview', content: <div>abc</div> },
-  { title: 'Match history', content: <div>def</div> },
-]
 
 const getStats = async (player, update = false) => {
   const { platform, name, id = '' } = player;
@@ -91,10 +67,6 @@ const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
     if (isUpdating) return;
     setUpdating(true);
 
-    /*
-      Normalize ENDPOINT stats object after update
-      + Add used props to test
-    */
     getStats(stats.player, true)
       .then(nextStats => {
         setStats(nextStats);
@@ -165,17 +137,6 @@ const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
           {updateIn}
         </div>
       </div>
-      {/* <HorizontalNav>
-        <Link href={url}>
-          <a>Overview</a>
-        </Link>
-        <Link
-          href={histUrl}
-          as={as}
-        >
-          <a>Match History</a>
-        </Link>
-      </HorizontalNav> */}
       <HorizontalNavTab
         withMargin
         tabs={[
@@ -204,22 +165,7 @@ const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
           */
         ]}
       >
-        {/* {(tab, index) => (
-          <div>{tab} {index}</div>
-        )} */}
       </HorizontalNavTab>
-      {/* <HorizontalNav2>
-        <StaticLink
-          title="Match history"
-          href={url}
-          as={url}
-        />
-        <StaticLink
-          title="Match history"
-          href={historyUrl}
-          as={historyUrl}
-        />
-      </HorizontalNav2> */}
     </div>
   )
 }
