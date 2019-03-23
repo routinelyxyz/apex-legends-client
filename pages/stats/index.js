@@ -108,6 +108,10 @@ const StatsPage = ({ name, url, platform, empty, error, status, router, ...props
     config: { mass: 1, tension: 150, friction: 50 },
   });
 
+  const sortedLegends = useMemo(() =>
+    stats.legends.sort((a, b) => a.kills > b.kills ? -1 : 1)
+  , [stats]);
+
   return (
     <div>
       <Head>
@@ -156,7 +160,7 @@ const StatsPage = ({ name, url, platform, empty, error, status, router, ...props
             title: 'Overview',
             content: (
               <>
-                {stats.legends.map(legendStats => (
+                {sortedLegends.map(legendStats => (
                   <LegendStats
                     stats={legendStats}
                     key={legendStats.id}
