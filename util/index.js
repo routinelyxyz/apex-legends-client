@@ -29,3 +29,13 @@ export const useDispatch = dispatch => (type, payload, meta) =>
   dispatch({ type, payload, meta });
 
 export const filterUnique = (value, index, self) => self.indexOf(value) === index;
+
+export const filterById = (item, index, self) =>
+  self.filter(any => any.id == item.id).length < 2;
+
+export const getUniqueById = items => Object.values(
+  items.reduce((unique, item) => ({
+    ...unique,
+    [item.id]: item
+  }), {})
+);

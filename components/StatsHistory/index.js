@@ -9,22 +9,15 @@ const fetchHistory = async ({ name, platform, id }) => {
   return data.data;
 }
 
-export const StatsHistory = ({ player }) => {
-  const [history, setHistory] = useState([]);
+export const StatsHistory = ({ player, matchHistory, setMatchHistory }) => {
 
   useEffect(() => {
     fetchHistory(player)
-      .then(history => {
-        const withDay = history.map(match => ({
-          ...match,
-          day: dayjs(match.date).format('YYYY-MM-DD')
-        }))
-        setHistory(withDay);
-      })
+      .then(setMatchHistory)
       .catch(console.error)
   }, []);
 
-  const groupedByDay = useMemo(() => history
+  const groupedByDay = useMemo(() => matchHistory
     .reduce((grouped, match, index, original) => {
       const lastGroupIndex = grouped.length - 1;
       const { day } = match;
@@ -34,10 +27,9 @@ export const StatsHistory = ({ player }) => {
       } else {
         grouped[lastGroupIndex].matches.push(match);
       }
-
       return grouped;
     }, [])
-  , [history]);
+  , [matchHistory]);
 
   return (
     <div className={css.container}>

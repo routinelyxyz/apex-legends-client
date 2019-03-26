@@ -5,7 +5,7 @@ import { animated, useSpring, config } from 'react-spring';
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import dayjs from 'dayjs';
-import { getTs } from '../../util';
+import { getTs, getUniqueById } from '../../util';
 import { connect } from 'react-redux';
 import { mapDispatchToProps, mapStateDynamic } from '../../store/mappers';
 import Head from 'next/head';
@@ -25,16 +25,28 @@ const getStats = async (player, update = false) => {
   const { platform, name, id = '' } = player;
 
   const url = `/stats/${platform}/${encodeURI(name)}?id=${id}&update=${update}`;
-  const stats = await axios.get(url);
-  
-  return stats.data.data;
+  const response = await axios.get(url);
+  const { history, data: stats } = response.data;
+
+  return [stats, history];
 }
+
+const addDayToRecord = record => ({
+  ...record,
+  day: dayjs(record.date).format('YYYY-MM-DD')
+});
+
+const mergeMatchHistory = (prevHistory, nextHistory) => 
+  getUniqueById(
+    [...nextHistory, ...prevHistory]
+  ).sort((a, b) => a.id > b.id ? -1 : 1);
+
 
 const initialTs = getTs();
 // const countdown = 178;
-const countdown = 10;
+const countdown = process.env.NODE_ENV === 'production' ? 178 : 10;
 
-const StatsPage = ({ name, url, platform, empty, error, status, router, history, ...props }) => {
+const StatsPage = ({ name, url, platform, error, status, router, history, ...props }) => {
   if (!props.stats || error) return (
     <div className={css.searcher}>
       <PlayerSearcher pageMode/>
@@ -50,6 +62,7 @@ const StatsPage = ({ name, url, platform, empty, error, status, router, history,
   );
   const afterFirstRender = useFirstRender();
   const [stats, setStats] = useState(() => props.stats);
+  const [matchHistory, setMatchHistory] = useState([]);
   const [now, setNow] = useState(() => initialTs);
   const [to, setTo] = useState(() => initialTs - 1);
   const [isUpdating, setUpdating] = useState(false);
@@ -60,9 +73,15 @@ const StatsPage = ({ name, url, platform, empty, error, status, router, history,
     setUpdating(true);
 
     return getStats(player, true)
-      .then(nextStats => {
+      .then(([nextStats, nextHistory]) => {
         if (router.query.name === stats.player.name) {
           setStats(nextStats);
+        }
+        if (nextHistory) {
+          const nextHistoryWithDay = [addDayToRecord(nextHistory)];
+          setMatchHistory(prevHistory =>
+            mergeMatchHistory(prevHistory, nextHistoryWithDay)
+          );
         }
         setTo(getTs() + countdown);
         setUpdating(false);
@@ -107,6 +126,13 @@ const StatsPage = ({ name, url, platform, empty, error, status, router, history,
     delay: 100,
     config: { mass: 1, tension: 150, friction: 50 },
   });
+
+  const handleHistoryUpdate = nextHistory => {
+    const nextHistoryWithDay = nextHistory.map(addDayToRecord);
+    setMatchHistory(prevHistory =>
+      mergeMatchHistory(prevHistory, nextHistoryWithDay)
+    );
+  }
 
   const sortedLegends = useMemo(() =>
     stats.legends.sort((a, b) => a.kills > b.kills ? -1 : 1)
@@ -171,7 +197,13 @@ const StatsPage = ({ name, url, platform, empty, error, status, router, history,
           },
           {
             title: 'Match history',
-            content: <StatsHistory player={stats.player || stats}/>
+            content: (
+              <StatsHistory
+                player={stats.player}
+                matchHistory={matchHistory}
+                setMatchHistory={handleHistoryUpdate}
+              />
+            )
           },
           /*
           {
@@ -193,9 +225,9 @@ StatsPage.getInitialProps = async ({ query: { platform, name, id = '' }}) => {
     }
     
     const res = await axios.get(`/stats/${platform}/${encodeURIComponent(name)}?id=${id}`);
-    const stats = res.data.data;
+    const { history, data: stats } = res.data;
 
-    return { stats, platform, name, id, url: '' };
+    return { stats, platform, name, id, history };
   
   } catch (err) {
     const { status } = err.response ? err.response : 500;
