@@ -34,7 +34,7 @@ const initialTs = getTs();
 // const countdown = 178;
 const countdown = 10;
 
-const StatsPage = ({ name, url, platform, empty, error, status, router, ...props }) => {
+const StatsPage = ({ name, url, platform, empty, error, status, router, history, ...props }) => {
   if (!props.stats || error) return (
     <div className={css.searcher}>
       <PlayerSearcher pageMode/>
@@ -103,7 +103,7 @@ const StatsPage = ({ name, url, platform, empty, error, status, router, ...props
 
   const lvlProps = useSpring({
     from: { lvl: 0 },
-    to: { lvl: stats.lvl },
+    to: { lvl: stats.lifetime.lvl },
     delay: 100,
     config: { mass: 1, tension: 150, friction: 50 },
   });
@@ -122,7 +122,7 @@ const StatsPage = ({ name, url, platform, empty, error, status, router, ...props
           <ProgressRing
             radius={73}
             stroke={7}
-            progress={stats.lvlProgress}
+            progress={stats.lifetime.lvlProgress}
           />
           <div className={css.avatar_container}>
             <img
