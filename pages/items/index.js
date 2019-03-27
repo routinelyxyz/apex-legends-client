@@ -273,7 +273,10 @@ const WeaponsPage = ({ items, router, categories }) => {
             />
           </div>
         </div>
-        <WeaponsGrid items={filteredWeapons}/>
+        <WeaponsGrid 
+          items={filteredWeapons}
+          flipKey={updateKey}
+        />
       </div>
     </article>
   )
