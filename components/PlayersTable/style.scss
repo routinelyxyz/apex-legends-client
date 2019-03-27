@@ -1,3 +1,4 @@
+@import "../../assets/css/rwd.scss";
 
 .not_found {
   text-align: center;
@@ -34,6 +35,12 @@
       height: 40px;
       border-radius: 50%;
       margin-right: 15px;
+      @include small {
+        margin-right: 8px;
+      }
+    }
+    @include small {
+      font-size: 13px;
     }
   }
   th {
@@ -42,8 +49,15 @@
     font-weight: normal;
     padding: 20px;
     text-align: left;
+    @include phone {
+      padding: 20px 10px;
+    }
+    @include small {
+      padding: 20px 5px;
+    }
     &:first-child {
       max-width: 110px;
+      text-align: center;
     }
     &:last-child {
       text-align: right;
@@ -51,16 +65,33 @@
     }
   }
   td {
+    padding: 10px 20px;
+    @include small {
+      padding: 10px 5px;
+    }
     &:first-child {
-      border-radius: 8px 0 0 8px;
+      text-align: center;
+      border-radius: 8px 0 0 0;
+      @include phone {
+        padding: 10px 0;
+      }
+      @include small {
+        max-width: 40px;
+      }
     }
     &:last-child {
       border-radius: 0 8px 8px 0;
       font-size: 18px;
       text-align: right;
       text-align: center;
+      @include phone {
+        padding: 10px 0;
+      }
+      @include small {
+        padding: 10px 5px;
+        font-size: 16px;
+      }
     }
-    padding: 10px 20px;
     border-collapse: collapse;
   }
   tr:nth-child(odd) td {
