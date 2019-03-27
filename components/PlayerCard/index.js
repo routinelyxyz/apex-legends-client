@@ -18,12 +18,16 @@ export const PlayerCard = ({ data, scaleSize, className, horizontal, place = 1 }
       horizontal && css.horizontal,
       className
     )}>
-      <div className={css.avatar_container}>
-        <img
-          className={css.avatar}
-          src={getAvatar(data.player)}
-        />
-      </div>
+      <PlayerLink player={data.player}>
+        <a>
+          <div className={css.avatar_container}>
+            <img
+              className={css.avatar}
+              src={getAvatar(data.player)}
+            />
+          </div>
+        </a>
+      </PlayerLink>
       <div className={css.card}>
         <p className={css.name}>
           <PlayerLink player={data.player}>
