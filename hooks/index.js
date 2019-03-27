@@ -57,16 +57,21 @@ export const useDevice = () => {
   const [width] = useWindowSize();
 
   const isSmall = width <= 480;
-  const isPhone = width > 480 && width < 979;
+  const isPhone = width < 979 // && width > 480;
   const isTablet = width >= 970 && width < 1200;
   const isDesktop = width >= 1200;
-  const key = '' + isSmall + isPhone + isTablet + isDesktop;
+
+  const isntDesktop = width < 1200;
+
+  const key = '' + isSmall + isPhone + isTablet + isDesktop + isntDesktop;
 
   const device = useMemo(() => ({
     isSmall,
     isPhone,
     isTablet,
-    isDesktop
+    isDesktop,
+
+    isntDesktop
   }), [key]);
 
   return device;
