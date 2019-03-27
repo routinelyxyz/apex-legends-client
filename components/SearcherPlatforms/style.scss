@@ -1,4 +1,5 @@
 @import "../../assets/css/rwd.scss";
+@import "../../assets/css/colors.scss";
 
 $phone-width: 35px;
 // $small-width: 30px;
@@ -15,18 +16,17 @@ $small-width: 35px;
   height: 100%;
   @include small { right: 0; }
   &.pc:before {
-    background: #15A7FA;
+    background: $pc;
   }
   &.ps4:before {
     transform: translateX(40px);
-    background: #0E409A;
-    background: rgb(28, 87, 197);
+    background: $ps4;
     @include phone { transform: translateX($phone-width); }
     @include small { transform: translateX($small-width); }
   }
   &.xbox:before {
     transform: translateX(80px);
-    background: #4CAF50;
+    background: $xbox;
     @include phone { transform: translateX($phone-width * 2); }
     @include small { transform: translateX($small-width * 2); }
   }

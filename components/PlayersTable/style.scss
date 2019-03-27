@@ -1,4 +1,5 @@
 @import "../../assets/css/rwd.scss";
+@import "../../assets/css/colors.scss";
 
 .not_found {
   text-align: center;
@@ -22,27 +23,6 @@
   .prop_name {
     text-transform: capitalize;
   }
-  .player {
-    display: inline-flex;
-    align-items: center;
-    box-sizing: border-box;
-    vertical-align: middle;
-    &:hover {
-      text-decoration: underline;
-    }
-    .avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      margin-right: 15px;
-      @include small {
-        margin-right: 8px;
-      }
-    }
-    @include small {
-      font-size: 13px;
-    }
-  }
   th {
     color: #7E81A7;
     color: #b2b2d5;
@@ -65,15 +45,16 @@
     }
   }
   td {
-    padding: 10px 20px;
+    $padding-vertical: 13px;
+    padding: $padding-vertical 20px;
     @include small {
-      padding: 10px 5px;
+      padding: $padding-vertical 5px;
     }
     &:first-child {
       text-align: center;
       border-radius: 8px 0 0 0;
       @include phone {
-        padding: 10px 0;
+        padding: $padding-vertical 0;
       }
       @include small {
         max-width: 40px;
@@ -85,10 +66,10 @@
       text-align: right;
       text-align: center;
       @include phone {
-        padding: 10px 0;
+        padding: $padding-vertical 0;
       }
       @include small {
-        padding: 10px 5px;
+        padding: $padding-vertical 5px;
         font-size: 16px;
       }
     }
@@ -97,4 +78,60 @@
   tr:nth-child(odd) td {
     background: #272836;
   }
+}
+
+.player {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  vertical-align: middle;
+  position: relative;
+  &:hover {
+    text-decoration: underline;
+  }
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+    @include small {
+      margin-right: 8px;
+    }
+    // border: 1px solid 
+  }
+  @include small {
+    font-size: 13px;
+  }
+}
+
+$platform-size: 15px;
+
+.platform_container {
+  width: $platform-size + 8px;
+  height: $platform-size + 8px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -4px;
+  left: -16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .platform {
+    width: $platform-size;
+    height: $platform-size;
+    filter: invert(100%);
+  }
+  overflow: hidden;
+  &.pc {
+    // background: $pc;
+    .platform {
+      width: $platform-size - 3px;
+      height: $platform-size - 3px;
+    }
+  }
+  // &.ps4 { background: $ps4; }
+  // &.xbox { background: $xbox; }
+  // background: linear-gradient(#4A00E0, #8E2DE2);
+  background: rgba(1,1,1,.4);
+
 }

@@ -1,5 +1,5 @@
 import css from './style.scss';
-import { statsTitlesMap, getStatic, getAvatar } from '../../helpers'
+import { statsTitlesMap, getStatic, getAvatar, applyCss } from '../../helpers'
 
 import { PlayerLink } from '../../components/PlayerLink';
 
@@ -40,6 +40,15 @@ export const PlayersTable = ({ data, prop, clearFilters, renderRank = i => i + 1
             <td>
               <PlayerLink player={row.player}>
                 <a className={css.player}>
+                  <div {...applyCss(
+                    css.platform_container,
+                    css[row.player.platform]
+                  )}>
+                    <img
+                      className={css.platform}
+                      src={`/static/img/${row.player.platform}.svg`}
+                    />
+                  </div>
                   <img
                     src={getAvatar(row.player, 40)}
                     className={css.avatar}
