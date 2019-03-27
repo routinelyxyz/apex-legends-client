@@ -66,13 +66,17 @@ export const applyCss = (...inputs) => ({
     .join(' ')
 });
 
-export const HOST_URL = process.env.NODE_ENV === 'production'
+const isProduction = process.env.NODE_ENV === 'production';
+
+export const HOST_URL = isProduction
   ? 'https://api.apex-legends.win'
-  : 'http://localhost:4000'
+  : 'http://api.localhost';
 
-export const STATIC = HOST_URL + '/static';
+export const STATIC = isProduction
+  ? 'https://static.apex-legends.win'
+  : 'http://static.localhost';
 
-export const getStatic = url => HOST_URL + '/static' + url;
+export const getStatic = url => STATIC + url;
 export const getUrl = url => HOST_URL + url;
 export const getAvatar = (player, size = 115) => getStatic(
   `/avatars/${player.avatar ? player.id : 'default'}-${size}.jpg`
