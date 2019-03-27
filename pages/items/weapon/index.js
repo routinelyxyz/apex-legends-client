@@ -19,6 +19,7 @@ const splittedProps = [
 const WeaponPage = ({ slug, item, ratios }) => {
 
   const calcedRatio = useMemo(() => ratios
+    .filter(ratio => ratio.name !== 'headshotDPS')
     .map(({ name, min, diff }) => {
       const valOutMin = item[name] - min;
       let value = Math.round(

@@ -17,7 +17,7 @@ export const weaponProps = [
   ['bodyDamage', 'Body damage'],
   ['headshotDamage', 'Headshot damage'],
   ['bodyDPS', 'Body DPS'],
-  ['headshotDPS', 'Headshot DPS'],
+  // ['headshotDPS', 'Headshot DPS'],
   ['reload', 'Reload time',  v => parseFloat(v) + ' s'],
   ['emptyReload', 'Reload time (empty magazine)', v => parseFloat(v) + ' s'],
   ['magazine', 'Magazine size'],
