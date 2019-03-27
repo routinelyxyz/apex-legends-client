@@ -151,41 +151,31 @@ const WeaponsPage = ({ items, router, categories }) => {
   }, [updateKey]);
 
   useEffect(() => {
-    const handleRouteChange = url => {
-      if (
-        url !== '/items' ||
-        !url.includes('/items?')
-      ) {
-        clearTimeout(timeoutB);
-      }
-    }
-    router.events.on('routeChangeStart', handleRouteChange)
-    return () => router.events.off('routeChangeStart', handleRouteChange)
-  }, []);
-
-  useEffect(() => {
     const { name, ammo, sortBy, sortDesc, category } = router.query;
     
-    if (name) setPhrase(name);
-    if (ammo) setAmmoTypes(
-      ammo
-        .split(',')
-        .reduce((updatedTypes, type) => ({
-          ...updatedTypes,
-          [type]: true
-        }), selectedAmmoTypes)
-    );
-    if (category) setWeaponTypes(
-      category
-        .split(',')
-        .reduce((updatedCats, category) => ({
-          ...updatedCats,
-          [category]: true
-        }), selectedWeaponTypes)
-    )
-    if (sortBy != null && sortBy !== initialSort) setSortProp(sortBy);
-    if (sortDesc != null && sortDesc !== initialSortAsc) setSortAsc(false);
+    const timeoutId = setTimeout(() => {
+      if (name) setPhrase(name);
+      if (ammo) setAmmoTypes(
+        ammo
+          .split(',')
+          .reduce((updatedTypes, type) => ({
+            ...updatedTypes,
+            [type]: true
+          }), selectedAmmoTypes)
+      );
+      if (category) setWeaponTypes(
+        category
+          .split(',')
+          .reduce((updatedCats, category) => ({
+            ...updatedCats,
+            [category]: true
+          }), selectedWeaponTypes)
+      )
+      if (sortBy != null && sortBy !== initialSort) setSortProp(sortBy);
+      if (sortDesc != null && sortDesc !== initialSortAsc) setSortAsc(false);
+    }, 150);
 
+    return () => clearTimeout(timeoutId);
   }, []);
 
   return (
