@@ -18,19 +18,10 @@ import { PlayersTable } from '../../components/PlayersTable';
   Color for searcher phrase background #FFFAE0
 */
 
-const HomePage = ({ recentUpdates }) => {
-  const [stats, setStats] = useState(() => recentUpdates);
+const HomePage = ({ dailyRanking }) => {
 
-  const transitions = useTransition(stats, s => s.player.id, {
-    from: { opacity: 0, transform: 'translateX(100px)' },
-    enter: { opacity: 1, transform: 'translateX(0px)' },
-    leave: { opacity: 0 }
-  });
-
-  const top3Players = recentUpdates.slice(0, 3);
-  const restPlayers = recentUpdates.slice(3, recentUpdates.length);
-  // const [top1, top2, top3, ...restPlayers] = recentUpdates;
-  // const top3Players = [top1, top2, top3]; 
+  const top3Players = dailyRanking.slice(0, 3);
+  const restPlayers = dailyRanking.slice(3, dailyRanking.length);
 
   return (
     <article>
@@ -71,14 +62,12 @@ const HomePage = ({ recentUpdates }) => {
 
 HomePage.getInitialProps = async () => {
   try {
-    const options = { timeout: 700 };
 
-    const recentUpdates = await axios.get('/stats/recently-updated', options);
-    const trending = await axios.get('/stats/trending', options);
+    const options = { timeout: 500 };
+    const dailyRanking = await axios.get('/stats/daily-ranking', options);
 
     return {
-      recentUpdates: recentUpdates.data.data.reverse(),
-      trending: trending.data.data
+      dailyRanking: dailyRanking.data.data
     }
 
   } catch(err) {
