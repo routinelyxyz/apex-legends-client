@@ -1,0 +1,91 @@
+@import "../../assets/css/rwd.scss";
+@import "../../assets/css/colors.scss";
+
+$phone-width: 35px;
+// $small-width: 30px;
+$small-width: 35px;
+
+.platforms {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  display: flex;
+  top: 0;
+  right: 5px;
+  height: 100%;
+  @include small { right: 0; }
+  &.pc:before {
+    background: $pc;
+  }
+  &.ps4:before {
+    transform: translateX(40px);
+    background: $ps4;
+    @include phone { transform: translateX($phone-width); }
+    @include small { transform: translateX($small-width); }
+  }
+  &.xbox:before {
+    transform: translateX(80px);
+    background: $xbox;
+    @include phone { transform: translateX($phone-width * 2); }
+    @include small { transform: translateX($small-width * 2); }
+  }
+  &:before {
+    content: "";
+    border-radius: 5px;
+    position: absolute;
+    height: 110%;
+    width: 40px;
+    top: -5%;
+    transition: transform .25s ease, background-color .25s ease;
+    @include phone { width: $phone-width; }
+    @include small { width: $small-width; }
+  }
+  .platform_btn {
+    user-select: none;
+    height: 100%;
+    width: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @include phone { width: $phone-width; }
+    @include small { width: $small-width; }
+    &.active {
+      .platform_img {
+        filter: invert(100%);
+      }
+    }
+  }
+  .platform_img {
+    height: 22px;
+    width: 22px;
+    filter: invert(50%);
+    position: relative;
+    z-index: 40;
+    transition: filter .5s ease;
+    @include phone {
+      height: $phone-width - 17px;
+      width: $phone-width - 17px;
+    }
+    @include small {
+      height: $small-width - 17px;
+      width: $small-width - 17px;
+    }
+  }
+  &.small {
+    right: 0;
+    &.ps4:before { transform: translateX($small-width); }
+    &.xbox:before { transform: translateX($small-width * 2); }
+    &:before {
+      width: $small-width;
+      height: 105%;
+      top: -2.5%;
+    }
+    .platform_btn { width: $small-width; }
+    .platform_img {
+      width: $small-width - 17px;
+      height: $small-width - 17px;
+    }
+  }
+}

@@ -19,6 +19,7 @@ const splittedProps = [
 const WeaponPage = ({ slug, item, ratios }) => {
 
   const calcedRatio = useMemo(() => ratios
+    .filter(ratio => ratio.name !== 'headshotDPS')
     .map(({ name, min, diff }) => {
       const valOutMin = item[name] - min;
       let value = Math.round(
@@ -131,8 +132,8 @@ WeaponPage.getInitialProps = async ({ query: { slug }}) => {
     axios.get('/items/weapons/ratio'),
   ]);
 
-  const item = itemData.data;
-  const ratios = ratiosData.data;
+  const item = itemData.data.data;
+  const ratios = ratiosData.data.data;
 
   return { slug, item, ratios };
 }

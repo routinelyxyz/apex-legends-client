@@ -31,7 +31,7 @@ class MyDocument extends Document {
       <html lang="en">
         <Head>
           {/* <Manifest/> */}
-          <meta charset="UTF-8" key="charset"/>
+          <meta charSet="UTF-8" key="charSet"/>
           <meta name="viewport" content="width=device-width, initial-scale=1" key="viewport"/>
           <meta name="description" content={description} key="description"/>
           <meta name="ogDescription" content={description} key="ogDescription"/>

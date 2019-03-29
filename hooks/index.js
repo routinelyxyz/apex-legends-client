@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import ResizeObserver from 'resize-observer-polyfill';
 import { ModalContext } from '../helpers/context';
 
@@ -51,24 +51,28 @@ export const useMounted = (fn) => {
   }, []);
   return mounted.current;
 }
+export { useMounted as useFirstRender };
 
 export const useDevice = () => {
   const [width] = useWindowSize();
-  const [device, setDevice] = useState({});
 
-  useEffect(() => {
-    if (width === 0) return;
-    if (width <= 480) setDevice({ ...device, isSmall: true });
-    // if (width < 979) setDevice({ ...device, isPhone: true });
+  const isSmall = width <= 480;
+  const isPhone = width < 979 // && width > 480;
+  const isTablet = width >= 970 && width < 1200;
+  const isDesktop = width >= 1200;
 
-    setDevice({
-      ...device,
-      isPhone: width < 979
-    });
+  const isntDesktop = width < 1200;
 
-    // if (width <= 979 && width < 1200) setDevice({  ...device, isTablet: true });
-    // else setDevice({ isDesktop: true });
-  }, [width]);
+  const key = '' + isSmall + isPhone + isTablet + isDesktop + isntDesktop;
+
+  const device = useMemo(() => ({
+    isSmall,
+    isPhone,
+    isTablet,
+    isDesktop,
+
+    isntDesktop
+  }), [key]);
 
   return device;
 }

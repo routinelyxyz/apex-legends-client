@@ -3,11 +3,11 @@ import { getUrl } from '../../helpers';
 import qs from 'querystringify';
 import { useState, useEffect } from 'react';
 import { withRouter } from 'next/router';
-import { fetchify } from '../../util/fetchify';
 import { useMounted } from '../../hooks';
 import { statsPropTitles, statsProps, statsTitlesMap, platforms } from '../../helpers';
 import Link from 'next/link';
 import Head from 'next/head';
+import axios from 'axios';
 
 import { Navigation } from '../../reusable/Navigation';
 import { Select } from '../../reusable/Select';
@@ -166,16 +166,21 @@ const LeadeboardsPage = ({ data, query, legends, router }) => {
 LeadeboardsPage.getInitialProps = async (props) => {
   const { query } = props;
 
-  const [stats, legends] = await Promise.all([
-    fetchify.get('/stats' + props.asPath).then(s => s.json()),
-    fetchify.get('/legends').then(l => l.json()),
+  const [leaderboards, legends] = await Promise.all([
+    axios.get('/stats' + props.asPath),
+    axios.get('/legends')
   ]);
   
   if (props.asPath !== '/leaderboards') {
     await new Promise(r => setTimeout(r, 250));
   }
 
-  return { stats, data: stats, legends, query: { page: 1, ...query }};
+  return {
+    stats: leaderboards.data,
+    data: leaderboards.data,
+    legends: legends.data.data,
+    query: { page: 1, ...query }
+  }
 }
 
 export default withRouter(LeadeboardsPage);

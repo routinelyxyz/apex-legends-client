@@ -1,54 +1,45 @@
 import css from './style.scss';
 import 'isomorphic-unfetch';
-import { getUrl } from '../../helpers';
-import dayjs from 'dayjs';
-import { useState, useEffect } from 'react';
-import { animated, useTransition, config } from 'react-spring';
 import Head from 'next/head';
-import { useDevice, useWindowSize } from '../../hooks';
-import { fetchify } from '../../util/fetchify';
 import axios from 'axios';
+import { useState, useMemo, useEffect } from 'react';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
 import { PlayerCard } from '../../components/PlayerCard';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
 import { PlayersTable } from '../../components/PlayersTable';
- 
 
-const avatar = 'https://opgg-static.akamaized.net/images/profile_icons/profileIcon3379.jpg?image=c_scale,w_38&v=1518361200';
-/*
-  Color for searcher phrase background #FFFAE0
-*/
+const endOfDay = dayjs().utc().endOf('day');
 
-const HomePage = ({ recentUpdates }) => {
-  const [stats, setStats] = useState(() => recentUpdates);
+const HomePage = ({ dailyRanking }) => {
+  const [timeLeft, setTimeLeft] = useState('');
+
+  const handleTimeCounter = () => {
+    const secondsLeft = endOfDay.diff(dayjs().utc(), 'seconds');
+
+    const seconds = secondsLeft % 60;
+    const minutes  = ~~((secondsLeft % 3600) / 60);
+    const hours  = ~~(secondsLeft / 3600);
+
+    const formatted = [hours, minutes, seconds]
+      .map(v => v < 10 ? '0' + v : v)
+      .join(' : ');
+
+    setTimeLeft(formatted);
+  }
 
   useEffect(() => {
-    return;
-    let index = 0;
-    const interval = setInterval(() => {
-      index++;
-      if (index === recentUpdates.length) {
-        return clearInterval(interval);
-      }
-      setStats(prevStats => {
-        const updated = [recentUpdates[index], ...prevStats];
-        if (updated.length > 5) updated.splice(-1, 1);
-        return updated;
-      });
-    }, 2000);
-    return () => clearInterval(interval);
+    handleTimeCounter();
+    const intervalId = setInterval(handleTimeCounter, 1000);
+    return () => clearInterval(intervalId);
   }, []);
 
-  const transitions = useTransition(stats, s => s.player.id, {
-    from: { opacity: 0, transform: 'translateX(100px)' },
-    enter: { opacity: 1, transform: 'translateX(0px)' },
-    leave: { opacity: 0 }
-  });
-
-  const top3Players = recentUpdates.slice(0, 3);
-  const restPlayers = recentUpdates.slice(3, recentUpdates.length);
-  // const [top1, top2, top3, ...restPlayers] = recentUpdates;
-  // const top3Players = [top1, top2, top3]; 
+  const { top3Players, restPlayers } = useMemo(() => ({
+    top3Players: dailyRanking.slice(0, 3),
+    restPlayers: dailyRanking.slice(3, dailyRanking.length)
+  }), [dailyRanking]);
 
   return (
     <article>
@@ -58,7 +49,12 @@ const HomePage = ({ recentUpdates }) => {
       <PlayerSearcher pageMode/>
       {!!top3Players.length && (
         <>
-          <h2 className={css.top_header}>Best players of day</h2>
+          <h2 className={css.top_header}>
+            Best players of day
+          </h2>
+          <p className={css.top_counter}>
+            {timeLeft}
+          </p>
           <div className={css.cards_container}>
             {top3Players.map((stats, index) => (
               <div className={css.card_container} key={index}>
@@ -89,15 +85,13 @@ const HomePage = ({ recentUpdates }) => {
 
 HomePage.getInitialProps = async () => {
   try {
-    /* Refactor to data */
-    const options = { timeout: 700 };
-    const recentsRes = await axios.get('/stats/recently-updated', options);
-    const recentUpdates = recentsRes.data.reverse();
-  
-    const trendingRes = await axios.get('/stats/trending', options);
-    const trending = trendingRes.data;
 
-    return { recentUpdates, trending };
+    const options = { timeout: 500 };
+    const dailyRanking = await axios.get('/stats/daily-ranking', options);
+
+    return {
+      dailyRanking: dailyRanking.data.data
+    }
 
   } catch(err) {
     return { recentUpdates: [], trending: [] }

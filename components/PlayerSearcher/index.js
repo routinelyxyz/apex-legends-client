@@ -1,7 +1,7 @@
 import css from './style.scss';
 import { useState, useRef, useContext, useEffect } from 'react';
-import { debounce } from '../../util';
-import { getUrl, applyCss } from '../../helpers';
+import { debounce, applyCss } from '../../util';
+import { getUrl, platformNames } from '../../helpers';
 import useClickOutside from 'use-onclickoutside';
 import { animated, useTransition, config } from 'react-spring';
 import { connect } from 'react-redux';
@@ -9,31 +9,16 @@ import { mapStateDynamic, mapDispatchToProps } from '../../store/mappers';
 import Router from 'next/router';
 import { useDevice } from '../../hooks';
 import { MobileMenuContext, ModalContext } from '../../helpers/context';
+import { Dropdown } from '../../reusable/Dropdown';
 
 import { Menu } from '../../reusable/Menu';
 import { PlayerLabel } from '../../components/PlayerLabel';
 import { BasicInput } from '../../reusable/Input';
 import { PhraseSelector } from '../../reusable/PhraseSelector';
+import { SearcherPlatforms } from '../../components/SearcherPlatforms';
 
 const debounceA = debounce(350);
 const debounceB = debounce(100);
-
-const players = [
-  {
-    id: 1,
-    name: 'Ninja',
-    lvl: 103,
-    platform: 'pc',
-    img: 'https://static-cdn.jtvnw.net/jtv_user_pictures/cef31105-8a6e-4211-a74b-2f0bbd9791fb-profile_image-70x70.png'
-  },
-  {
-    id: 2,
-    name: 'ApexLegend',
-    lvl: 41,
-    platform: 'ps4',
-    img: 'https://static-cdn.jtvnw.net/jtv_user_pictures/cef31105-8a6e-4211-a74b-2f0bbd9791fb-profile_image-70x70.png'
-  }
-]
 
 const PlayerItem = player => (
   <PlayerLabel
@@ -76,7 +61,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
         getUrl(`/stats/players/${encodeURI(phrase)}`)
       );
       const data = await res.json();
-      setPlayersFound(data);
+      setPlayersFound(data.data);
     });
   }
 
@@ -84,6 +69,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
     if (e.key === 'Enter' && phrase.length) {
       debounceB(() => {
         setFocused(false);
+        modal.setOpened(false);
         Router.push(
           `/stats?platform=${platform}&name=${phrase}&=id`,
           `/stats/${platform}/${phrase}`
@@ -98,7 +84,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
     modal.setOpened(true);
     if (isPhone) {
       window.scrollTo({
-        top: refContainer.current.offsetTop,
+        top: refContainer.current.offsetTop - 5,
         behavior: 'smooth'
       });
     }
@@ -117,14 +103,22 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
       )}
       ref={refContainer}
     >
-      <BasicInput
-        type="text"
-        placeholder="Search player..."
-        value={phrase}
-        onChange={getPlayers}
-        onFocus={handleFocus}
-        onKeyPress={handleStatsSearch}
-      />
+      <div className={css.input_container}>
+        <BasicInput
+          className={pageMode && css.input_large}
+          type="text"
+          placeholder="Search player..."
+          value={phrase}
+          onChange={getPlayers}
+          onFocus={handleFocus}
+          onKeyPress={handleStatsSearch}
+        />
+        <SearcherPlatforms
+          platform={platform}
+          setPlatform={platform => setPlatform(platform)}
+          small={!pageMode}
+        />
+      </div>
       {transitions.map(({ item, props, key }) => (
         item &&
         <animated.div
@@ -146,7 +140,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
             :
               <Menu>
                 <div className={css.content_container}>
-                  {recentPlayers.map(PlayerItem)}
+                  {[].map(PlayerItem)}
                 </div>
                 <div className={css.content_container}>
                   {[].map(PlayerItem)}

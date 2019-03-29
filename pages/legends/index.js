@@ -29,7 +29,7 @@ const LegendsPage = ({ legends }) => {
 LegendsPage.getInitialProps = async () => {
   const data = await fetch(HOST_URL + '/legends');
   const legends = await data.json();
-  return { legends };
+  return { legends: legends.data };
 }
 
 export default LegendsPage;

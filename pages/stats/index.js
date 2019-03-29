@@ -1,62 +1,52 @@
 import 'isomorphic-unfetch';
 import css from './style.scss';
-import { getUrl } from '../../helpers';
+import { getUrl, getStatic, getAvatar } from '../../helpers';
 import { animated, useSpring, config } from 'react-spring';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import dayjs from 'dayjs';
-import { getTs } from '../../util';
-import { fetchify } from '../../util/fetchify';
+import { getTs, getUniqueById } from '../../util';
 import { connect } from 'react-redux';
 import { mapDispatchToProps, mapStateDynamic } from '../../store/mappers';
 import Head from 'next/head';
 import axios from 'axios';
-
-const avatar = 'https://static-cdn.jtvnw.net/jtv_user_pictures/cef31105-8a6e-4211-a74b-2f0bbd9791fb-profile_image-70x70.png';
+import { withRouter } from 'next/router';
+import { useFirstRender } from '../../hooks';
 
 import { ProgressRing } from '../../components/ProgressRing';
-import { HorizontalNav, HorizontalNav2, StaticLink, HorizontalNavTab } from '../../reusable/HorizontalNav';
+import { HorizontalNavTab } from '../../reusable/HorizontalNav';
 import { LegendStats } from '../../components/LegendStats';
 import { StatsBanner } from '../../components/StatsBanner';
 import { StatsHistory } from '../../components/StatsHistory';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
 
-const links = [
-  {
-    title: 'Overview',
-    active: r => !r.includes('/history'),
-    dynamic: ({ asPath = '' }) => ({
-      href: asPath,
-      as: asPath
-    }),
-  },
-  {
-    title: 'Match History',
-    active: r => r.includes('/history'),
-    dynamic: ({ asPath = '' }) => ({
-      href: asPath,
-      as: asPath
-    })
-  }
-];
-
-const tabs = [
-  { title: 'Overview', content: <div>xd</div> },
-  { title: 'Match history', content: <div>12312321</div> },
-]
 
 const getStats = async (player, update = false) => {
   const { platform, name, id = '' } = player;
-  const url = `/stats/${platform}/${encodeURI(name)}?id=${id}&update=${update}`;
 
-  const res = await fetchify.get(url);
-  return await res.json();
+  const url = `/stats/${platform}/${encodeURI(name)}?id=${id}&update=${update}`;
+  const response = await axios.get(url);
+  const { history, data: stats } = response.data;
+
+  return [stats, history];
 }
 
-const initialTs = getTs();
-const countdown = 178;
+const addDayToRecord = record => ({
+  ...record,
+  day: dayjs(record.date).format('YYYY-MM-DD')
+});
 
-const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
+const mergeMatchHistory = (prevHistory, nextHistory) => 
+  getUniqueById(
+    [...nextHistory, ...prevHistory]
+  ).sort((a, b) => a.id > b.id ? -1 : 1);
+
+
+const initialTs = getTs();
+// const countdown = 178;
+const countdown = process.env.NODE_ENV === 'production' ? 178 : 10;
+
+const StatsPage = ({ name, url, platform, error, status, router, history, ...props }) => {
   if (!props.stats || error) return (
     <div className={css.searcher}>
       <PlayerSearcher pageMode/>
@@ -70,78 +60,99 @@ const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
       )}
     </div>
   );
-  const [stats, setStats] = useState(() => props.stats.stats);
+  const afterFirstRender = useFirstRender();
+  const [stats, setStats] = useState(() => props.stats);
+  const [matchHistory, setMatchHistory] = useState([]);
   const [now, setNow] = useState(() => initialTs);
   const [to, setTo] = useState(() => initialTs - 1);
   const [isUpdating, setUpdating] = useState(false);
   const counter = to - now;
-  const histUrl = `/stats/${platform}/${encodeURI(name)}/history`;
-  const as = `/stats?platform=${platform}&name=${encodeURI(name)}&id=${stats.player && stats.player.id}/history`;
-  // const historyUrl = `/stats/history/${platform}/${encodeURI(name)}?id=${stats.player.id}`;
+
+  const updateStats = (player = stats.player) => {
+    if (isUpdating) return;
+    setUpdating(true);
+
+    return getStats(player, true)
+      .then(([nextStats, nextHistory]) => {
+        if (router.query.name === stats.player.name) {
+          setStats(nextStats);
+        }
+        if (nextHistory) {
+          const nextHistoryWithDay = [addDayToRecord(nextHistory)];
+          setMatchHistory(prevHistory =>
+            mergeMatchHistory(prevHistory, nextHistoryWithDay)
+          );
+        }
+        setTo(getTs() + countdown);
+        setUpdating(false);
+      })
+      .catch(console.log);
+  }
 
   useEffect(() => {
     let interval = setInterval(() => {
       setNow(getTs());
     }, 1000);
+
     if (stats && !error) {
-      props.actions.savePlayerAsync(stats);
+      if (afterFirstRender) {
+        setStats(props.stats);
+        setTo(getTs() + countdown);
+        props.actions.savePlayerAsync(props.stats.player);
+      } else {
+        props.actions.savePlayerAsync(stats.player);
+      }
     }
 
     return () => clearInterval(interval);
-  }, []);
-
-  const updateStats = () => {
-    if (isUpdating) return;
-    setUpdating(true);
-
-    /*
-      Normalize ENDPOINT stats object after update
-      + Add used props to test
-    */
-    getStats(stats.player, true)
-      .then(({ stats: data }) => {
-        setStats(data);
-        setTo(getTs() + countdown);
-        setUpdating(false);
-      })
-      .catch(console.log)
-  }
+  }, [props.stats, afterFirstRender]);
 
   useEffect(() => {
-    if (counter < 0) {
+    if (counter < 0 && !isUpdating) {
       updateStats();
     }
   }, [counter]);
 
-  const updateIn = () => {
+  const updateIn = useMemo(() => {
     const seconds = counter % 60;
     const minutes = Math.floor(counter / 60);
     if ((minutes <= 0 && seconds <= 0) || isUpdating) return 'Just now';
     return (minutes ? `${minutes} min. ` : '') + `${seconds} sec.`;
-  }
+  }, [counter, isUpdating]);
 
   const lvlProps = useSpring({
     from: { lvl: 0 },
-    to: { lvl: stats.lvl },
+    to: { lvl: stats.lifetime.lvl },
     delay: 100,
     config: { mass: 1, tension: 150, friction: 50 },
   });
 
+  const handleHistoryUpdate = nextHistory => {
+    const nextHistoryWithDay = nextHistory.map(addDayToRecord);
+    setMatchHistory(prevHistory =>
+      mergeMatchHistory(prevHistory, nextHistoryWithDay)
+    );
+  }
+
+  const sortedLegends = useMemo(() =>
+    stats.legends.sort((a, b) => a.kills > b.kills ? -1 : 1)
+  , [stats]);
+
   return (
     <div>
       <Head>
-        <title>{stats.name} - Stats | Apex-Legends.win</title>
+        <title>{stats.player.name} - Stats | Apex-Legends.win</title>
       </Head>
       <div className={css.player}>
         <div className={css.badge}>
           <ProgressRing
             radius={73}
             stroke={7}
-            progress={stats.lvlProgress}
+            progress={stats.lifetime.lvlProgress}
           />
           <div className={css.avatar_container}>
             <img
-              src={avatar}
+              src={getAvatar(stats.player)}
               className={css.avatar}
             />
           </div>
@@ -165,20 +176,9 @@ const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
           <p className={css.update_title}>
             Update in:
           </p>
-          {updateIn()}
+          {updateIn}
         </div>
       </div>
-      {/* <HorizontalNav>
-        <Link href={url}>
-          <a>Overview</a>
-        </Link>
-        <Link
-          href={histUrl}
-          as={as}
-        >
-          <a>Match History</a>
-        </Link>
-      </HorizontalNav> */}
       <HorizontalNavTab
         withMargin
         tabs={[
@@ -186,7 +186,7 @@ const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
             title: 'Overview',
             content: (
               <>
-                {stats.legends.map(legendStats => (
+                {sortedLegends.map(legendStats => (
                   <LegendStats
                     stats={legendStats}
                     key={legendStats.id}
@@ -197,7 +197,13 @@ const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
           },
           {
             title: 'Match history',
-            content: <StatsHistory player={stats.player || stats}/>
+            content: (
+              <StatsHistory
+                player={stats.player}
+                matchHistory={matchHistory}
+                setMatchHistory={handleHistoryUpdate}
+              />
+            )
           },
           /*
           {
@@ -207,22 +213,7 @@ const StatsPage = ({ name, url, platform, empty, error, status, ...props }) => {
           */
         ]}
       >
-        {/* {(tab, index) => (
-          <div>{tab} {index}</div>
-        )} */}
       </HorizontalNavTab>
-      {/* <HorizontalNav2>
-        <StaticLink
-          title="Match history"
-          href={url}
-          as={url}
-        />
-        <StaticLink
-          title="Match history"
-          href={historyUrl}
-          as={historyUrl}
-        />
-      </HorizontalNav2> */}
     </div>
   )
 }
@@ -234,9 +225,9 @@ StatsPage.getInitialProps = async ({ query: { platform, name, id = '' }}) => {
     }
     
     const res = await axios.get(`/stats/${platform}/${encodeURIComponent(name)}?id=${id}`);
-    const stats = res.data;
+    const { history, data: stats } = res.data;
 
-    return { stats, platform, name, id, url: '' };
+    return { stats, platform, name, id, history };
   
   } catch (err) {
     const { status } = err.response ? err.response : 500;
@@ -247,4 +238,4 @@ StatsPage.getInitialProps = async ({ query: { platform, name, id = '' }}) => {
 export default connect(
   mapStateDynamic(['stats']),
   mapDispatchToProps
-)(StatsPage);
+)(withRouter(StatsPage));

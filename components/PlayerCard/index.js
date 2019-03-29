@@ -1,9 +1,8 @@
 import css from './style.scss';
 import { applyCss } from '../../util';
+import { getAvatar } from '../../helpers';
 
 import { PlayerLink } from '../../components/PlayerLink';
-
-const avatar = "http://opgg-static.akamaized.net/images/profile_icons/profileIcon3182.jpg";
 
 export const PlayerCard = ({ data, scaleSize, className, horizontal, place = 1 }) => {
   const props = [
@@ -19,12 +18,16 @@ export const PlayerCard = ({ data, scaleSize, className, horizontal, place = 1 }
       horizontal && css.horizontal,
       className
     )}>
-      <div className={css.avatar_container}>
-        <img
-          className={css.avatar}
-          src={avatar}
-        />
-      </div>
+      <PlayerLink player={data.player}>
+        <a>
+          <div className={css.avatar_container}>
+            <img
+              className={css.avatar}
+              src={getAvatar(data.player)}
+            />
+          </div>
+        </a>
+      </PlayerLink>
       <div className={css.card}>
         <p className={css.name}>
           <PlayerLink player={data.player}>

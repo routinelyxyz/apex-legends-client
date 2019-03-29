@@ -6,11 +6,18 @@ export const platforms = [
   { name: 'Xbox', value: 'xbox' }
 ]
 
+export const platformNames = {
+  all: 'All',
+  pc: 'PC',
+  ps4: 'PS4',
+  xbox: 'Xbox'
+}
+
 export const weaponProps = [
   ['bodyDamage', 'Body damage'],
   ['headshotDamage', 'Headshot damage'],
   ['bodyDPS', 'Body DPS'],
-  ['headshotDPS', 'Headshot DPS'],
+  // ['headshotDPS', 'Headshot DPS'],
   ['reload', 'Reload time',  v => parseFloat(v) + ' s'],
   ['emptyReload', 'Reload time (empty magazine)', v => parseFloat(v) + ' s'],
   ['magazine', 'Magazine size'],
@@ -59,11 +66,18 @@ export const applyCss = (...inputs) => ({
     .join(' ')
 });
 
-export const HOST_URL = process.env.NODE_ENV === 'production'
+const isProduction = process.env.NODE_ENV === 'production';
+
+export const HOST_URL = isProduction
   ? 'https://api.apex-legends.win'
-  : 'http://localhost:4000'
+  : 'http://localhost:4000';
 
-export const STATIC = HOST_URL + '/static';
+export const STATIC = isProduction
+  ? 'https://static.apex-legends.win'
+  : 'http://static.localhost';
 
-export const getStatic = url => HOST_URL + '/static' + url;
+export const getStatic = url => STATIC + url;
 export const getUrl = url => HOST_URL + url;
+export const getAvatar = (player, size = 115) => getStatic(
+  `/avatars/${player.avatar ? player.id : 'default'}-${size}.jpg`
+);
