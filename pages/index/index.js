@@ -2,16 +2,44 @@ import css from './style.scss';
 import 'isomorphic-unfetch';
 import Head from 'next/head';
 import axios from 'axios';
+import { useState, useMemo, useEffect } from 'react';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
 import { PlayerCard } from '../../components/PlayerCard';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
 import { PlayersTable } from '../../components/PlayersTable';
- 
+
+const endOfDay = dayjs().utc().endOf('day');
 
 const HomePage = ({ dailyRanking }) => {
+  const [timeLeft, setTimeLeft] = useState('');
 
-  const top3Players = dailyRanking.slice(0, 3);
-  const restPlayers = dailyRanking.slice(3, dailyRanking.length);
+  const handleTimeCounter = () => {
+    const secondsLeft = endOfDay.diff(dayjs().utc(), 'seconds');
+
+    const seconds = secondsLeft % 60;
+    const minutes  = ~~((secondsLeft % 3600) / 60);
+    const hours  = ~~(secondsLeft / 3600);
+
+    const formatted = [hours, minutes, seconds]
+      .map(v => v < 10 ? '0' + v : v)
+      .join(' : ');
+
+    setTimeLeft(formatted);
+  }
+
+  useEffect(() => {
+    handleTimeCounter();
+    const intervalId = setInterval(handleTimeCounter, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const { top3Players, restPlayers } = useMemo(() => ({
+    top3Players: dailyRanking.slice(0, 3),
+    restPlayers: dailyRanking.slice(3, dailyRanking.length)
+  }), [dailyRanking]);
 
   return (
     <article>
@@ -21,7 +49,12 @@ const HomePage = ({ dailyRanking }) => {
       <PlayerSearcher pageMode/>
       {!!top3Players.length && (
         <>
-          <h2 className={css.top_header}>Best players of day</h2>
+          <h2 className={css.top_header}>
+            Best players of day
+          </h2>
+          <p className={css.top_counter}>
+            {timeLeft}
+          </p>
           <div className={css.cards_container}>
             {top3Players.map((stats, index) => (
               <div className={css.card_container} key={index}>
