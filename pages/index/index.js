@@ -1,22 +1,12 @@
 import css from './style.scss';
 import 'isomorphic-unfetch';
-import { getUrl } from '../../helpers';
-import dayjs from 'dayjs';
-import { useState, useEffect } from 'react';
-import { animated, useTransition, config } from 'react-spring';
 import Head from 'next/head';
-import { useDevice, useWindowSize } from '../../hooks';
-import { fetchify } from '../../util/fetchify';
 import axios from 'axios';
 
 import { PlayerCard } from '../../components/PlayerCard';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
 import { PlayersTable } from '../../components/PlayersTable';
  
-
-/*
-  Color for searcher phrase background #FFFAE0
-*/
 
 const HomePage = ({ dailyRanking }) => {
 
