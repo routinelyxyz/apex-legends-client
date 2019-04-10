@@ -36,10 +36,10 @@ const HomePage = ({ dailyRanking }) => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const { top3Players, restPlayers } = useMemo(() => ({
-    top3Players: dailyRanking.slice(0, 3),
-    restPlayers: dailyRanking.slice(3, dailyRanking.length)
-  }), [dailyRanking]);
+  const [top3Players, restPlayers] = useMemo(() => [
+    dailyRanking.slice(0, 3),
+    dailyRanking.slice(3, dailyRanking.length)
+  ], [dailyRanking]);
 
   return (
     <article>
