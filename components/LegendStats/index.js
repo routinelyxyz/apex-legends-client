@@ -4,7 +4,6 @@ import { getStatic, statsProps, statsPropTitles } from '../../helpers';
 import { LegendStatsValue } from '../LegendStatsValue';
 
 export const LegendStats = ({ stats }) => {
-  const { id, legend } = stats;
   return (
     <div className={`box ${css.container}`}>
       <div className={css.legend_container}>

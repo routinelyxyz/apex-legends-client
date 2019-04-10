@@ -113,7 +113,6 @@ const StatsPage = ({ name, url, platform, error, status, router, ...props }) => 
   }, [props.stats, afterFirstRender]);
 
   useEffect(() => {
-    console.log(counter)
     if (counter < 0 && !isUpdating) {
       handleStatsUpdate();
     }
@@ -230,7 +229,17 @@ StatsPage.getInitialProps = async ({ query }) => {
     return { stats, platform, name, id };
   } catch (err) {
     const { status = 500 } = err.response;
-    return { stats: null, platform, name, error: true, status };
+
+    if (status === 404) {
+      try {
+        await updateStats(query);
+        const stats = await fetchStats(query);
+
+        return { stats, platform, name, id };
+      } catch(err) {
+        return { stats: null, error: true, status }
+      }
+    }
   }
 }
 
