@@ -37,7 +37,7 @@ async function updateStats(player) {
 }
 
 const initialTs = getTs();
-const countdown = process.env.NODE_ENV === 'production' ? 178 : 30;
+const countdown = process.env.NODE_ENV === 'production' ? 178 : 10;
 
 const StatsPage = ({ name, url, platform, error, status, router, ...props }) => {
   if (!props.stats || error) return (
@@ -46,7 +46,7 @@ const StatsPage = ({ name, url, platform, error, status, router, ...props }) => 
       {error && (
         <>
           <p>{status === 404
-            ? `Player with name (${name}) doesn't exist on platform - ${platform}.` 
+            ? `Player with nickname (${name}) doesn't exist on platform - ${platform}.` 
             : `Server error. Please try again after few minutes.` 
           }</p>
         </>
@@ -105,17 +105,15 @@ const StatsPage = ({ name, url, platform, error, status, router, ...props }) => 
       setNow(getTs());
     }, 1000);
 
-    /* Prolly handling route change
     if (stats && !error) {
       if (afterFirstRender) {
         setStats(props.stats);
         setTo(getTs() + countdown);
-        props.actions.savePlayerAsync(props.stats.player);
+        // props.actions.savePlayerAsync(props.stats.player);
       } else {
-        props.actions.savePlayerAsync(stats.player);
+        // props.actions.savePlayerAsync(stats.player);
       }
     }
-    */
 
     return () => clearInterval(interval);
   }, [props.stats, afterFirstRender]);
@@ -229,7 +227,7 @@ StatsPage.getInitialProps = async ({ query }) => {
     const stats = await fetchStats(query);
     return { stats, platform, name, id };
   } catch (err) {
-    const { status = 500 } = err.response;
+    const { status = 500 } = err.response || {};
 
     if (status === 404) {
       try {
@@ -238,8 +236,8 @@ StatsPage.getInitialProps = async ({ query }) => {
 
         return { stats, platform, name, id };
       } catch(err) {
-        const { status = 500 } = err.response;
-        return { stats: null, error: true, status }
+        const { status = 500 } = err.response || {};
+        return { stats: null, error: true, status, ...query }
       }
     }
   }
