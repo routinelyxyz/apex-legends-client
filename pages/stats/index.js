@@ -118,7 +118,7 @@ const StatsPage = ({ name, url, platform, error, status, router, ...props }) => 
   }, [props.stats, afterFirstRender]);
 
   useEffect(() => {
-    if (counter < 0 && !isUpdating) {
+    if (counter <= 0 && !isUpdating) {
       handleStatsUpdate();
     }
   }, [counter]);
