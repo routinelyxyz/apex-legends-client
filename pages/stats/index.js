@@ -16,19 +16,23 @@ import { useFirstRender } from '../../hooks';
 import { ProgressRing } from '../../components/ProgressRing';
 import { HorizontalNavTab } from '../../reusable/HorizontalNav';
 import { LegendStats } from '../../components/LegendStats';
-import { StatsBanner } from '../../components/StatsBanner';
 import { StatsHistory } from '../../components/StatsHistory';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
 
 
-const getStats = async (player, update = false) => {
+const getURL = player => {
   const { platform, name, id = '' } = player;
+  return `/stats/v2/${platform}/${encodeURIComponent(name)}?id=${id}`;
+}
 
-  const url = `/stats/${platform}/${encodeURI(name)}?id=${id}&update=${update}`;
-  const response = await axios.get(url);
-  const { history, data: stats } = response.data;
+async function fetchStats(player) {
+  const response = await axios.get(getURL(player));
+  return response.data.data;
+}
 
-  return [stats, history];
+async function updateStats(player) {
+  const response = await axios.post(getURL(player));
+  return response.data.latestMatch;
 }
 
 const addDayToRecord = record => ({
@@ -43,10 +47,9 @@ const mergeMatchHistory = (prevHistory, nextHistory) =>
 
 
 const initialTs = getTs();
-// const countdown = 178;
-const countdown = process.env.NODE_ENV === 'production' ? 178 : 10;
+const countdown = process.env.NODE_ENV === 'production' ? 178 : 178;
 
-const StatsPage = ({ name, url, platform, error, status, router, history, ...props }) => {
+const StatsPage = ({ name, url, platform, error, status, router, ...props }) => {
   if (!props.stats || error) return (
     <div className={css.searcher}>
       <PlayerSearcher pageMode/>
@@ -64,29 +67,29 @@ const StatsPage = ({ name, url, platform, error, status, router, history, ...pro
   const [stats, setStats] = useState(() => props.stats);
   const [matchHistory, setMatchHistory] = useState([]);
   const [now, setNow] = useState(() => initialTs);
-  const [to, setTo] = useState(() => initialTs - 1);
+  const [to, setTo] = useState(() => initialTs + 3);
   const [isUpdating, setUpdating] = useState(false);
   const counter = to - now;
 
-  const updateStats = (player = stats.player) => {
+  const handleStatsUpdate = (player = stats.player) => {
     if (isUpdating) return;
     setUpdating(true);
 
-    return getStats(player, true)
-      .then(([nextStats, nextHistory]) => {
-        if (router.query.name === stats.player.name) {
+    return updateStats(player)
+      .then(latestMatch => {
+        if (latestMatch) {
+
+        }
+        return fetchStats(player);
+      })
+      .then(nextStats => {
+        if (router.query.name === nextStats.player.name) {
           setStats(nextStats);
         }
-        if (nextHistory) {
-          const nextHistoryWithDay = [addDayToRecord(nextHistory)];
-          setMatchHistory(prevHistory =>
-            mergeMatchHistory(prevHistory, nextHistoryWithDay)
-          );
-        }
         setTo(getTs() + countdown);
-        setUpdating(false);
       })
-      .catch(console.log);
+      .catch(console.log)
+      .finally(_ => setUpdating(false));
   }
 
   useEffect(() => {
@@ -94,6 +97,7 @@ const StatsPage = ({ name, url, platform, error, status, router, history, ...pro
       setNow(getTs());
     }, 1000);
 
+    /* Prolly handling route change
     if (stats && !error) {
       if (afterFirstRender) {
         setStats(props.stats);
@@ -103,13 +107,15 @@ const StatsPage = ({ name, url, platform, error, status, router, history, ...pro
         props.actions.savePlayerAsync(stats.player);
       }
     }
+    */
 
     return () => clearInterval(interval);
   }, [props.stats, afterFirstRender]);
 
   useEffect(() => {
+    console.log(counter)
     if (counter < 0 && !isUpdating) {
-      updateStats();
+      handleStatsUpdate();
     }
   }, [counter]);
 
@@ -122,7 +128,7 @@ const StatsPage = ({ name, url, platform, error, status, router, history, ...pro
 
   const lvlProps = useSpring({
     from: { lvl: 0 },
-    to: { lvl: stats.lifetime.lvl },
+    to: { lvl: stats.lifetime.lvl.value },
     delay: 100,
     config: { mass: 1, tension: 150, friction: 50 },
   });
@@ -135,7 +141,7 @@ const StatsPage = ({ name, url, platform, error, status, router, history, ...pro
   }
 
   const sortedLegends = useMemo(() =>
-    stats.legends.sort((a, b) => a.kills > b.kills ? -1 : 1)
+    stats.legends.sort((a, b) => a.kills.value > b.kills.value ? -1 : 1)
   , [stats]);
 
   return (
@@ -204,13 +210,7 @@ const StatsPage = ({ name, url, platform, error, status, router, history, ...pro
                 setMatchHistory={handleHistoryUpdate}
               />
             )
-          },
-          /*
-          {
-            title: 'Banner',
-            content: <StatsBanner playerId={stats.id || stats.player.id}/>
           }
-          */
         ]}
       >
       </HorizontalNavTab>
@@ -218,19 +218,18 @@ const StatsPage = ({ name, url, platform, error, status, router, history, ...pro
   )
 }
 
-StatsPage.getInitialProps = async ({ query: { platform, name, id = '' }}) => {
-  try {
-    if ((!name || !platform) && !id) {
-      return { stats: null };
-    }
-    
-    const res = await axios.get(`/stats/${platform}/${encodeURIComponent(name)}?id=${id}`);
-    const { history, data: stats } = res.data;
+StatsPage.getInitialProps = async ({ query }) => {
+  const { platform, name, id = '' } = query;
 
-    return { stats, platform, name, id, history };
-  
+  if ((!name || !platform) && !id) {
+    return { stats: null };
+  }
+
+  try {
+    const stats = await fetchStats(query);
+    return { stats, platform, name, id };
   } catch (err) {
-    const { status } = err.response ? err.response : 500;
+    const { status = 500 } = err.response;
     return { stats: null, platform, name, error: true, status };
   }
 }

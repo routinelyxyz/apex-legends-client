@@ -3,7 +3,7 @@ import { statsPropTitles  } from '../../helpers';
 
 import { ProgressBar } from '../../reusable/ProgressBar';
 
-export const LegendStatsValue = ({ stats, prop }) => (
+export const LegendStatsValue = ({ value, prop, percentile }) => (
   <li
     className={css.container}
     key={prop}
@@ -12,14 +12,12 @@ export const LegendStatsValue = ({ stats, prop }) => (
       {statsPropTitles[prop] || prop}
     </span>
     <p className={css.value}>
-      {stats[prop].toLocaleString('en-US')}
+      {value.toLocaleString('en-US')}
     </p>
-    {false && (
-      <ProgressBar
-        value={65}
-        width={100}
-        height={3}
-      />
-    )}
+    <ProgressBar
+      value={percentile}
+      width={100}
+      height={3}
+    />
   </li>
 )
