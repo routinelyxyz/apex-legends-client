@@ -47,7 +47,7 @@ const mergeMatchHistory = (prevHistory, nextHistory) =>
 
 
 const initialTs = getTs();
-const countdown = process.env.NODE_ENV === 'production' ? 178 : 178;
+const countdown = process.env.NODE_ENV === 'production' ? 178 : 15;
 
 const StatsPage = ({ name, url, platform, error, status, router, ...props }) => {
   if (!props.stats || error) return (
@@ -71,25 +71,37 @@ const StatsPage = ({ name, url, platform, error, status, router, ...props }) => 
   const [isUpdating, setUpdating] = useState(false);
   const counter = to - now;
 
-  const handleStatsUpdate = (player = stats.player) => {
+  const handleMatchHistoryUpdate = latestMatch => {
+    const latestMatchWithDay = addDayToRecord(latestMatch);
+
+    setMatchHistory(prevMatchHistory => 
+      getUniqueById([latestMatchWithDay, ...prevMatchHistory])
+        .sort((a, b) => a.id > b.id ? -1 : 1)
+    );
+  }
+
+  const handleStatsUpdate = async (player = stats.player) => {
     if (isUpdating) return;
-    setUpdating(true);
 
-    return updateStats(player)
-      .then(latestMatch => {
-        if (latestMatch) {
+    try {
+      setUpdating(true);
+      const latestMatch = await updateStats(player);
 
-        }
-        return fetchStats(player);
-      })
-      .then(nextStats => {
+      if (latestMatch) {
+        handleMatchHistoryUpdate(latestMatch);
+
+        const nextStats = await fetchStats(player);
         if (router.query.name === nextStats.player.name) {
           setStats(nextStats);
         }
-        setTo(getTs() + countdown);
-      })
-      .catch(console.log)
-      .finally(_ => setUpdating(false));
+      }
+
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setTo(getTs() + countdown);
+      setUpdating(false);
+    }
   }
 
   useEffect(() => {
