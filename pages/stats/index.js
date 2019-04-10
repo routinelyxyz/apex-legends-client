@@ -36,8 +36,7 @@ async function updateStats(player) {
   return response.data.latestMatch;
 }
 
-const initialTs = getTs();
-const countdown = process.env.NODE_ENV === 'production' ? 178 : 10;
+const countdown = process.env.NODE_ENV === 'production' ? 178 : 178;
 
 const StatsPage = ({ name, url, platform, error, status, router, ...props }) => {
   if (!props.stats || error) return (
@@ -56,8 +55,8 @@ const StatsPage = ({ name, url, platform, error, status, router, ...props }) => 
   const afterFirstRender = useFirstRender();
   const [stats, setStats] = useState(() => props.stats);
   const [matchHistory, setMatchHistory] = useState([]);
-  const [now, setNow] = useState(() => initialTs);
-  const [to, setTo] = useState(() => initialTs + 3);
+  const [now, setNow] = useState(getTs());
+  const [to, setTo] = useState(getTs() + 3);
   const [isUpdating, setUpdating] = useState(false);
   const counter = to - now;
 
@@ -106,9 +105,9 @@ const StatsPage = ({ name, url, platform, error, status, router, ...props }) => 
     }, 1000);
 
     if (stats && !error) {
-      if (afterFirstRender) {
+      if (afterFirstRender && props.stats.player.name !== stats.player.name) {
         setStats(props.stats);
-        setTo(getTs() + countdown);
+        setTo(getTs() + 3);
         // props.actions.savePlayerAsync(props.stats.player);
       } else {
         // props.actions.savePlayerAsync(stats.player);
@@ -170,11 +169,11 @@ const StatsPage = ({ name, url, platform, error, status, router, ...props }) => 
               {lvlProps.lvl.interpolate(v => v.toFixed())}
             </animated.span>
           </p>
-          <div
+          {/* <div
             onClick={() => props.actions.savePlayerAsync(
               stats, 'favorite'
             )}
-          >Add to fav</div>
+          >Add to fav</div> */}
         </div>
         <div className={css.update_container}>
           <p className={css.update_title}>
