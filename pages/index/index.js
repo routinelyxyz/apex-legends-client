@@ -50,7 +50,7 @@ const HomePage = ({ dailyRanking }) => {
       {!!top3Players.length && (
         <>
           <h2 className={css.top_header}>
-            Best players of day
+            Best players of the day
           </h2>
           <p className={css.top_counter}>
             {timeLeft}
@@ -87,14 +87,13 @@ HomePage.getInitialProps = async () => {
   try {
 
     const options = { timeout: 500 };
-    const dailyRanking = await axios.get('/stats/daily-ranking', options);
+    const response = await axios.get('/stats/v2/daily-ranking', options);
+    const dailyRanking = response.data.data; 
 
-    return {
-      dailyRanking: dailyRanking.data.data
-    }
+    return { dailyRanking };
 
   } catch(err) {
-    return { recentUpdates: [], trending: [] }
+    return { dailyRanking: [] };
   }
 }
 
