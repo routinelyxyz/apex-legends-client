@@ -12,6 +12,7 @@ import Head from 'next/head';
 import axios from 'axios';
 import { withRouter } from 'next/router';
 import { useFirstRender } from '../../hooks';
+import NProgress from 'nprogress';
 
 import { ProgressRing } from '../../components/ProgressRing';
 import { HorizontalNavTab } from '../../reusable/HorizontalNav';
@@ -35,19 +36,8 @@ async function updateStats(player) {
   return response.data.latestMatch;
 }
 
-const addDayToRecord = record => ({
-  ...record,
-  day: dayjs(record.date).format('YYYY-MM-DD')
-});
-
-const mergeMatchHistory = (prevHistory, nextHistory) => 
-  getUniqueById(
-    [...nextHistory, ...prevHistory]
-  ).sort((a, b) => a.id > b.id ? -1 : 1);
-
-
 const initialTs = getTs();
-const countdown = process.env.NODE_ENV === 'production' ? 178 : 15;
+const countdown = process.env.NODE_ENV === 'production' ? 178 : 30;
 
 const StatsPage = ({ name, url, platform, error, status, router, ...props }) => {
   if (!props.stats || error) return (
@@ -71,11 +61,15 @@ const StatsPage = ({ name, url, platform, error, status, router, ...props }) => 
   const [isUpdating, setUpdating] = useState(false);
   const counter = to - now;
 
-  const handleMatchHistoryUpdate = latestMatch => {
-    const latestMatchWithDay = addDayToRecord(latestMatch);
+  const handleMatchHistoryUpdate = nextMatchHistory => {
+    const addDayToRecord = record => ({
+      ...record,
+      day: dayjs(record.date).format('YYYY-MM-DD')
+    });
+    const nextMatchHistoryWithDay = nextMatchHistory.map(addDayToRecord);
 
     setMatchHistory(prevMatchHistory => 
-      getUniqueById([latestMatchWithDay, ...prevMatchHistory])
+      getUniqueById([...nextMatchHistoryWithDay, ...prevMatchHistory])
         .sort((a, b) => a.id > b.id ? -1 : 1)
     );
   }
@@ -85,10 +79,11 @@ const StatsPage = ({ name, url, platform, error, status, router, ...props }) => 
 
     try {
       setUpdating(true);
+      NProgress.start();
       const latestMatch = await updateStats(player);
 
       if (latestMatch) {
-        handleMatchHistoryUpdate(latestMatch);
+        handleMatchHistoryUpdate([latestMatch]);
 
         const nextStats = await fetchStats(player);
         if (router.query.name === nextStats.player.name) {
@@ -101,6 +96,7 @@ const StatsPage = ({ name, url, platform, error, status, router, ...props }) => 
     } finally {
       setTo(getTs() + countdown);
       setUpdating(false);
+      NProgress.done();
     }
   }
 
@@ -143,13 +139,6 @@ const StatsPage = ({ name, url, platform, error, status, router, ...props }) => 
     delay: 100,
     config: { mass: 1, tension: 150, friction: 50 },
   });
-
-  const handleHistoryUpdate = nextHistory => {
-    const nextHistoryWithDay = nextHistory.map(addDayToRecord);
-    setMatchHistory(prevHistory =>
-      mergeMatchHistory(prevHistory, nextHistoryWithDay)
-    );
-  }
 
   const sortedLegends = useMemo(() =>
     stats.legends.sort((a, b) => a.kills.value > b.kills.value ? -1 : 1)
@@ -218,7 +207,7 @@ const StatsPage = ({ name, url, platform, error, status, router, ...props }) => 
               <StatsHistory
                 player={stats.player}
                 matchHistory={matchHistory}
-                setMatchHistory={handleHistoryUpdate}
+                setMatchHistory={handleMatchHistoryUpdate}
               />
             )
           }
@@ -249,6 +238,7 @@ StatsPage.getInitialProps = async ({ query }) => {
 
         return { stats, platform, name, id };
       } catch(err) {
+        const { status = 500 } = err.response;
         return { stats: null, error: true, status }
       }
     }
