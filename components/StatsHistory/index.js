@@ -3,16 +3,15 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import css from './style.scss';
 
-const fetchHistory = async ({ name, platform, id }) => {
-  const url = `/stats/match-history/${platform}/${name}?id=${id}`;
-  const { data } = await axios.get(url);
-  return data.data;
+async function fetchMatchHistory(id) {
+  const response = await axios.get(`/stats/v2/match-history/id/${id}`);
+  return response.data.data;
 }
 
 export const StatsHistory = ({ player, matchHistory, setMatchHistory }) => {
 
   useEffect(() => {
-    fetchHistory(player)
+    fetchMatchHistory(player.id)
       .then(setMatchHistory)
       .catch(console.error)
   }, []);
