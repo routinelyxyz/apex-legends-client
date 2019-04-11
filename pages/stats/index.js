@@ -38,7 +38,7 @@ async function updateStats(player) {
 
 const countdown = process.env.NODE_ENV === 'production' ? 178 : 178;
 
-const StatsPage = ({ name, url, platform, error, status, router, ...props }) => {
+const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch = false, ...props }) => {
   if (!props.stats || error) return (
     <div className={css.searcher}>
       <PlayerSearcher pageMode/>
@@ -56,7 +56,7 @@ const StatsPage = ({ name, url, platform, error, status, router, ...props }) => 
   const [stats, setStats] = useState(() => props.stats);
   const [matchHistory, setMatchHistory] = useState([]);
   const [now, setNow] = useState(getTs());
-  const [to, setTo] = useState(getTs() + 3);
+  const [to, setTo] = useState(getTs() + (skipFirstFetch ? countdown : 3));
   const [isUpdating, setUpdating] = useState(false);
   const counter = to - now;
 
@@ -232,8 +232,9 @@ StatsPage.getInitialProps = async ({ query }) => {
       try {
         await updateStats(query);
         const stats = await fetchStats(query);
+        const skipFirstFetch = true;
 
-        return { stats, platform, name, id };
+        return { stats, platform, name, id, skipFirstFetch };
       } catch(err) {
         const { status = 500 } = err.response || {};
         return { stats: null, error: true, status, ...query }
