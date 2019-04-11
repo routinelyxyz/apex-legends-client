@@ -12,48 +12,40 @@ import Head from 'next/head';
 import axios from 'axios';
 import { withRouter } from 'next/router';
 import { useFirstRender } from '../../hooks';
+import NProgress from 'nprogress';
 
 import { ProgressRing } from '../../components/ProgressRing';
 import { HorizontalNavTab } from '../../reusable/HorizontalNav';
 import { LegendStats } from '../../components/LegendStats';
-import { StatsBanner } from '../../components/StatsBanner';
 import { StatsHistory } from '../../components/StatsHistory';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
 
 
-const getStats = async (player, update = false) => {
+const getURL = player => {
   const { platform, name, id = '' } = player;
-
-  const url = `/stats/${platform}/${encodeURI(name)}?id=${id}&update=${update}`;
-  const response = await axios.get(url);
-  const { history, data: stats } = response.data;
-
-  return [stats, history];
+  return `/stats/v2/${platform}/${encodeURIComponent(name)}?id=${id}`;
 }
 
-const addDayToRecord = record => ({
-  ...record,
-  day: dayjs(record.date).format('YYYY-MM-DD')
-});
+async function fetchStats(player) {
+  const response = await axios.get(getURL(player));
+  return response.data.data;
+}
 
-const mergeMatchHistory = (prevHistory, nextHistory) => 
-  getUniqueById(
-    [...nextHistory, ...prevHistory]
-  ).sort((a, b) => a.id > b.id ? -1 : 1);
+async function updateStats(player) {
+  const response = await axios.post(getURL(player));
+  return response.data.latestMatch;
+}
 
+const countdown = process.env.NODE_ENV === 'production' ? 178 : 178;
 
-const initialTs = getTs();
-// const countdown = 178;
-const countdown = process.env.NODE_ENV === 'production' ? 178 : 10;
-
-const StatsPage = ({ name, url, platform, error, status, router, history, ...props }) => {
+const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch = false, ...props }) => {
   if (!props.stats || error) return (
     <div className={css.searcher}>
       <PlayerSearcher pageMode/>
       {error && (
         <>
           <p>{status === 404
-            ? `Player with name (${name}) doesn't exist on platform - ${platform}.` 
+            ? `Player with nickname (${name}) doesn't exist on platform - ${platform}.` 
             : `Server error. Please try again after few minutes.` 
           }</p>
         </>
@@ -63,30 +55,48 @@ const StatsPage = ({ name, url, platform, error, status, router, history, ...pro
   const afterFirstRender = useFirstRender();
   const [stats, setStats] = useState(() => props.stats);
   const [matchHistory, setMatchHistory] = useState([]);
-  const [now, setNow] = useState(() => initialTs);
-  const [to, setTo] = useState(() => initialTs - 1);
+  const [now, setNow] = useState(getTs());
+  const [to, setTo] = useState(getTs() + (skipFirstFetch ? countdown : 3));
   const [isUpdating, setUpdating] = useState(false);
   const counter = to - now;
 
-  const updateStats = (player = stats.player) => {
-    if (isUpdating) return;
-    setUpdating(true);
+  const handleMatchHistoryUpdate = nextMatchHistory => {
+    const addDayToRecord = record => ({
+      ...record,
+      day: dayjs(record.date).format('YYYY-MM-DD')
+    });
+    const nextMatchHistoryWithDay = nextMatchHistory.map(addDayToRecord);
 
-    return getStats(player, true)
-      .then(([nextStats, nextHistory]) => {
-        if (router.query.name === stats.player.name) {
+    setMatchHistory(prevMatchHistory => 
+      getUniqueById([...nextMatchHistoryWithDay, ...prevMatchHistory])
+        .sort((a, b) => a.id > b.id ? -1 : 1)
+    );
+  }
+
+  const handleStatsUpdate = async (player = stats.player) => {
+    if (isUpdating) return;
+
+    try {
+      setUpdating(true);
+      NProgress.start();
+      const latestMatch = await updateStats(player);
+
+      if (latestMatch) {
+        handleMatchHistoryUpdate([latestMatch]);
+
+        const nextStats = await fetchStats(player);
+        if (router.query.name === nextStats.player.name) {
           setStats(nextStats);
         }
-        if (nextHistory) {
-          const nextHistoryWithDay = [addDayToRecord(nextHistory)];
-          setMatchHistory(prevHistory =>
-            mergeMatchHistory(prevHistory, nextHistoryWithDay)
-          );
-        }
-        setTo(getTs() + countdown);
-        setUpdating(false);
-      })
-      .catch(console.log);
+      }
+
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setTo(getTs() + countdown);
+      setUpdating(false);
+      NProgress.done();
+    }
   }
 
   useEffect(() => {
@@ -95,12 +105,12 @@ const StatsPage = ({ name, url, platform, error, status, router, history, ...pro
     }, 1000);
 
     if (stats && !error) {
-      if (afterFirstRender) {
+      if (afterFirstRender && props.stats.player.name !== stats.player.name) {
         setStats(props.stats);
-        setTo(getTs() + countdown);
-        props.actions.savePlayerAsync(props.stats.player);
+        setTo(getTs() + 3);
+        // props.actions.savePlayerAsync(props.stats.player);
       } else {
-        props.actions.savePlayerAsync(stats.player);
+        // props.actions.savePlayerAsync(stats.player);
       }
     }
 
@@ -108,8 +118,8 @@ const StatsPage = ({ name, url, platform, error, status, router, history, ...pro
   }, [props.stats, afterFirstRender]);
 
   useEffect(() => {
-    if (counter < 0 && !isUpdating) {
-      updateStats();
+    if (counter <= 0 && !isUpdating) {
+      handleStatsUpdate();
     }
   }, [counter]);
 
@@ -122,20 +132,13 @@ const StatsPage = ({ name, url, platform, error, status, router, history, ...pro
 
   const lvlProps = useSpring({
     from: { lvl: 0 },
-    to: { lvl: stats.lifetime.lvl },
+    to: { lvl: stats.lifetime.lvl.value },
     delay: 100,
     config: { mass: 1, tension: 150, friction: 50 },
   });
 
-  const handleHistoryUpdate = nextHistory => {
-    const nextHistoryWithDay = nextHistory.map(addDayToRecord);
-    setMatchHistory(prevHistory =>
-      mergeMatchHistory(prevHistory, nextHistoryWithDay)
-    );
-  }
-
   const sortedLegends = useMemo(() =>
-    stats.legends.sort((a, b) => a.kills > b.kills ? -1 : 1)
+    stats.legends.sort((a, b) => a.kills.value > b.kills.value ? -1 : 1)
   , [stats]);
 
   return (
@@ -166,11 +169,11 @@ const StatsPage = ({ name, url, platform, error, status, router, history, ...pro
               {lvlProps.lvl.interpolate(v => v.toFixed())}
             </animated.span>
           </p>
-          <div
+          {/* <div
             onClick={() => props.actions.savePlayerAsync(
               stats, 'favorite'
             )}
-          >Add to fav</div>
+          >Add to fav</div> */}
         </div>
         <div className={css.update_container}>
           <p className={css.update_title}>
@@ -201,16 +204,10 @@ const StatsPage = ({ name, url, platform, error, status, router, history, ...pro
               <StatsHistory
                 player={stats.player}
                 matchHistory={matchHistory}
-                setMatchHistory={handleHistoryUpdate}
+                setMatchHistory={handleMatchHistoryUpdate}
               />
             )
-          },
-          /*
-          {
-            title: 'Banner',
-            content: <StatsBanner playerId={stats.id || stats.player.id}/>
           }
-          */
         ]}
       >
       </HorizontalNavTab>
@@ -218,20 +215,31 @@ const StatsPage = ({ name, url, platform, error, status, router, history, ...pro
   )
 }
 
-StatsPage.getInitialProps = async ({ query: { platform, name, id = '' }}) => {
-  try {
-    if ((!name || !platform) && !id) {
-      return { stats: null };
-    }
-    
-    const res = await axios.get(`/stats/${platform}/${encodeURIComponent(name)}?id=${id}`);
-    const { history, data: stats } = res.data;
+StatsPage.getInitialProps = async ({ query }) => {
+  const { platform, name, id = '' } = query;
 
-    return { stats, platform, name, id, history };
-  
+  if ((!name || !platform) && !id) {
+    return { stats: null };
+  }
+
+  try {
+    const stats = await fetchStats(query);
+    return { stats, platform, name, id };
   } catch (err) {
-    const { status } = err.response ? err.response : 500;
-    return { stats: null, platform, name, error: true, status };
+    const { status = 500 } = err.response || {};
+
+    if (status === 404) {
+      try {
+        await updateStats(query);
+        const stats = await fetchStats(query);
+        const skipFirstFetch = true;
+
+        return { stats, platform, name, id, skipFirstFetch };
+      } catch(err) {
+        const { status = 500 } = err.response || {};
+        return { stats: null, error: true, status, ...query }
+      }
+    }
   }
 }
 

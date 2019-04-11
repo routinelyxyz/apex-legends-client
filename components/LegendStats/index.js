@@ -4,7 +4,6 @@ import { getStatic, statsProps, statsPropTitles } from '../../helpers';
 import { LegendStatsValue } from '../LegendStatsValue';
 
 export const LegendStats = ({ stats }) => {
-  const { id, legend } = stats;
   return (
     <div className={`box ${css.container}`}>
       <div className={css.legend_container}>
@@ -17,11 +16,13 @@ export const LegendStats = ({ stats }) => {
         />
       </div>
       <ul className={css.stats_list}>
-        {statsProps.lifetime.map(prop => (
-          stats[prop] != null && (
+        {statsProps.legend.map(prop => (
+          stats[prop].value != null && (
             <LegendStatsValue
+              key={prop}
               prop={prop}
-              stats={stats}
+              value={stats[prop].value}
+              percentile={stats[prop].percentile * 100}
             />
           )
         ))}
