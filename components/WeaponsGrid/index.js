@@ -11,7 +11,7 @@ export const WeaponsGrid = ({ items, flipKey }) => {
       staggerConfig={{ default: { speed: 1.5 }}}
       opacity={true}
     >
-      <div className={css.container}>
+      <div className={css.container} data-testid="WeaponsGrid">
         {items.map(item => (
           <Flipped key={item.id} flipId={item.id}>
             <Item item={item} key={item.id}/>

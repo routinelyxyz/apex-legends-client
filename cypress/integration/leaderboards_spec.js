@@ -2,7 +2,7 @@ import { hookInto } from '../util';
 
 const h = hookInto`Leaderboards__query-container`;
 
-describe('Leaderboards', function() {
+describe('Leaderboards page', function() {
 
   beforeEach(function () {
     cy.visit('/leaderboards');
