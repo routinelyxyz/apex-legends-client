@@ -14,7 +14,8 @@ cypress:
   script:
     - npm i
     - npx next build
-    - npm run test:cypress
+    - npm run start:ci
+    - cypress run
   artifacts:
     paths:
       - cypress/videos
