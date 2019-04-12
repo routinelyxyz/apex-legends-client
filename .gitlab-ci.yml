@@ -29,7 +29,7 @@ deploy_staging:
   script:
     - echo $NOW_TOKEN
     - npm i -g now --silent --unsafe-perm
-    - now alias $(now --token $NOW_TOKEN) staging.apex-legends.win --token $NOW_TOKEN
+    - now alias $(now --token=$NOW_TOKEN) staging.apex-legends.win --token=$NOW_TOKEN
 
 deploy_prod:
   stage: deploy
