@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "NODE_ENV=production next start",
     "now-build": "next build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:cypress": "NODE_ENV=development next start cypress run"
   },
   "repository": {
     "type": "git",
