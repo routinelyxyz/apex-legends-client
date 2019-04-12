@@ -19,3 +19,19 @@ cypress:
     paths:
       - cypress/videos
     expire_in: 1 day
+
+deploy_staging:
+  stage: deploy
+  script:
+    - npm i -g now --silent
+    - now alias $(now --token $NOW_TOKEN) staging.apex-legends.win --token $NOW_TOKEN 
+
+deploy_prod:
+  stage: deploy
+  only:
+    - tags
+  when: manual
+  allow_failure: false
+  script:
+    - npm i -g now --silent
+    - now alias $(now --token $NOW_TOKEN) apex-legends.win --token $NOW_TOKEN
