@@ -6,10 +6,11 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "NODE_ENV=production next start",
+    "start": "next start",
+    "start:ci": "start-server-and-test start http://localhost:3000",
     "now-build": "next build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test:cypress": "NODE_ENV=development next start cypress run"
+    "test:cypress": "start:ci cypress run"
   },
   "repository": {
     "type": "git",
@@ -53,6 +54,7 @@
   "devDependencies": {
     "cypress": "^3.2.0",
     "next-compose": "0.0.2",
+    "start-server-and-test": "^1.7.13",
     "webpack-filter-warnings-plugin": "^1.2.1"
   }
 }
