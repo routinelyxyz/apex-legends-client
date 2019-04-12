@@ -7,7 +7,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "start:ci": "start-server-and-test start http://localhost:3000",
+    "start:ci": "start-server-and-test start http://localhost:3000 test:cypress",
     "now-build": "next build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:cypress": "start:ci cypress run"
