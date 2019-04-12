@@ -1,0 +1,18 @@
+stages:
+  - test
+  - deploy
+
+cache:
+  paths:
+  - node_modules/
+
+cypress:
+  stage: test
+  image: cypress/base:11.13.0
+  script:
+    - npm i
+    - npx cypress run
+  artifacts:
+    paths:
+      - cypress/videos
+    expire_in: 1 day
