@@ -11,6 +11,8 @@ cypress:
   image: cypress/base:11.13.0
   script:
     - npm i
+    - npx next build
+    - npx next start
     - npx cypress run
   artifacts:
     paths:
