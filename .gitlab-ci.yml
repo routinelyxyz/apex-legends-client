@@ -24,11 +24,9 @@ cypress:
 deploy_staging:
   stage: deploy
   image: node:11.14.0
-  variables:
-    NOW_TOKEN: $NOW_TOKEN
   script:
     - npm i -g now --silent --unsafe-perm
-    - now alias $(now --token="$NOW_TOKEN") staging.apex-legends.win --token="$NOW_TOKEN"
+    - now alias $(now --token=$NOW_TOKEN) staging.apex-legends.win --token=$NOW_TOKEN
 
 deploy_prod:
   stage: deploy
