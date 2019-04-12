@@ -9,7 +9,7 @@ cache:
 
 cypress:
   stage: test
-  image: node:11.14.0
+  image: cypress/base:11.13.0
   variables:
     NODE_ENV: "development"
   script:
