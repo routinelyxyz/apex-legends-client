@@ -102,6 +102,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
         pageMode && css.page_mode
       )}
       ref={refContainer}
+      data-testid={`PlayerSearcher_container`}
     >
       <div className={css.input_container}>
         <BasicInput

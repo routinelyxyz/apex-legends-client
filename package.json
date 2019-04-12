@@ -50,6 +50,7 @@
     "use-onclickoutside": "^0.3.0"
   },
   "devDependencies": {
+    "cypress": "^3.2.0",
     "next-compose": "0.0.2",
     "webpack-filter-warnings-plugin": "^1.2.1"
   }
