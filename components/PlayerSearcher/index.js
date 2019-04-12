@@ -18,7 +18,6 @@ import { PhraseSelector } from '../../reusable/PhraseSelector';
 import { SearcherPlatforms } from '../../components/SearcherPlatforms';
 
 const debounceA = debounce(350);
-const debounceB = debounce(100);
 
 const PlayerItem = player => (
   <PlayerLabel
@@ -67,14 +66,12 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
 
   const handleStatsSearch = e => {
     if (e.key === 'Enter' && phrase.length) {
-      debounceB(() => {
-        setFocused(false);
-        modal.setOpened(false);
-        Router.push(
-          `/stats?platform=${platform}&name=${phrase}&=id`,
-          `/stats/${platform}/${phrase}`
-        );
-      });
+      setFocused(false);
+      modal.setOpened(false);
+      Router.push(
+        `/stats?platform=${platform}&name=${phrase}&=id`,
+        `/stats/${platform}/${phrase}`
+      );
     }
   }
 
