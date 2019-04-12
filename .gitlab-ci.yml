@@ -5,7 +5,7 @@ stages:
 cache:
   paths:
   - node_modules/
-  - /root/.cache/Cypress
+  - .cache/Cypress
 
 cypress:
   stage: test
@@ -13,7 +13,7 @@ cypress:
   variables:
     NODE_ENV: "development"
   script:
-    - npm i
+    - npm i --silent
     - npx next build
     - npm run start:ci
   artifacts:
