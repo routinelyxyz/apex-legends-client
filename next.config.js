@@ -94,7 +94,7 @@ module.exports = withPlugins(
     */
   ],
   {
-    target: 'serverless',
+    target: process.env.NODE_ENV === 'production' ? 'serverless' : 'server',
     webpack(config, { isServer, dev, buildId, config: { distDir }}) {
       const plugins = [...config.plugins];
 
