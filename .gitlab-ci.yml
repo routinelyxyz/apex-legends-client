@@ -10,6 +10,8 @@ cache:
 cypress:
   stage: test
   image: cypress/base:11.13.0
+  only:
+    - disabled
   variables:
     NODE_ENV: "development"
   script:
@@ -26,7 +28,7 @@ deploy_staging:
   image: node:11.14.0
   script:
     - npm i -g now --silent --unsafe-perm
-    - now alias $(now --token=$NOW_TOKEN) staging.apex-legends.win --token=$NOW_TOKEN
+    - now alias $(now --token $NOW_TOKEN) staging.apex-legends.win --token $NOW_TOKEN
 
 deploy_prod:
   stage: deploy
