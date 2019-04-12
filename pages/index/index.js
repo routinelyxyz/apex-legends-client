@@ -46,7 +46,7 @@ const HomePage = ({ dailyRanking }) => {
       <Head>
         <title>Homepage | Apex-Legends.win</title>
       </Head>
-      <PlayerSearcher pageMode/>
+      <PlayerSearcher pageMode testId="main"/>
       {!!top3Players.length && (
         <>
           <h2 className={css.top_header}>

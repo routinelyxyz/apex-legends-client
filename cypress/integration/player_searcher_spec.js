@@ -1,17 +1,4 @@
-import cy from 'cypress';
-
-const get = element => cy.get(
-  `[data-testid="${element}"]`
-);
-
-function tag([string], ...values) {
-  const [mainElement, ...rest] = string.split(/ /);
-  return `[data-testid="${mainElement}"] ${rest.join(' ')}`;
-}
-const t = tag;
-
-const tagMain = mainElement => rest => tag([mainElement + ' ' + rest.join(' ')]);
-
+import { hookInto } from '../util';
 
 describe('The Player Searcher', function() {
 
@@ -20,15 +7,13 @@ describe('The Player Searcher', function() {
   });
 
   it('allows to type name and change platform', function() {
-    cy.visit('/');
-    
-    const el = tagMain('PlayerSearcher_container');
 
-    cy.get(t`PlayerSearcher_container li`).eq(2).click();
+    const g = hookInto`PlayerSearcher__main`;
 
-    cy.get(tag`PlayerSearcher_container input`)
-      .type('basedgodfearless {enter}');
-
+    cy.get(g`li`).eq(1).click();
+    cy.get(g`input`)
+      .type('basedgodfearless{enter}');
     cy.url().should('include', `/stats/ps4/basedgodfearless`);
+    
   });
 });

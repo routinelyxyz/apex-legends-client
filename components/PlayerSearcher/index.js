@@ -27,7 +27,7 @@ const PlayerItem = player => (
   />
 );
 
-const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
+const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
   const [phrase, setPhrase] = useState('');
   const [focused, setFocused] = useState(false);
   const [playersFound, setPlayersFound] = useState([]);
@@ -102,7 +102,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
         pageMode && css.page_mode
       )}
       ref={refContainer}
-      data-testid={`PlayerSearcher_container`}
+      data-testid={['PlayerSearcher', testId].filter(Boolean).join('__')}
     >
       <div className={css.input_container}>
         <BasicInput
