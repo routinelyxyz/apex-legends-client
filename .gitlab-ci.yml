@@ -27,6 +27,7 @@ deploy_staging:
   stage: deploy
   image: node:11.14.0
   script:
+    - echo $NOW_TOKEN
     - npm i -g now --silent --unsafe-perm
     - now alias $(now --token $NOW_TOKEN) staging.apex-legends.win --token $NOW_TOKEN
 
