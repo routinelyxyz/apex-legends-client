@@ -9,7 +9,7 @@ import qs from 'querystringify';
 import { debounce, useDebounce, useDispatch, filterUnique } from '../../util';
 import Head from 'next/head';
 import axios from 'axios';
-import { reducer, initialState } from './reducer';
+import { reducer, initialState } from '../../store/hook-reducers/items';
 
 import Item from '../../reusable/Item';
 import Input from '../../reusable/Input';
