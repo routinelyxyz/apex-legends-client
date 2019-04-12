@@ -9,7 +9,7 @@ cache:
 
 cypress:
   stage: test
-  image: cypress/base:11.13.0
+  image: node:11.14.0
   variables:
     NODE_ENV: "development"
   script:
@@ -23,12 +23,14 @@ cypress:
 
 deploy_staging:
   stage: deploy
+  image: node:11.14.0
   script:
     - npm i -g now --silent
     - now alias $(now --token $NOW_TOKEN) staging.apex-legends.win --token $NOW_TOKEN 
 
 deploy_prod:
   stage: deploy
+  image: node:11.14.0
   only:
     - tags
   when: manual
