@@ -8,6 +8,7 @@ describe('The Player Searcher', function() {
     cy.visit('/');
   });
 
+  /*
   describe('Platforms', function() {
     it('PC', function() {
       cy.get(h `input`).type('rockalone{enter}');
@@ -24,6 +25,7 @@ describe('The Player Searcher', function() {
       cy.url().should('include', 'xbox');
     });
   });
+  */
 
   it('body scroll is hiding/showing properly', function() {
     cy.clock();
