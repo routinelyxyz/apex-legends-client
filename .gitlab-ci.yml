@@ -10,8 +10,6 @@ cache:
 cypress:
   stage: test
   image: cypress/base:11.13.0
-  only:
-    - disabled
   variables:
     NODE_ENV: "development"
   script:
