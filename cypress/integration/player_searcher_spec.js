@@ -37,7 +37,7 @@ describe('The Player Searcher', function() {
     cy.get('body').should('not.have.class', 'hidden_scroll');
     cy.tick(50);
     
-    cy.get(h `input`).type('rockalone');
+    cy.get(h `input`).focus().type('rockalone');
     cy.tick(50);
     cy.get('body').should('have.class', 'hidden_scroll');
     cy.get(h `input`).type('{enter}');
