@@ -33,7 +33,7 @@ cypress:
       - cypress/screenshots
     expire_in: 1 week
 
-deploy_stagingx:
+deploy_staging:
   stage: deploy_staging
   image: node:11.14.0
   variables:
@@ -42,7 +42,7 @@ deploy_stagingx:
     - npx now alias $(npx now --token=$NOW_TOKEN) staging.apex-legends.win --token=$NOW_TOKEN
 
 test_staging:
-  stage: test
+  stage: test_staging
   image: cypress/browsers:node11.13.0-chrome73
   variables:
     GIT_STRATEGY: none
