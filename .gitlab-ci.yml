@@ -25,7 +25,8 @@ cypress:
   artifacts:
     paths:
       - cypress/videos
-    expire_in: 1 day
+      - cypress/screenshots
+    expire_in: 1 week
 
 deploy_staging:
   stage: deploy
