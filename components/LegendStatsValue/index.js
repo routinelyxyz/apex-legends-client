@@ -1,5 +1,5 @@
 import css from './style.scss';
-import { statsPropTitles  } from '../../helpers';
+import { statsTitlesMap } from '../../helpers';
 
 import { ProgressBar } from '../../reusable/ProgressBar';
 
@@ -9,7 +9,7 @@ export const LegendStatsValue = ({ value, prop, percentile }) => (
     key={prop}
   >
     <span className={css.prop}>
-      {statsPropTitles[prop] || prop}
+      {statsTitlesMap[prop] || prop}
     </span>
     <p className={css.value}>
       {value.toLocaleString('en-US')}

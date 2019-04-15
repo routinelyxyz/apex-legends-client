@@ -1,5 +1,5 @@
 import css from './style.scss';
-import { getStatic, statsProps, statsPropTitles } from '../../helpers';
+import { getStatic, statsProps } from '../../helpers';
 
 import { LegendStatsValue } from '../LegendStatsValue';
 
