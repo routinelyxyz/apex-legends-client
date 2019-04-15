@@ -21,7 +21,8 @@ cypress:
   script:
     - npm i --silent
     - npx next build
-    - npx start-server-and-test npm run test http://localhost:3000 npx cypress run --reporter junit \
+    - npx next start & npx wait-on http://localhost:3000
+    - npx cypress run --reporter junit \
       --reporter-options "mochaFile=cypress.xml,toConsole=true"
   artifacts:
     reports:
