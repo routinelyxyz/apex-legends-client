@@ -1,6 +1,7 @@
 stages:
   - test
   - deploy
+  - test_staging
 
 variables:
   npm_config_cache: "$CI_PROJECT_DIR/.npm"
@@ -54,3 +55,17 @@ deploy_prod:
   script:
     - npm i -g now@14.0.3 --silent --unsafe-perm
     - now alias $(now --token=$NOW_TOKEN) staging.apex-legends.win --token=$NOW_TOKEN
+
+test_staging:
+  stage: test_staging
+  image: cypress/browsers:node11.13.0-chrome73
+  script:
+    # check cypress (without npx) if fails, otherwise run npm i before test
+    - npx cypress run --config baseUrl=https://staging.apex-legends.win
+  artifacts:
+    reports:
+      junit: results/*.xml
+    paths:
+      - cypress/videos
+      - cypress/screenshots
+    expire_in: 1 week
