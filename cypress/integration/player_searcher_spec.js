@@ -27,18 +27,18 @@ describe('The Player Searcher', function() {
   });
   */
 
-  it('body scroll is hiding/showing properly', function() {
+  it('body scroll is hiding/showing properly [mobile]', function() {
     cy.clock();
+    cy.viewport('iphone-6');
 
     cy.get(h `input`).focus();
-    cy.tick(50);
+    cy.tick(25);
     cy.get('body').should('have.class', 'hidden_scroll').click();
-    cy.tick(50);
+    cy.tick(25);
     cy.get('body').should('not.have.class', 'hidden_scroll');
-    cy.tick(50);
+    cy.tick(25);
     
     cy.get(h `input`).focus().type('rockalone');
-    cy.tick(50);
     cy.get('body').should('have.class', 'hidden_scroll');
     cy.get(h `input`).type('{enter}');
     cy.url().should('include', `/stats/pc/rockalone`);
