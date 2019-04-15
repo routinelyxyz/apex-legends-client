@@ -39,3 +39,15 @@ export const getUniqueById = items => Object.values(
     [item.id]: item
   }), {})
 );
+
+export const scrollTo = ({ top = 0, left = 0, behavior = 'smooth'}) => {
+  try {
+    window.scroll({ top, left, behavior });
+  } catch(err) {
+    if (err instanceof TypeError) {
+      window.scroll(top, left);
+    } else {
+      throw err;
+    }
+  }
+}

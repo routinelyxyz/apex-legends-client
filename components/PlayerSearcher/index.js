@@ -1,6 +1,6 @@
 import css from './style.scss';
 import { useState, useRef, useContext, useEffect } from 'react';
-import { debounce, applyCss } from '../../util';
+import { debounce, applyCss, scrollTo } from '../../util';
 import { getUrl, platformNames } from '../../helpers';
 import useClickOutside from 'use-onclickoutside';
 import { animated, useTransition, config } from 'react-spring';
@@ -80,9 +80,8 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
     mobileMenu.setVisible(false);
     modal.setOpened(true);
     if (isPhone) {
-      window.scrollTo({
-        top: refContainer.current.offsetTop - 5,
-        behavior: 'smooth'
+      scrollTo({
+        top: refContainer.current.offsetTop - 5
       });
     }
   }
