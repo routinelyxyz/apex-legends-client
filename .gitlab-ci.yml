@@ -22,7 +22,11 @@ cypress:
     - npm i --silent
     - npx next build
     - npm run start:ci
+    - npx start-server-and-test start http://localhost:3000 npx cypress run --reporter junit \
+      --reporter-options "mochaFile=cypress.xml,toConsole=true"
   artifacts:
+    reports:
+      junit: cypress.xml
     paths:
       - cypress/videos
       - cypress/screenshots

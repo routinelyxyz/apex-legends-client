@@ -53,6 +53,7 @@
   },
   "devDependencies": {
     "cypress": "^3.2.0",
+    "mocha-junit-reporter": "^1.21.0",
     "next-compose": "0.0.2",
     "start-server-and-test": "^1.7.13",
     "webpack-filter-warnings-plugin": "^1.2.1"
