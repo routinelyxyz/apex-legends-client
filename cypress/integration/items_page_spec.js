@@ -46,14 +46,18 @@ describe('Items page', function() {
   });
 
   it('sorting works properly', function() {
+    cy.clock();
+
     cy.get(grid `> div:first-child p`).contains('Alternator SMG');
     cy.get(`h3:contains('Direction') ~ label`).click();
     cy.get(grid `> div:last-child p`).contains('Alternator SMG');
 
     cy.get(`h3:contains('Sort By') ~ select`).select('ammoType');
+    cy.tick(50);
     cy.get(grid `> div:last-child p`).contains('G7 Scout');
     cy.get(`h3:contains('Direction') ~ label`).click();
     cy.url().should('include', 'sortBy=ammoType');
+    cy.tick(50);
     cy.get(grid `> div:first-child p`).contains('G7 Scout');
   });
 
