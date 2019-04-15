@@ -9,7 +9,7 @@ cache:
 
 cypress:
   stage: test
-  image: cypress/base:11.13.0
+  image: cypress/browsers:node11.13.0-chrome73
   variables:
     NODE_ENV: "development"
   script:
