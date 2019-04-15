@@ -57,7 +57,7 @@ deploy_prod:
     - now alias $(now --token=$NOW_TOKEN) staging.apex-legends.win --token=$NOW_TOKEN
 
 test_staging:
-  stage: test_staging
+  stage: test
   image: cypress/browsers:node11.13.0-chrome73
   script:
     # check cypress (without npx) if fails, otherwise run npm i before test
