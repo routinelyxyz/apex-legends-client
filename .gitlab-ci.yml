@@ -18,6 +18,8 @@ cache:
 cypress:
   stage: test
   image: cypress/browsers:node11.13.0-chrome73
+  only:
+    - disabled
   variables:
     NODE_ENV: "development"
   script:
@@ -44,8 +46,6 @@ deploy_staging:
 test_staging:
   stage: test_staging
   image: cypress/browsers:node11.13.0-chrome73
-  variables:
-    GIT_STRATEGY: none
   script:
     - npx cypress run --config baseUrl=https://staging.apex-legends.win
   artifacts:
