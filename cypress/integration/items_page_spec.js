@@ -53,6 +53,7 @@ describe('Items page', function() {
     cy.get(`h3:contains('Sort By') ~ select`).select('ammoType');
     cy.get(grid `> div:last-child p`).contains('G7 Scout');
     cy.get(`h3:contains('Direction') ~ label`).click();
+    cy.url().should('include', 'sortBy=ammoType');
     cy.get(grid `> div:first-child p`).contains('G7 Scout');
   });
 
