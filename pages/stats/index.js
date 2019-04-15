@@ -1,6 +1,6 @@
 import 'isomorphic-unfetch';
 import css from './style.scss';
-import { getUrl, getStatic, getAvatar } from '../../helpers';
+import { getUrl, getStatic, getAvatar, statsProps } from '../../helpers';
 import { animated, useSpring, config } from 'react-spring';
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
@@ -145,6 +145,32 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
     stats.legends.sort((a, b) => a.kills.value > b.kills.value ? -1 : 1)
   , [stats]);
 
+  const lifetimeStats = useMemo(() =>
+    statsProps.legend
+      .map(prop => ({
+        prop,
+        ...stats.lifetime[prop]
+      }))
+      .filter(propObj => propObj.value != null)
+  , [stats]);
+
+  const legendStats = useMemo(() => 
+    stats.legends
+      .map(legendStats => statsProps.legend
+        .map(prop => ({
+          prop,
+          ...legendStats[prop]
+        }))
+        .filter(propObj => propObj.value != null)
+      )
+      .sort((a, b) =>
+          a.find(stats => stats.prop === 'kills').value >
+          b.find(stats => stats.prop === 'kills').value
+            ? -1
+            : 1
+        )
+  , [stats]);
+
   return (
     <div>
       <Head>
@@ -183,13 +209,11 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
       </div>
       <h2>Lifetime</h2>
       <ul className={css.lifetime_stats__list}>
-        {lifetimeStatsProps.map(prop => (
-          stats.lifetime[prop].value != null && (
+        {lifetimeStats.map(stats => (
           <LegendStatsValue
-            value={stats.lifetime[prop].value}
-            percentile={stats.lifetime[prop].percentile}
-            prop={prop}
-          />)
+            key={stats.prop}
+            {...stats}
+          />
         ))}
       </ul>
       <HorizontalNavTab

@@ -22,7 +22,8 @@ export const LegendStats = ({ stats }) => {
               key={prop}
               prop={prop}
               value={stats[prop].value}
-              percentile={stats[prop].percentile * 100}
+              percentile={stats[prop].percentile}
+              rank={stats[prop].rank}
             />
           )
         ))}
