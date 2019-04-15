@@ -1,6 +1,7 @@
 {
   "baseUrl": "http://localhost:3000",
-  "reporter": "spec, junit",
+  "reporter": "junit",
+  "reporterEnabled": "spec, mocha-junit-reporter",
   "reporterOptions": {
     "mochaFile": "results/cypress-[hash].xml"
   }
