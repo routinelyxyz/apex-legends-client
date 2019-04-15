@@ -1,6 +1,6 @@
 import css from './style.scss';
 import { useState, useRef, useContext, useEffect } from 'react';
-import { debounce, applyCss } from '../../util';
+import { debounce, applyCss, scrollTo } from '../../util';
 import { getUrl, platformNames } from '../../helpers';
 import useClickOutside from 'use-onclickoutside';
 import { animated, useTransition, config } from 'react-spring';
@@ -18,7 +18,6 @@ import { PhraseSelector } from '../../reusable/PhraseSelector';
 import { SearcherPlatforms } from '../../components/SearcherPlatforms';
 
 const debounceA = debounce(350);
-const debounceB = debounce(100);
 
 const PlayerItem = player => (
   <PlayerLabel
@@ -27,7 +26,7 @@ const PlayerItem = player => (
   />
 );
 
-const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
+const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
   const [phrase, setPhrase] = useState('');
   const [focused, setFocused] = useState(false);
   const [playersFound, setPlayersFound] = useState([]);
@@ -67,14 +66,12 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
 
   const handleStatsSearch = e => {
     if (e.key === 'Enter' && phrase.length) {
-      debounceB(() => {
-        setFocused(false);
-        modal.setOpened(false);
-        Router.push(
-          `/stats?platform=${platform}&name=${phrase}&=id`,
-          `/stats/${platform}/${phrase}`
-        );
-      });
+      setFocused(false);
+      modal.setOpened(false);
+      Router.push(
+        `/stats?platform=${platform}&name=${phrase}&=id`,
+        `/stats/${platform}/${phrase}`
+      );
     }
   }
 
@@ -83,9 +80,8 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
     mobileMenu.setVisible(false);
     modal.setOpened(true);
     if (isPhone) {
-      window.scrollTo({
-        top: refContainer.current.offsetTop - 5,
-        behavior: 'smooth'
+      scrollTo({
+        top: refContainer.current.offsetTop - 5
       });
     }
   }
@@ -102,6 +98,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
         pageMode && css.page_mode
       )}
       ref={refContainer}
+      data-testid={['PlayerSearcher', testId].filter(Boolean).join('__')}
     >
       <div className={css.input_container}>
         <BasicInput

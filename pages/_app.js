@@ -51,7 +51,7 @@ class MyApp extends App {
     });
     Router.events.on('routeChangeComplete', url => {
       NProgress.done();
-      if (window.gtag) {
+      if (process.env.NODE_ENV === 'production' && window.gtag) {
         window.gtag('config', GA_ID, {
           page_location: window.location.href,
           page_path: window.location.pathname,

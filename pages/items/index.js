@@ -9,7 +9,7 @@ import qs from 'querystringify';
 import { debounce, useDebounce, useDispatch, filterUnique } from '../../util';
 import Head from 'next/head';
 import axios from 'axios';
-import { reducer, initialState } from './reducer';
+import { reducer, initialState } from '../../store/hook-reducers/items';
 
 import Item from '../../reusable/Item';
 import Input from '../../reusable/Input';
@@ -185,7 +185,7 @@ const WeaponsPage = ({ items, router, categories }) => {
       </Head>
       <MobileModal title={'Show filters ' + (updateKey === initialUpdateKey ? '' : '(*)')}>
         <nav className={css.search_filters}>
-          <label className={css.filters_searcher}>
+          <label className={css.filters_searcher} data-testid="Items__input">
             <h3 className={css.h3}>Name</h3>
             <Input
               placeholder="Weapon name..."
@@ -193,7 +193,7 @@ const WeaponsPage = ({ items, router, categories }) => {
               onChange={e => setPhrase(e.target.value)}
             />
           </label>
-          <div className={css.filters_section}>
+          <div className={css.filters_section} data-testid="Items__category">
             <h3 className={css.h3}>Category</h3>
             {Object.keys(selectedWeaponTypes).map(type => (
               <Checkmark
@@ -207,7 +207,7 @@ const WeaponsPage = ({ items, router, categories }) => {
               /> 
             ))}
           </div>
-          <div className={css.filters_section}>
+          <div className={css.filters_section} data-testid="Items__ammo">
             <h3 className={css.h3}>Ammo type</h3>
             {Object.keys(selectedAmmoTypes).map(type => (
               <Checkmark

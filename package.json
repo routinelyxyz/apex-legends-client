@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "NODE_ENV=production next start",
+    "start": "next start",
+    "start:ci": "start-server-and-test start http://localhost:3000 test:cypress",
     "now-build": "next build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:cypress": "cypress run"
   },
   "repository": {
     "type": "git",
@@ -50,7 +52,12 @@
     "use-onclickoutside": "^0.3.0"
   },
   "devDependencies": {
+    "cypress": "^3.2.0",
+    "mocha-junit-reporter": "^1.21.0",
     "next-compose": "0.0.2",
+    "now": "^14.0.3",
+    "start-server-and-test": "^1.7.13",
+    "wait-on": "^3.2.0",
     "webpack-filter-warnings-plugin": "^1.2.1"
   }
 }
