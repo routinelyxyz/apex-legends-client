@@ -60,7 +60,6 @@ test_staging:
   stage: test
   image: cypress/browsers:node11.13.0-chrome73
   script:
-    # check cypress (without npx) if fails, otherwise run npm i before test
     - npx cypress run --config baseUrl=https://staging.apex-legends.win
   artifacts:
     reports:

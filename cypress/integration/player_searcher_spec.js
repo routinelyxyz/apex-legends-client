@@ -33,7 +33,8 @@ describe('The Player Searcher', function() {
 
     cy.get(h `input`).focus();
     cy.tick(25);
-    cy.get('body').should('have.class', 'hidden_scroll').click();
+    cy.get('body').should('have.class', 'hidden_scroll');
+    cy.get('header').click();
     cy.tick(25);
     cy.get('body').should('not.have.class', 'hidden_scroll');
     cy.tick(25);
