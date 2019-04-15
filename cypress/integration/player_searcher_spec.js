@@ -39,7 +39,7 @@ describe('The Player Searcher', function() {
     cy.get('body').should('not.have.class', 'hidden_scroll');
     cy.tick(25);
     
-    cy.get(h `input`).focus().type('rockalone');
+    cy.get(h `input`).type('rockalone');
     cy.get('body').should('have.class', 'hidden_scroll');
     cy.get(h `input`).type('{enter}');
     cy.url().should('include', `/stats/pc/rockalone`);
