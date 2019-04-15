@@ -19,7 +19,11 @@ import { HorizontalNavTab } from '../../reusable/HorizontalNav';
 import { LegendStats } from '../../components/LegendStats';
 import { StatsHistory } from '../../components/StatsHistory';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
+import { LegendStatsValue } from '../../components/LegendStatsValue';
 
+const lifetimeStatsProps = [
+  'kills', 'damage', 'headshots', 'damagePerKill', 'headshotsPerKill'
+]
 
 const getURL = player => {
   const { platform, name, id = '' } = player;
@@ -169,11 +173,6 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
               {lvlProps.lvl.interpolate(v => v.toFixed())}
             </animated.span>
           </p>
-          {/* <div
-            onClick={() => props.actions.savePlayerAsync(
-              stats, 'favorite'
-            )}
-          >Add to fav</div> */}
         </div>
         <div className={css.update_container}>
           <p className={css.update_title}>
@@ -182,6 +181,17 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
           {updateIn}
         </div>
       </div>
+      <h2>Lifetime</h2>
+      <ul className={css.lifetime_stats__list}>
+        {lifetimeStatsProps.map(prop => (
+          stats.lifetime[prop].value != null && (
+          <LegendStatsValue
+            value={stats.lifetime[prop].value}
+            percentile={stats.lifetime[prop].percentile}
+            prop={prop}
+          />)
+        ))}
+      </ul>
       <HorizontalNavTab
         withMargin
         tabs={[

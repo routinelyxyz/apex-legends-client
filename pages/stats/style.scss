@@ -78,3 +78,11 @@
   text-transform: uppercase;
   font-weight: bold;
 }
+
+.lifetime_stats__list {
+  margin: 10px 0;
+  display: flex;
+  text-align: right;
+  list-style-type: none;
+  padding: 0;
+}

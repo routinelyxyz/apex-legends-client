@@ -3,7 +3,7 @@ import { statsTitlesMap } from '../../helpers';
 
 import { ProgressBar } from '../../reusable/ProgressBar';
 
-export const LegendStatsValue = ({ value, prop, percentile }) => (
+export const LegendStatsValue = ({ value = 0, prop, percentile = 0 }) => (
   <li
     className={css.container}
     key={prop}
