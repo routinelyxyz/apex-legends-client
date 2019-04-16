@@ -4,7 +4,7 @@ import React from 'react';
 
 import { ProgressBar } from '../../reusable/ProgressBar';
 
-const LegendStatsValue = ({ value, prop, rank, percentile }) => {
+const LegendStatsValue = ({ value, prop, rank, percentile, link = rank => '#' + rank }) => {
   const percents = percentile <= 1 ? percentile * 100 : percentile;
   return (
     <li
@@ -23,7 +23,7 @@ const LegendStatsValue = ({ value, prop, rank, percentile }) => {
         height={3}
       />
       <p className={css.rank}>
-        #{rank}
+        {link(rank, prop)}
       </p>
     </li>
   );
