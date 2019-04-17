@@ -39,7 +39,7 @@ jest:
   script:
     - npm i --silent
     - npx jest --color --coverage
-  coverage: /All files\s*\|\s*([0-9.]+)/
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
     paths:
       - coverage/
