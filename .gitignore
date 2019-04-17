@@ -7,3 +7,4 @@ out
 cypress/videos
 cypress/screenshots
 results/
+coverage/

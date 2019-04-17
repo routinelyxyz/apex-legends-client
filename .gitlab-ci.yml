@@ -33,6 +33,18 @@ cypress:
       - cypress/screenshots
     expire_in: 1 week
 
+jest:
+  stage: test
+  image: node:11.14.0
+  script:
+    - npm i --silent
+    - npx jest --color --coverage
+  coverage: /All files\s*\|\s*([0-9.]+)/
+  artifacts:
+    paths:
+      - coverage/
+    expire_in: 1 week
+
 deploy_staging:
   stage: deploy_staging
   image: node:11.14.0
