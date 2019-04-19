@@ -1,0 +1,15 @@
+
+.container {
+  border: 2px solid #636386;
+  border-radius: 4px;
+  padding: 10px 20px;
+  background: transparent;
+  cursor: pointer;
+  font-family: Cabin, sans-serif;
+  font-size: 14px;
+  color: rgb(228, 229, 248);
+}
+
+.active {
+  border-color: #6770FA;
+}
