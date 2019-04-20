@@ -3,7 +3,7 @@ import { applyCss } from '../../util';
 
 const platforms = ['pc', 'ps4', 'xbox'];
 
-export const SearcherPlatforms = ({ platform, setPlatform, small }) => {
+export const SearcherPlatforms = ({ platform, testId, setPlatform, small }) => {
   return (
     <ul
       {...applyCss(
@@ -11,6 +11,7 @@ export const SearcherPlatforms = ({ platform, setPlatform, small }) => {
         css[platform],
         small && css.small
       )}
+      data-testid={testId}
     >
       {platforms.map(platformType => (
         <li

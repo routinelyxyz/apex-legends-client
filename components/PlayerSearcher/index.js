@@ -109,11 +109,13 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
           onChange={getPlayers}
           onFocus={handleFocus}
           onKeyPress={handleStatsSearch}
+          data-testid="PlayerSearcher__input"
         />
         <SearcherPlatforms
           platform={platform}
           setPlatform={platform => setPlatform(platform)}
           small={!pageMode}
+          testId="PlayerSearcher__platforms"
         />
       </div>
       {transitions.map(({ item, props, key }) => (
@@ -128,6 +130,7 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
           }}
           className={css.search_container}
           key={key}
+          data-testid="PlayerSearcher__dropdown"
         >
           {phrase.length > 100
             ? 
