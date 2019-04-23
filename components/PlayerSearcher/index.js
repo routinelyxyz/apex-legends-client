@@ -8,6 +8,7 @@ import Router from 'next/router';
 import { useDevice } from '../../hooks';
 import { MobileMenuContext, ModalContext } from '../../helpers/context';
 import axios from 'axios';
+import NProgress from 'nprogress';
 
 import { PlayerLabel } from '../../components/PlayersTable';
 import { BasicInput } from '../../reusable/Input';
@@ -19,11 +20,12 @@ const debounceA = debounce(350);
 let timeout;
 
 const RenderPlayersResult = ({ isSearching, playersFound, phrase }) => {
-  if (isSearching) {
-    return <div>Searching...</div>
-  }
-  else if (phrase.length && !playersFound.length) {
-    return <p>No players were found</p>
+  if (!isSearching && phrase.length && !playersFound.length) {
+    return (
+      <p className={css.players_error}>
+        No players were found
+      </p>
+    );
   }
 
   return playersFound.map(player => (
@@ -40,7 +42,7 @@ const RenderPlayersResult = ({ isSearching, playersFound, phrase }) => {
               phrase={phrase}
             />
           </span>
-        )} 
+        )}
       />
     </div>
   ));
@@ -74,6 +76,7 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
         setPlayersFound(response.data.data);
       }
       setIsSearching(false);
+      NProgress.done();
     },
     [phrase]
   );
@@ -81,11 +84,13 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
   const handleOnChange = event => {
     const { value } = event.target;
     setPhrase(value);
+    NProgress.start();
     if (!isSearching) setIsSearching(true);
     
     if (!!!value) {
       clearTimeout(timeout);
       setIsSearching(false);
+      NProgress.done();
       if (playersFound.length) {
         setPlayersFound([]);
       }
