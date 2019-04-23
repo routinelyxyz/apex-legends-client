@@ -1,21 +1,21 @@
 import css from './style.scss';
 import { useState, useRef, useContext, useEffect } from 'react';
 import { debounce, applyCss, scrollTo } from '../../util';
-import { getUrl, platformNames } from '../../helpers';
+import { getUrl } from '../../helpers';
 import useClickOutside from 'use-onclickoutside';
-import { animated, useTransition, config } from 'react-spring';
 import { connect } from 'react-redux';
 import { mapStateDynamic, mapDispatchToProps } from '../../store/mappers';
 import Router from 'next/router';
 import { useDevice } from '../../hooks';
 import { MobileMenuContext, ModalContext } from '../../helpers/context';
-import { Dropdown } from '../../reusable/Dropdown';
 
-import { Menu } from '../../reusable/Menu';
-import { PlayerLabel } from '../../components/PlayerLabel';
+
+// import { PlayerLabel } from '../../components/PlayerLabel';
+import { PlayerLabel } from '../../components/PlayersTable';
 import { BasicInput } from '../../reusable/Input';
 import { PhraseSelector } from '../../reusable/PhraseSelector';
 import { SearcherPlatforms } from '../../components/SearcherPlatforms';
+import { SlidingContainer } from '../../reusable/SlidingContainer';
 
 const debounceA = debounce(350);
 
@@ -28,7 +28,7 @@ const PlayerItem = player => (
 
 const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
   const [phrase, setPhrase] = useState('');
-  const [focused, setFocused] = useState(false);
+  const [focused, setFocused] = useState(true);
   const [playersFound, setPlayersFound] = useState([]);
   const [platform, setPlatform] = useState('pc');
   const { favoritePlayers, recentPlayers } = props.reducers.stats;
@@ -43,13 +43,6 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
       modal.setOpened(false);
       mobileMenu.setVisible(true);
     }
-  });
-
-  const transitions = useTransition(focused, null, {
-    from: { opacity: 0.7, height: 0 },
-    enter: { scale: 1, opacity: 1, height },
-    leave: { scale: 0, opacity: 0, height: 0 },
-    config: config.stiff
   });
 
   const getPlayers = e => {
@@ -116,50 +109,18 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
           small={!pageMode}
         />
       </div>
-      {transitions.map(({ item, props, key }) => (
-        item &&
-        <animated.div
-          style={{
-            opacity: props.opacity,
-            // maxHeight: props.height
-              // .interpolate(v => v + 'px'),
-            height: props.height
-              .interpolate(v => v + 'px'),
-          }}
-          className={css.search_container}
-          key={key}
-        >
-          {phrase.length > 100
-            ? 
-              <div>
-                {playersFound.map(PlayerItem)}
-              </div>
-            :
-              <Menu>
-                <div className={css.content_container}>
-                  {[].map(PlayerItem)}
-                </div>
-                <div className={css.content_container}>
-                  {[].map(PlayerItem)}
-                </div>
-                <div>
-                  <PhraseSelector
-                    value="Popular players"
-                    phrase={phrase}
-                  />
-                </div>
-                <div>
-                  {playersFound.map(player => (
-                    <PlayerLabel
-                      key={player.id}
-                      player={player}
-                    />
-                  ))}
-                </div>
-              </Menu>
-          }
-        </animated.div>
-      ))}
+      <SlidingContainer
+        state={focused}
+        height={height}
+        className={css.search_container}
+      >
+        {playersFound.map(player => (
+          <PlayerLabel
+            key={player.id}
+            player={player}
+          />
+        ))}
+      </SlidingContainer>
     </div>
   )
 }
