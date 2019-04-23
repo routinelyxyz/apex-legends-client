@@ -61,13 +61,13 @@ describe('<PlayerSearcher />', () => {
     expect(xbox.classList.length).toBe(1);
   });
 
-  it('disables scroll on focus', () => {
-    const { container, getByLabelText, getByTestId, rerender, getByText } = render(renderSkeleton);
+  // it('disables scroll on focus', () => {
+  //   const { container, getByLabelText, getByTestId, rerender, getByText } = render(renderSkeleton);
 
-    fireEvent.focus(getByTestId('PlayerSearcher__input'));
+  //   fireEvent.focus(getByTestId('PlayerSearcher__input'));
 
-    /* Add jest-dom */
-    // body doesn't exist on render?
-    // expect(container.querySelector('body').classList.contains('hidden_scroll')).toBe(true);
-  });
+  //   /* Add jest-dom */
+  //   // body doesn't exist on render?
+  //   // expect(container.querySelector('body').classList.contains('hidden_scroll')).toBe(true);
+  // });
 });
