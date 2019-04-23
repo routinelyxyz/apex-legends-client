@@ -2,6 +2,7 @@
 export const debounce = (delay = 250, timeout) => fn => {
   clearTimeout(timeout);
   timeout = setTimeout(fn, delay);
+  return timeout;
 }
 
 export const round = (val, scale = 10) => Math.round(val * scale) / scale;

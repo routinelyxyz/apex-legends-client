@@ -14,7 +14,7 @@ const PhraseSelector = ({ value, phrase }) => {
     <>
       {value.slice(0, phraseStart)}
       <strong className={css.selection}>
-        {phrase}
+        {value.slice(phraseStart, phraseEnd)}
       </strong>
       {value.slice(phraseEnd)}
     </>
