@@ -9,11 +9,11 @@ dayjs.extend(utc);
 
 import { PlayerCard } from '../../components/PlayerCard';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
-import { PlayersTable } from '../../components/PlayersTable';
+import { PlayersTable, Table, PlayerLabel } from '../../components/PlayersTable';
 
 const endOfDay = dayjs().utc().endOf('day');
 
-const HomePage = ({ dailyRanking }) => {
+const HomePage = ({ dailyRanking, recentlyUpdated }) => {
   const [timeLeft, setTimeLeft] = useState('');
 
   const handleTimeCounter = () => {
@@ -79,6 +79,29 @@ const HomePage = ({ dailyRanking }) => {
           )}
         </>
       )}
+      {recentlyUpdated.length && (
+        <>
+          <h2 className={css.top_header}>
+            Recently updated
+          </h2>
+          <Table
+            thead={(
+              <tr>
+                <th>Player</th>
+                <th>Kills</th>
+                <th>Time ago</th>
+              </tr>
+            )}
+            tbody={recentlyUpdated.map(stats => (
+              <tr key={stats.id}>
+                <td><PlayerLabel player={stats.player}/></td>
+                <td>+{stats.kills}</td>
+                <td>{dayjs(stats.date).fromNow()}</td>
+              </tr>
+            ))}
+          />
+        </>
+      )}
     </article>
   )
 }
@@ -87,13 +110,18 @@ HomePage.getInitialProps = async () => {
   try {
 
     const options = { timeout: 500 };
-    const response = await axios.get('/stats/v2/daily-ranking', options);
-    const dailyRanking = response.data.data; 
+    const [dailyRanking, recentlyUpdated] = await Promise.all([
+      axios.get('/stats/v2/daily-ranking', options),
+      axios.get('/stats/v2/recently-updated', options)
+    ]); 
 
-    return { dailyRanking };
+    return {
+      dailyRanking: dailyRanking.data.data,
+      recentlyUpdated: recentlyUpdated.data.data
+    };
 
   } catch(err) {
-    return { dailyRanking: [] };
+    return { dailyRanking: [], recentlyUpdated: [] };
   }
 }
 
