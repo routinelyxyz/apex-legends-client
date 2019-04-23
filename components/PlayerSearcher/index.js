@@ -69,17 +69,14 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
     }
   });
 
-  const findPlayers = useCallback(
-    async () => {
-      const response = await axios.get(`/stats/players/${encodeURI(phrase)}`);
-      if (phrase.length) {
-        setPlayersFound(response.data.data);
-      }
-      setIsSearching(false);
-      NProgress.done();
-    },
-    [phrase]
-  );
+  const findPlayers = async (name) => {
+    const response = await axios.get(`/stats/players/${encodeURI(name)}`);
+    if (phrase.length) {
+      setPlayersFound(response.data.data);
+    }
+    setIsSearching(false);
+    NProgress.done();
+  }
 
   const handleOnChange = event => {
     const { value } = event.target;
@@ -97,7 +94,7 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
       return;
     }
 
-    timeout = debounceA(findPlayers);
+    timeout = debounceA(() => findPlayers(value));
   }
 
   const handleStatsSearch = e => {
