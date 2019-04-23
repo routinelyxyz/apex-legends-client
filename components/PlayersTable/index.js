@@ -35,6 +35,24 @@ export const PlayerLabel = ({ player }) => (
   </PlayerLink>
 );
 
+export const Td = ({ children, align = 'left', fontSize = 14 }) => (
+  <td {...applyCss(
+    css['column__fs_' + fontSize],
+    css['column__' + align]
+  )}>
+    {children}
+  </td>
+);
+
+export const Th = ({ children, align = 'left', fontSize = 14 }) => (
+  <th {...applyCss(
+    css['column__fs_' + fontSize],
+    css['column__' + align]
+  )}>
+    {children}
+  </th>
+);
+
 export const PlayersTable = ({ data, prop, clearFilters, renderRank = i => i + 1 }) => {
   if (!data.length) return (
     <div className={css.not_found}>
@@ -55,18 +73,24 @@ export const PlayersTable = ({ data, prop, clearFilters, renderRank = i => i + 1
     <Table
       thead={(
         <tr>
-          <th>Rank</th>
+          <Th align="center">Rank</Th>
           <th>Player</th>
-          <th className={css.prop_name}>
-            {statsTitlesMap[prop] || prop}
-          </th>
+          <Th align="center">
+            <span className={css.prop_name}>
+              {statsTitlesMap[prop] || prop}
+            </span>
+          </Th>
         </tr>
       )}
       tbody={data.map((row, index) => (
         <tr key={index}> 
-          <td>{renderRank(index)}</td>
-          <td><PlayerLabel player={row.player} /></td>
-          <td>{(row[prop] && row[prop].toLocaleString('en-US')) || 0}</td>
+          <Td align="center">{renderRank(index)}</Td>
+          <Td>
+            <PlayerLabel player={row.player} />
+          </Td>
+          <Td align="center" fontSize={18}>
+            {(row[prop] && row[prop].toLocaleString('en-US')) || 0}
+          </Td>
         </tr> 
       ))}
     />

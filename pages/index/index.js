@@ -9,7 +9,7 @@ dayjs.extend(utc);
 
 import { PlayerCard } from '../../components/PlayerCard';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
-import { PlayersTable, Table, PlayerLabel } from '../../components/PlayersTable';
+import { PlayersTable, Table, PlayerLabel, Td, Th } from '../../components/PlayersTable';
 
 const endOfDay = dayjs().utc().endOf('day');
 
@@ -81,22 +81,32 @@ const HomePage = ({ dailyRanking, recentlyUpdated }) => {
       )}
       {recentlyUpdated.length && (
         <>
-          <h2 className={css.top_header}>
+          <h2 className={`${css.top_header} ${css.top_header__recent}`}>
             Recently updated
           </h2>
           <Table
             thead={(
               <tr>
-                <th>Player</th>
-                <th>Kills</th>
-                <th>Time ago</th>
+                <Th>Player</Th>
+                <Th align="center">Kills</Th>
+                <Th align="right">Time ago</Th>
               </tr>
             )}
             tbody={recentlyUpdated.map(stats => (
               <tr key={stats.id}>
-                <td><PlayerLabel player={stats.player}/></td>
-                <td>+{stats.kills}</td>
-                <td>{dayjs(stats.date).fromNow()}</td>
+                <Td>
+                  <div className={css.table_field__first}>
+                    <PlayerLabel player={stats.player}/>
+                  </div>
+                </Td>
+                <Td align="center" fontSize={18}>
+                  +{stats.kills}
+                </Td>
+                <Td align="right">
+                  <span className={css.table_field__last}>
+                    {dayjs(stats.date).fromNow()}
+                  </span>
+                </Td>
               </tr>
             ))}
           />

@@ -49,6 +49,16 @@
 
 .top_header {
   text-align: center;
+  &.top_header__recent {
+    margin: 100px 0 0 0;
+  }
+}
+
+.table_field__first {
+  padding-left: 20px;
+}
+.table_field__last {
+  padding-right: 10px;
 }
 
 .top_counter {
