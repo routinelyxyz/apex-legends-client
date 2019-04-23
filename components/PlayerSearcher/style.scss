@@ -36,7 +36,7 @@
   color: #23232F; 
   padding: 5px;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: auto;
   will-change: height, opacity;
   min-width: 400px;
   @include phone {
@@ -45,12 +45,25 @@
   max-height: calc(100vh - 47px);
   z-index: 50;
   right: 0;
-  // overflow-y: auto;
 }
 
 .content_container {
   padding: 10px 5px;
   display: flex;
   flex-wrap: wrap;
-  // overflow-y: auto;
+}
+
+.player_label_searcher__container {
+  padding: 10px 30px;
+  box-shadow: 0 0 25px -4px rgba(1,1,1,.25);
+  margin-bottom: 5px;
+  background: rgb(233, 233, 233);
+  overflow: auto;
+  &:hover {
+    background-color: rgba(255,255,255,.8);
+  }
+}
+
+.player_label_searcher__name {
+  color: #23232F; 
 }

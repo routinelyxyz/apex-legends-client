@@ -14,7 +14,7 @@ export const Table = ({ thead, tbody }) => (
   </table>
 );
 
-export const PlayerLabel = ({ player }) => (
+export const PlayerLabel = ({ player, renderName = name => name }) => (
   <PlayerLink player={player}>
     <a className={css.player}>
       <div {...applyCss(
@@ -30,7 +30,7 @@ export const PlayerLabel = ({ player }) => (
         src={getAvatar(player, 40)}
         className={css.avatar}
       />
-      {player.name}
+      {renderName(player.name)}
     </a>
   </PlayerLink>
 );

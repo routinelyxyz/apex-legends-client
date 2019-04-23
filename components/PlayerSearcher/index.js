@@ -1,5 +1,5 @@
 import css from './style.scss';
-import { useState, useRef, useContext, useEffect } from 'react';
+import { useState, useRef, useContext, useEffect, useCallback } from 'react';
 import { debounce, applyCss, scrollTo } from '../../util';
 import { getUrl } from '../../helpers';
 import useClickOutside from 'use-onclickoutside';
@@ -8,7 +8,7 @@ import { mapStateDynamic, mapDispatchToProps } from '../../store/mappers';
 import Router from 'next/router';
 import { useDevice } from '../../hooks';
 import { MobileMenuContext, ModalContext } from '../../helpers/context';
-
+import axios from 'axios';
 
 // import { PlayerLabel } from '../../components/PlayerLabel';
 import { PlayerLabel } from '../../components/PlayersTable';
@@ -17,14 +17,14 @@ import { PhraseSelector } from '../../reusable/PhraseSelector';
 import { SearcherPlatforms } from '../../components/SearcherPlatforms';
 import { SlidingContainer } from '../../reusable/SlidingContainer';
 
-const debounceA = debounce(350);
-
-const PlayerItem = player => (
-  <PlayerLabel
-    key={player.id}
-    player={player}
-  />
+const PlayerLabelSearcher = (props) => (
+  <div className={css.player_label_searcher__container}>
+    <PlayerLabel {...props} />
+  </div>
 );
+
+const debounceA = debounce(350);
+let timeout;
 
 const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
   const [phrase, setPhrase] = useState('');
@@ -36,6 +36,7 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
   const mobileMenu = useContext(MobileMenuContext);
   const modal = useContext(ModalContext);
   const refContainer = useRef();
+
   useClickOutside(refContainer, () => {
     setFocused(false);
     if (focused) {
@@ -45,16 +46,29 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
     }
   });
 
-  const getPlayers = e => {
-    setPhrase(e.target.value);
-    if (!phrase && !phrase.length) return;
-    debounceA(async () => {
-      const res = await fetch(
-        getUrl(`/stats/players/${encodeURI(phrase)}`)
-      );
-      const data = await res.json();
-      setPlayersFound(data.data);
-    });
+  const findPlayers = useCallback(
+    async () => {
+      const response = await axios.get(`/stats/players/${encodeURI(phrase)}`);
+      if (phrase.length) {
+        setPlayersFound(response.data.data);
+      }
+    },
+    [phrase]
+  );
+
+  const handleOnChange = event => {
+    const { value } = event.target;
+    setPhrase(value);
+    
+    if (!!!value) {
+      clearTimeout(timeout);
+      if (playersFound.length) {
+        setPlayersFound([]);
+      }
+      return;
+    }
+
+    timeout = debounceA(findPlayers);
   }
 
   const handleStatsSearch = e => {
@@ -99,7 +113,7 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
           type="text"
           placeholder="Search player..."
           value={phrase}
-          onChange={getPlayers}
+          onChange={handleOnChange}
           onFocus={handleFocus}
           onKeyPress={handleStatsSearch}
         />
@@ -115,9 +129,17 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
         className={css.search_container}
       >
         {playersFound.map(player => (
-          <PlayerLabel
+          <PlayerLabelSearcher
             key={player.id}
             player={player}
+            renderName={name => (
+              <span className={css.player_label_searcher__name}>
+                <PhraseSelector
+                  value={name}
+                  phrase={phrase}
+                />
+              </span>
+            )}
           />
         ))}
       </SlidingContainer>
