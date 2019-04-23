@@ -1,6 +1,7 @@
+import React from 'react';
 import { animated, useTransition, config } from 'react-spring';
 
-export const SlidingContainer = ({ children, state, height = 250, ...rest }) => {
+const SlidingContainer = ({ children, state, height = 250, ...rest }) => {
 
   const transitions = useTransition(state, null, {
     from: { opacity: 0.7, height: 0 },
@@ -24,3 +25,6 @@ export const SlidingContainer = ({ children, state, height = 250, ...rest }) => 
     </animated.div>
   ));
 }
+
+const Memoized = React.memo(SlidingContainer);
+export { Memoized as SlidingContainer };
