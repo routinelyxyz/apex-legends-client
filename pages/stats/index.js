@@ -20,6 +20,7 @@ import { LegendStats } from '../../components/LegendStats';
 import { StatsHistory } from '../../components/StatsHistory';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
 import { LegendStatsValue } from '../../components/LegendStatsValue';
+import { InfoCard } from '../../components/InfoCard';
 
 const lifetimeStatsProps = [
   'kills', 'damage', 'headshots', 'damagePerKill', 'headshotsPerKill'
@@ -138,7 +139,14 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
     from: { lvl: 0 },
     to: { lvl: stats.lifetime.lvl.value },
     delay: 100,
-    config: { mass: 1, tension: 150, friction: 50 },
+    config: { mass: 1, tension: 150, friction: 50 }
+  });
+
+  const rankProps = useSpring({
+    from: { rank: 1 },
+    to: { rank: stats.lifetime.kills.rank },
+    delay: 100,
+    config: { mass: 1, tension: 150, friction: 50 }
   });
 
   const sortedLegends = useMemo(() =>
@@ -196,11 +204,35 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
           <h1 className={css.name}>
             {stats.name || stats.player.name}
           </h1>
-          <p className={css.lvl_container}>
-            <animated.span className={css.lvl_value}>
-              {lvlProps.lvl.interpolate(v => v.toFixed())}
-            </animated.span>
-          </p>
+          <div className={css.info_card__container}>
+            <InfoCard
+              title="Rank"
+              content={(
+                <animated.span>
+                  {rankProps.rank.interpolate(v => v.toFixed())}
+                </animated.span>
+              )}
+              className={css.info_card__item}
+            />
+            <InfoCard
+              title="Platform"
+              className={css.info_card__item}
+              content={(
+                <img
+                  className={css.platform_image}
+                  src={`/static/img/${stats.player.platform}-rose.svg`}
+                />
+              )}
+            />
+            <InfoCard
+              title="Level"
+              content={(
+                <animated.span>
+                  {lvlProps.lvl.interpolate(v => v.toFixed())}
+                </animated.span>
+              )}
+            />
+          </div>
         </div>
         <div className={css.update_container}>
           <p className={css.update_title}>
