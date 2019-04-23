@@ -48,7 +48,7 @@ const RenderPlayersResult = ({ isSearching, playersFound, phrase }) => {
 
 const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
   const [phrase, setPhrase] = useState('');
-  const [focused, setFocused] = useState(true);
+  const [focused, setFocused] = useState(false);
   const [playersFound, setPlayersFound] = useState([]);
   const [platform, setPlatform] = useState('pc');
   const [isSearching, setIsSearching] = useState(false);
