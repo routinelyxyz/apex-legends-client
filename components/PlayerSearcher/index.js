@@ -1,7 +1,6 @@
 import css from './style.scss';
 import { useState, useRef, useContext, useEffect, useCallback } from 'react';
 import { debounce, applyCss, scrollTo } from '../../util';
-import { getUrl } from '../../helpers';
 import useClickOutside from 'use-onclickoutside';
 import { connect } from 'react-redux';
 import { mapStateDynamic, mapDispatchToProps } from '../../store/mappers';
@@ -10,27 +9,49 @@ import { useDevice } from '../../hooks';
 import { MobileMenuContext, ModalContext } from '../../helpers/context';
 import axios from 'axios';
 
-// import { PlayerLabel } from '../../components/PlayerLabel';
 import { PlayerLabel } from '../../components/PlayersTable';
 import { BasicInput } from '../../reusable/Input';
 import { PhraseSelector } from '../../reusable/PhraseSelector';
 import { SearcherPlatforms } from '../../components/SearcherPlatforms';
 import { SlidingContainer } from '../../reusable/SlidingContainer';
 
-const PlayerLabelSearcher = (props) => (
-  <div className={css.player_label_searcher__container}>
-    <PlayerLabel {...props} />
-  </div>
-);
-
 const debounceA = debounce(350);
 let timeout;
+
+const RenderPlayersResult = ({ isSearching, playersFound, phrase }) => {
+  if (isSearching) {
+    return <div>Searching...</div>
+  }
+  else if (phrase.length && !playersFound.length) {
+    return <p>No players were found</p>
+  }
+
+  return playersFound.map(player => (
+    <div
+      key={player.id}
+      className={css.player_label_searcher__container}
+    >
+      <PlayerLabel 
+        player={player}
+        renderName={name => (
+          <span className={css.player_label_searcher__name}>
+            <PhraseSelector
+              value={name}
+              phrase={phrase}
+            />
+          </span>
+        )} 
+      />
+    </div>
+  ));
+}
 
 const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
   const [phrase, setPhrase] = useState('');
   const [focused, setFocused] = useState(true);
   const [playersFound, setPlayersFound] = useState([]);
   const [platform, setPlatform] = useState('pc');
+  const [isSearching, setIsSearching] = useState(false);
   const { favoritePlayers, recentPlayers } = props.reducers.stats;
   const { isPhone } = useDevice();
   const mobileMenu = useContext(MobileMenuContext);
@@ -52,6 +73,7 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
       if (phrase.length) {
         setPlayersFound(response.data.data);
       }
+      setIsSearching(false);
     },
     [phrase]
   );
@@ -59,9 +81,11 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
   const handleOnChange = event => {
     const { value } = event.target;
     setPhrase(value);
+    if (!isSearching) setIsSearching(true);
     
     if (!!!value) {
       clearTimeout(timeout);
+      setIsSearching(false);
       if (playersFound.length) {
         setPlayersFound([]);
       }
@@ -128,20 +152,11 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
         height={height}
         className={css.search_container}
       >
-        {playersFound.map(player => (
-          <PlayerLabelSearcher
-            key={player.id}
-            player={player}
-            renderName={name => (
-              <span className={css.player_label_searcher__name}>
-                <PhraseSelector
-                  value={name}
-                  phrase={phrase}
-                />
-              </span>
-            )}
-          />
-        ))}
+        <RenderPlayersResult
+          isSearching={isSearching}
+          playersFound={playersFound}
+          phrase={phrase}
+        />
       </SlidingContainer>
     </div>
   )
