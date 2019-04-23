@@ -154,6 +154,7 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
       .filter(propObj => propObj.value != null)
   , [stats]);
 
+  /*
   const legendStats = useMemo(() => 
     stats.legends
       .map(legendStats => statsProps.legend
@@ -170,6 +171,7 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
             : 1
         )
   , [stats]);
+  */
 
   return (
     <div>
@@ -207,15 +209,23 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
           {updateIn}
         </div>
       </div>
-      <h2>Lifetime</h2>
-      <ul className={css.lifetime_stats__list}>
-        {lifetimeStats.map(stats => (
-          <LegendStatsValue
-            key={stats.prop}
-            {...stats}
-          />
-        ))}
-      </ul>
+      <h2 className={css.lifetime_stats__title}>
+        Lifetime
+      </h2>
+      <div className={css.lifetime_stats_container}>
+        {lifetimeStats.length ? (
+          <ul className={css.lifetime_stats__list}>
+            {lifetimeStats.map(stats => (
+              <LegendStatsValue
+                key={stats.prop}
+                {...stats}
+              />
+            ))}
+          </ul>
+        ) : (
+          <p>No lifetime stats were found</p>
+        )}
+      </div>
       <HorizontalNavTab
         withMargin
         tabs={[
