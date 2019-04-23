@@ -57,7 +57,7 @@ export const PlayersTable = ({ data, prop, clearFilters, renderRank = i => i + 1
                 </a>
               </PlayerLink>
             </td>
-            <td>{row[prop] && row[prop].toLocaleString('en-US')}</td>
+            <td>{(row[prop] && row[prop].toLocaleString('en-US')) || 0}</td>
           </tr> 
         ))}
       </tbody>
