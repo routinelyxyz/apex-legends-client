@@ -262,7 +262,7 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
         withMargin
         tabs={[
           {
-            title: 'Overview',
+            title: 'Legend Stats',
             content: (
               <>
                 {sortedLegends.map(legendStats => (
