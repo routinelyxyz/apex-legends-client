@@ -200,7 +200,7 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
             />
           </div>
         </div>
-        <div>
+        <div className={css.player_info}>
           <h1 className={css.name}>
             {stats.name || stats.player.name}
           </h1>

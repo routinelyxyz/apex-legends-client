@@ -3,15 +3,26 @@
 .player {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .badge {
   position: relative;
   margin-right: 15px;
+  @include phone {
+    margin: 0 auto;
+  }
+}
+
+.player_info {
+  @include phone {
+    width: 100%;
+  }
 }
 
 .colored_rank {
   text-shadow: 0 0 19px rgba(255,255,255, .8);
+  color: #fff;
 }
 
 .avatar {
@@ -37,13 +48,23 @@
 .name {
   font-size: 35px;
   margin: 0;
-
+  @include phone {
+    text-align: center;
+    margin: 10px 0 15px 0;
+  }
+  @include tablet {
+    font-size: 30px;
+  }
 }
 .info_card__container {
   display: flex;
   margin-top: 10px;
   .info_card__item {
     margin-right: 10px;
+  }
+  @include phone {
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }
 
@@ -58,6 +79,11 @@
   color: #9999c4;
   margin-left: auto;
   text-align: right;
+  @include phone {
+    width: 100%;
+    margin-top: 50px;
+    text-align: center;
+  }
 }
 .update_title {
   color: #6d6d92;
