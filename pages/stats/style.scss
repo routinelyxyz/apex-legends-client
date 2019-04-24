@@ -1,4 +1,4 @@
-
+@import "../../assets/css/rwd.scss";
 
 .player {
   display: flex;
@@ -8,6 +8,10 @@
 .badge {
   position: relative;
   margin-right: 15px;
+}
+
+.colored_rank {
+  text-shadow: 0 0 19px rgba(255,255,255, .8);
 }
 
 .avatar {
@@ -66,6 +70,7 @@
 .lifetime_stats__list {
   margin: 10px 0;
   display: flex;
+  flex-wrap: wrap;
   text-align: right;
   list-style-type: none;
   padding: 0;
@@ -73,10 +78,20 @@
 
 .lifetime_stats_container {
   padding: 10px;
-  background: rgba(46, 48, 74, .4);
+  margin: 0 80px 80px 80px;
+  background: rgba(95, 98, 136, 0.05);
+  border: 1px solid rgba(255, 255, 255, .1);
   border-radius: 5px;
+  @include tablet {
+    margin: 0 30px 80px 30px;
+  }
+  @include phone {
+    margin: 0 10px 80px 10px;
+    padding: 5px;
+  }
 }
 
 .lifetime_stats__title {
-  margin-top: 25px;
+  margin-top: 80px;
+  text-align: center;
 }

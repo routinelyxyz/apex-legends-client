@@ -208,7 +208,7 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
             <InfoCard
               title="Rank"
               content={(
-                <animated.span>
+                <animated.span className={stats.lifetime.kills.rank <= 10 && css.colored_rank}>
                   {rankProps.rank.interpolate(v => v.toFixed())}
                 </animated.span>
               )}
@@ -242,7 +242,7 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
         </div>
       </div>
       <h2 className={css.lifetime_stats__title}>
-        Lifetime
+        Lifetime stats
       </h2>
       <div className={css.lifetime_stats_container}>
         {lifetimeStats.length ? (
