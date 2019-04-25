@@ -1,6 +1,6 @@
 import 'isomorphic-unfetch';
 import css from './style.scss';
-import { getUrl, getStatic, getAvatar } from '../../helpers';
+import { getUrl, getStatic, getAvatar, statsProps } from '../../helpers';
 import { animated, useSpring, config } from 'react-spring';
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
@@ -19,7 +19,12 @@ import { HorizontalNavTab } from '../../reusable/HorizontalNav';
 import { LegendStats } from '../../components/LegendStats';
 import { StatsHistory } from '../../components/StatsHistory';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
+import { LegendStatsValue } from '../../components/LegendStatsValue';
+import { InfoCard } from '../../components/InfoCard';
 
+const lifetimeStatsProps = [
+  'kills', 'damage', 'headshots', 'damagePerKill', 'headshotsPerKill'
+]
 
 const getURL = player => {
   const { platform, name, id = '' } = player;
@@ -134,12 +139,47 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
     from: { lvl: 0 },
     to: { lvl: stats.lifetime.lvl.value },
     delay: 100,
-    config: { mass: 1, tension: 150, friction: 50 },
+    config: { mass: 1, tension: 150, friction: 50 }
+  });
+
+  const rankProps = useSpring({
+    from: { rank: 1 },
+    to: { rank: stats.lifetime.kills.rank },
+    delay: 100,
+    config: { mass: 1, tension: 150, friction: 50 }
   });
 
   const sortedLegends = useMemo(() =>
     stats.legends.sort((a, b) => a.kills.value > b.kills.value ? -1 : 1)
   , [stats]);
+
+  const lifetimeStats = useMemo(() =>
+    statsProps.legend
+      .map(prop => ({
+        prop,
+        ...stats.lifetime[prop]
+      }))
+      .filter(propObj => propObj.value != null)
+  , [stats]);
+
+  /*
+  const legendStats = useMemo(() => 
+    stats.legends
+      .map(legendStats => statsProps.legend
+        .map(prop => ({
+          prop,
+          ...legendStats[prop]
+        }))
+        .filter(propObj => propObj.value != null)
+      )
+      .sort((a, b) =>
+          a.find(stats => stats.prop === 'kills').value >
+          b.find(stats => stats.prop === 'kills').value
+            ? -1
+            : 1
+        )
+  , [stats]);
+  */
 
   return (
     <div>
@@ -160,20 +200,39 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
             />
           </div>
         </div>
-        <div>
+        <div className={css.player_info}>
           <h1 className={css.name}>
             {stats.name || stats.player.name}
           </h1>
-          <p className={css.lvl_container}>
-            <animated.span className={css.lvl_value}>
-              {lvlProps.lvl.interpolate(v => v.toFixed())}
-            </animated.span>
-          </p>
-          {/* <div
-            onClick={() => props.actions.savePlayerAsync(
-              stats, 'favorite'
-            )}
-          >Add to fav</div> */}
+          <div className={css.info_card__container}>
+            <InfoCard
+              title="Rank"
+              content={(
+                <animated.span className={stats.lifetime.kills.rank <= 10 && css.colored_rank}>
+                  {rankProps.rank.interpolate(v => v.toFixed())}
+                </animated.span>
+              )}
+              className={css.info_card__item}
+            />
+            <InfoCard
+              title="Platform"
+              className={css.info_card__item}
+              content={(
+                <img
+                  className={css.platform_image}
+                  src={`/static/img/${stats.player.platform}-rose.svg`}
+                />
+              )}
+            />
+            <InfoCard
+              title="Level"
+              content={(
+                <animated.span>
+                  {lvlProps.lvl.interpolate(v => v.toFixed())}
+                </animated.span>
+              )}
+            />
+          </div>
         </div>
         <div className={css.update_container}>
           <p className={css.update_title}>
@@ -182,11 +241,28 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
           {updateIn}
         </div>
       </div>
+      <h2 className={css.lifetime_stats__title}>
+        Lifetime stats
+      </h2>
+      <div className={css.lifetime_stats_container}>
+        {lifetimeStats.length ? (
+          <ul className={css.lifetime_stats__list}>
+            {lifetimeStats.map(stats => (
+              <LegendStatsValue
+                key={stats.prop}
+                {...stats}
+              />
+            ))}
+          </ul>
+        ) : (
+          <p>No lifetime stats were found</p>
+        )}
+      </div>
       <HorizontalNavTab
         withMargin
         tabs={[
           {
-            title: 'Overview',
+            title: 'Legend Stats',
             content: (
               <>
                 {sortedLegends.map(legendStats => (
