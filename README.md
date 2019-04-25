@@ -8,8 +8,8 @@
   </thead>
   <tbody>
     <tr>
-      <td align="center"></td>
-      <td align="center">v0.4.3</td>
+      <td align="center">v1.0.0</td>
+      <td align="center">v0.4.6</td>
     </tr>
   </tbody>
 </table>
