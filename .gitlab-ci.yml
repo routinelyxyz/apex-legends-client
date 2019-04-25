@@ -1,0 +1,73 @@
+stages:
+  - test
+  - deploy_staging
+  - test_staging
+  - deploy_production
+
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
+
+cache:
+  # key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .npm
+    - cache/Cypress
+    - node_modules
+
+cypress:
+  stage: test
+  image: cypress/browsers:node11.13.0-chrome73
+  variables:
+    NODE_ENV: "development"
+  script:
+    - npm i --silent
+    - npx next build
+    - npx next start & npx wait-on http://localhost:3000
+    - npx cypress run
+  artifacts:
+    # reports:
+    #   junit: results/*.xml
+    paths:
+      - cypress/videos
+      - cypress/screenshots
+    expire_in: 1 week
+
+deploy_staging:
+  stage: deploy_staging
+  image: node:11.14.0
+  only:
+    - master
+    - tags
+  variables:
+    NODE_ENV: "production"
+  script:
+    - npx now alias $(npx now --token=$NOW_TOKEN) staging.apex-legends.win --token=$NOW_TOKEN
+
+test_staging:
+  stage: test_staging
+  image: cypress/browsers:node11.13.0-chrome73
+  only:
+    - master
+    - tags
+  script:
+    - npx cypress run --config baseUrl=https://staging.apex-legends.win
+  artifacts:
+    # reports:
+      # junit: results/*.xml
+    paths:
+      - cypress/videos
+      - cypress/screenshots
+    expire_in: 1 week
+
+deploy_production:
+  stage: deploy_production
+  image: node:11.14.0
+  when: manual
+  only:
+    - tags
+  allow_failure: false
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - npx now alias staging.apex-legends.win apex-legends.win --token=$NOW_TOKEN

@@ -18,13 +18,11 @@
 .players_table {
   border-collapse: collapse;
   width: 100%;
-  // max-width: 680px;
-  margin: 50px auto;
+  margin: 45px auto;
   .prop_name {
     text-transform: capitalize;
   }
   th {
-    color: #7E81A7;
     color: #b2b2d5;
     font-weight: normal;
     padding: 20px;
@@ -35,14 +33,6 @@
     @include small {
       padding: 20px 5px;
     }
-    &:first-child {
-      max-width: 110px;
-      text-align: center;
-    }
-    &:last-child {
-      text-align: right;
-      text-align: center;
-    }
   }
   td {
     $padding-vertical: 13px;
@@ -51,7 +41,6 @@
       padding: $padding-vertical 5px;
     }
     &:first-child {
-      text-align: center;
       border-radius: 8px 0 0 0;
       @include phone {
         padding: $padding-vertical 0;
@@ -62,9 +51,6 @@
     }
     &:last-child {
       border-radius: 0 8px 8px 0;
-      font-size: 18px;
-      text-align: right;
-      text-align: center;
       @include phone {
         padding: $padding-vertical 0;
       }
@@ -97,7 +83,6 @@
     @include small {
       margin-right: 8px;
     }
-    // border: 1px solid 
   }
   @include small {
     font-size: 13px;
@@ -123,7 +108,6 @@ $platform-size: 15px;
   }
   overflow: hidden;
   &.pc {
-    // background: $pc;
     .platform {
       width: $platform-size - 3px;
       height: $platform-size - 3px;
@@ -134,4 +118,20 @@ $platform-size: 15px;
   // background: linear-gradient(#4A00E0, #8E2DE2);
   background: rgba(1,1,1,.4);
 
+}
+
+.column__left {
+  text-align: left;
+}
+.column__right {
+  text-align: right !important;
+}
+.column__center {
+  text-align: center !important;
+}
+
+@for $font-size from 12 to 24 {
+  .column__fs_#{$font-size} {
+    font-size: $font-size + px;
+  }
 }

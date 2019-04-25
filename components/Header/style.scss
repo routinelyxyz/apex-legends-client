@@ -10,7 +10,10 @@
 }
 
 .logo {
-  margin-right: 50px;
+  margin-right: 40px;
+  @include phone {
+    margin: 10px auto;
+  }
 }
 
 .searcher {

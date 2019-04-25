@@ -10,6 +10,8 @@ const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
 const withManifest = require('next-manifest');
 const { resolve } = require('path');
 const withBundleAnalyzer = require("@zeit/next-bundle-analyzer");
+const isProduction = process.env.NODE_ENV === 'production';
+
 
 const CDN_URL = 'https://api.apex-legends.win';
 
@@ -71,11 +73,19 @@ const manifest = {
   }
 }
 
+const plugins = [
+  [withSass, { cssModules: true }]
+]
+
+if (isProduction) {
+  plugins.push(
+    [nextOffline, nextConfig]
+  );
+}
+
 module.exports = withPlugins(
   [
-    [withSass, { cssModules: true }],
-    // [withManifest, manifest]
-    [nextOffline, nextConfig],
+    ...plugins
     /*
     [withBundleAnalyzer, {
       analyzeServer: ["server", "both"].includes(process.env.BUNDLE_ANALYZE),
@@ -94,7 +104,7 @@ module.exports = withPlugins(
     */
   ],
   {
-    target: 'serverless',
+    target: isProduction ? 'serverless' : 'server',
     webpack(config, { isServer, dev, buildId, config: { distDir }}) {
       const plugins = [...config.plugins];
 

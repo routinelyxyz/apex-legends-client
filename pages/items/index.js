@@ -9,7 +9,7 @@ import qs from 'querystringify';
 import { debounce, useDebounce, useDispatch, filterUnique } from '../../util';
 import Head from 'next/head';
 import axios from 'axios';
-import { reducer, initialState } from './reducer';
+import { reducer, initialState } from '../../store/hook-reducers/items';
 
 import Item from '../../reusable/Item';
 import Input from '../../reusable/Input';
@@ -18,6 +18,7 @@ import Select from '../../reusable/Select';
 import { SortDirection } from '../../reusable/SortDirection';
 import { WeaponsGrid } from '../../components/WeaponsGrid';
 import { MobileModal } from '../../components/MobileModal';
+import { BasicButton } from '../../reusable/BasicButton';
 
 const initialUpdateKey = '00nametrue';
 
@@ -100,6 +101,29 @@ const WeaponsPage = ({ items, router, categories }) => {
 
 
   const updateKey = phrase + selectedTypeNames.length + selectedAmmoNames.length + sortProp + sortAsc;
+  const appliedFilters = updateKey !== initialUpdateKey;
+
+  const handleClearFilters = () => {
+    if (!appliedFilters) {
+      return;
+    }
+    setPhrase('');
+    setSortProp(initialSortProp);
+    setSortAsc(initialSortAsc);
+
+    setWeaponTypes(selectedTypeNames
+      .reduce((unselected, type) => ({
+        ...unselected,
+        [type]: false
+      }), selectedWeaponTypes)
+    );
+    setAmmoTypes(selectedAmmoNames
+      .reduce((unselected, name) => ({
+        ...unselected,
+        [name]: false
+      }), ammoTypes)
+    );
+  }
 
   const ammoTypeNames = useMemo(() => 
     Object.keys(selectedAmmoTypes)
@@ -185,7 +209,7 @@ const WeaponsPage = ({ items, router, categories }) => {
       </Head>
       <MobileModal title={'Show filters ' + (updateKey === initialUpdateKey ? '' : '(*)')}>
         <nav className={css.search_filters}>
-          <label className={css.filters_searcher}>
+          <label className={css.filters_searcher} data-testid="Items__input">
             <h3 className={css.h3}>Name</h3>
             <Input
               placeholder="Weapon name..."
@@ -193,7 +217,7 @@ const WeaponsPage = ({ items, router, categories }) => {
               onChange={e => setPhrase(e.target.value)}
             />
           </label>
-          <div className={css.filters_section}>
+          <div className={css.filters_section} data-testid="Items__category">
             <h3 className={css.h3}>Category</h3>
             {Object.keys(selectedWeaponTypes).map(type => (
               <Checkmark
@@ -207,7 +231,7 @@ const WeaponsPage = ({ items, router, categories }) => {
               /> 
             ))}
           </div>
-          <div className={css.filters_section}>
+          <div className={css.filters_section} data-testid="Items__ammo">
             <h3 className={css.h3}>Ammo type</h3>
             {Object.keys(selectedAmmoTypes).map(type => (
               <Checkmark
@@ -233,6 +257,14 @@ const WeaponsPage = ({ items, router, categories }) => {
       </MobileModal>
       <div className={css.items_wrapper}>
         <div className={css.sort_container}>
+          {/* <div className={css.sort_item}>
+            <BasicButton
+              title="Clear filters"
+              onClick={handleClearFilters}
+              active={appliedFilters}
+              className={css.clear_filters__btn}
+            />
+          </div> */}
           <div className={css.sort_item}>
             <h3 className={css.h3}>
               Sort By

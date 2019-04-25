@@ -43,7 +43,7 @@ export const PlayerCard = ({ data, scaleSize, className, horizontal, place = 1 }
               key={name}
             >
               <span className={css.prop}>{name}</span>
-              <span>{data[prop]}</span>
+              <span>{data[prop] || 0}</span>
             </li>
           ))}
         </ul>

@@ -9,11 +9,11 @@ dayjs.extend(utc);
 
 import { PlayerCard } from '../../components/PlayerCard';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
-import { PlayersTable } from '../../components/PlayersTable';
+import { PlayersTable, Table, PlayerLabel, Td, Th } from '../../components/PlayersTable';
 
 const endOfDay = dayjs().utc().endOf('day');
 
-const HomePage = ({ dailyRanking }) => {
+const HomePage = ({ dailyRanking, recentlyUpdated }) => {
   const [timeLeft, setTimeLeft] = useState('');
 
   const handleTimeCounter = () => {
@@ -36,21 +36,21 @@ const HomePage = ({ dailyRanking }) => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const { top3Players, restPlayers } = useMemo(() => ({
-    top3Players: dailyRanking.slice(0, 3),
-    restPlayers: dailyRanking.slice(3, dailyRanking.length)
-  }), [dailyRanking]);
+  const [top3Players, restPlayers] = useMemo(() => [
+    dailyRanking.slice(0, 3),
+    dailyRanking.slice(3, dailyRanking.length)
+  ], [dailyRanking]);
 
   return (
     <article>
       <Head>
         <title>Homepage | Apex-Legends.win</title>
       </Head>
-      <PlayerSearcher pageMode/>
+      <PlayerSearcher pageMode testId="main"/>
       {!!top3Players.length && (
         <>
           <h2 className={css.top_header}>
-            Best players of day
+            Best players of the day
           </h2>
           <p className={css.top_counter}>
             {timeLeft}
@@ -79,6 +79,39 @@ const HomePage = ({ dailyRanking }) => {
           )}
         </>
       )}
+      {recentlyUpdated.length && (
+        <>
+          <h2 className={`${css.top_header} ${css.top_header__recent}`}>
+            Recently updated
+          </h2>
+          <Table
+            thead={(
+              <tr>
+                <Th>Player</Th>
+                <Th align="center">Kills</Th>
+                <Th align="right">Time ago</Th>
+              </tr>
+            )}
+            tbody={recentlyUpdated.map(stats => (
+              <tr key={stats.id}>
+                <Td>
+                  <div className={css.table_field__first}>
+                    <PlayerLabel player={stats.player}/>
+                  </div>
+                </Td>
+                <Td align="center" fontSize={18}>
+                  +{stats.kills}
+                </Td>
+                <Td align="right">
+                  <span className={css.table_field__last}>
+                    {dayjs(stats.date).fromNow()}
+                  </span>
+                </Td>
+              </tr>
+            ))}
+          />
+        </>
+      )}
     </article>
   )
 }
@@ -87,14 +120,18 @@ HomePage.getInitialProps = async () => {
   try {
 
     const options = { timeout: 500 };
-    const dailyRanking = await axios.get('/stats/daily-ranking', options);
+    const [dailyRanking, recentlyUpdated] = await Promise.all([
+      axios.get('/stats/v2/daily-ranking', options),
+      axios.get('/stats/v2/recently-updated', options)
+    ]); 
 
     return {
-      dailyRanking: dailyRanking.data.data
-    }
+      dailyRanking: dailyRanking.data.data,
+      recentlyUpdated: recentlyUpdated.data.data
+    };
 
   } catch(err) {
-    return { recentUpdates: [], trending: [] }
+    return { dailyRanking: [], recentlyUpdated: [] };
   }
 }
 

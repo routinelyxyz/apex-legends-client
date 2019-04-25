@@ -84,7 +84,10 @@ const LeadeboardsPage = ({ data, query, legends, router }) => {
         <title>Leaderboards | Apex-Legends.win</title>
       </Head>
       <h1>Leaderboards</h1>
-      <div className={css.query_container}>
+      <div
+        className={css.query_container}
+        data-testid="Leaderboards__query-container"
+      >
         <div className={css.query_item}>
           <H3>Platform</H3>
           <Select
@@ -171,8 +174,8 @@ LeadeboardsPage.getInitialProps = async (props) => {
     axios.get('/legends')
   ]);
   
-  if (props.asPath !== '/leaderboards') {
-    await new Promise(r => setTimeout(r, 250));
+  if (props.asPath !== '/leaderboards' && process.env.NODE_ENV === 'production') {
+    await new Promise(r => setTimeout(r, 200));
   }
 
   return {

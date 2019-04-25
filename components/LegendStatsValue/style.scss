@@ -1,0 +1,25 @@
+@import "../../assets/css/rwd.scss";
+
+.container {
+  margin: 10px 25px 10px 25px;
+  @include phone {
+    margin: 8px 20px 8px 20px;
+  }
+}
+
+.prop {
+  color: #8987A1;
+  font-weight: bold;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.value {
+  font-size: 22px;
+  margin: 5px 0 8px 0;
+}
+
+.rank {
+  margin: 3px 0 0 0;
+  color: rgb(120, 118, 141);
+}

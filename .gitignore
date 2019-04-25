@@ -1,5 +1,9 @@
 node_modules
 .next
-static
 
 bundles
+out
+
+cypress/videos
+cypress/screenshots
+results/

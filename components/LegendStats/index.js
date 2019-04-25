@@ -1,8 +1,15 @@
 import css from './style.scss';
-import { getStatic, statsProps, statsPropTitles } from '../../helpers';
+import { getStatic, statsProps } from '../../helpers';
+
+import { LegendStatsValue } from '../LegendStatsValue';
 
 export const LegendStats = ({ stats }) => {
-  const { id, legend } = stats;
+  const availaibleProps = statsProps.legend.filter(prop => stats[prop].value != null);
+  
+  if (!availaibleProps.length) {
+    return null;
+  }
+
   return (
     <div className={`box ${css.container}`}>
       <div className={css.legend_container}>
@@ -15,19 +22,15 @@ export const LegendStats = ({ stats }) => {
         />
       </div>
       <ul className={css.stats_list}>
-        {statsProps.lifetime.map(prop => (
-          stats[prop] != null && (
-            <li
-              className={css.stats_item}
+        {availaibleProps.map(prop => (
+          stats[prop].value != null && (
+            <LegendStatsValue
               key={prop}
-            >
-              <p className={css.prop}>
-                {statsPropTitles[prop] || prop}
-              </p>
-              <span className={css.val}>
-                {stats[prop].toLocaleString().replace(/,/g, '.').replace(' ', ',')}
-              </span>
-            </li> 
+              prop={prop}
+              value={stats[prop].value}
+              percentile={stats[prop].percentile}
+              rank={stats[prop].rank}
+            />
           )
         ))}
       </ul>

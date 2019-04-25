@@ -72,20 +72,21 @@ const WeaponPage = ({ slug, item, ratios }) => {
               </Link>
             </div>
           </div>
-          <div className={css.stats_bars}>
+          <ul className={css.stats_bars}>
             {calcedRatio.map(({ name, value }) => (
-              <ProgressBar
-                title={weaponPropTitles[name]}
-                className={css.progress_bar}
-                hoverTitle={p => 
-                  `${weaponPropTitles[name]} - ${item[name]} (${p}%)`
-                }
-                value={value}
-                key={name}
-                delay={150}
-              />
+              <li key={name} className={css.stats_bar}>
+                <ProgressBar
+                  title={weaponPropTitles[name]}
+                  className={css.progress_bar}
+                  hoverTitle={p => 
+                    `${weaponPropTitles[name]} - ${item[name]} (${p}%)`
+                  }
+                  value={value}
+                  delay={150}
+                />
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
         <figure className={css.img_container}>
           <img

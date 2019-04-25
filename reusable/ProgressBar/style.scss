@@ -11,10 +11,9 @@ $classes: (
 .container {
   max-width: 300px;
   width: 300px;
-  margin-bottom: 20px;
   border-radius: 8px;
   position: relative;
-  background: rgba(darken(#66a6ff, 30%), .1);
+  background: rgba(darken(#66a6ff, 30%), .3);
 
   // @each $class, $colors in $classes {
   //   $first: #89f7fe; // nth($colors, 1);

@@ -37,13 +37,8 @@ export const ammoNames = {
   Light: 'Light bullets'
 }
 
-export const statsPropTitles = {
-  damagePerKill: 'Damage / Kill',
-  headshotsPerKill: 'Headshots / Kill'
-}
-
 export const statsProps = {
-  lifetime: ['kills', 'damage', 'headshots', 'matches', 'lvl'],
+  lifetime: ['kills', 'damage', 'headshots', 'lvl'],
   legend: ['kills', 'damage', 'headshots', 'damagePerKill', 'headshotsPerKill']
 }
 
@@ -54,7 +49,7 @@ export const statsTitlesMap = {
   matches: 'Matches',
   damagePerKill: 'Damage / Kill',
   headshotsPerKill: 'Headshots / Kill',
-  lvl: 'Lvl',
+  lvl: 'Level',
 }
 
 
