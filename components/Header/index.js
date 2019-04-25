@@ -7,7 +7,6 @@ import Link from 'next/link';
 
 import { PlayerSearcher } from '../PlayerSearcher';
 import { NavLink } from '../../reusable/Elements';
-import { HeaderSearcher } from '../HeaderSearcher';
 
 const navigationLinks = [
   {
@@ -47,7 +46,6 @@ export const Header = ({ route }) => {
   const mobileMenu = useContext(MobileMenuContext);
   return (
     <header className={css.container}>
-      {/* <HeaderSearcher/> */}
       <Link href="/">
         <a className={css.logo}>
           <img src="/static/img/logo.png" />
