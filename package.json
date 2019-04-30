@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "NODE_ENV=production next start",
     "now-build": "next build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy:version": "node ./scripts/deploy-version.js"
   },
   "repository": {
     "type": "git",
@@ -51,6 +52,7 @@
   },
   "devDependencies": {
     "next-compose": "0.0.2",
+    "shelljs": "^0.8.3",
     "webpack-filter-warnings-plugin": "^1.2.1"
   }
 }
