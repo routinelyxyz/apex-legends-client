@@ -23,10 +23,10 @@
   @include tablet {
     display: none;
   }
-  width: 100%;
   margin-left: auto;
   &.searcher_stats {
     @include phone {
+      width: 100%;
       margin: 40px 0;
       display: block;
     }
