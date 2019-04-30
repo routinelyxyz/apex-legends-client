@@ -24,9 +24,9 @@ const LeadeboardsPage = ({ data, query, legends, router }) => {
   const { perPage = 100 } = data;
   const [leaderboards, setLeadboards] = useState([]);
   const page = router.query.page != null ? Number(router.query.page) : 1;
-  const [platform, setPlatform] = useState(initialPlatform);
-  const [legend, setLegend] = useState(initialLegend);
-  const [prop, setProp] = useState(initialProp);
+  const [platform, setPlatform] = useState(query.platform || initialPlatform);
+  const [legend, setLegend] = useState(query.legend || initialLegend);
+  const [prop, setProp] = useState(query.prop || initialProp);
   const [isFetching, setIsFetching] = useState(false);
   const isMounted = useMounted();
 
@@ -67,16 +67,6 @@ const LeadeboardsPage = ({ data, query, legends, router }) => {
       .finally(_ => setIsFetching(false));
 
   }, [platform, legend, prop]);
-
-  // useEffect(() => {
-  //   const lbLength = leaderboards.length;
-  //   if (
-  //     !lbLength ||
-  //     data.length && leaderboards[lbLength - 1].id !== data[0].id
-  //   ) {
-  //     setLeadboards(lb => [...lb, ...data]);
-  //   }
-  // }, [page]);
 
   return (
     <div>
