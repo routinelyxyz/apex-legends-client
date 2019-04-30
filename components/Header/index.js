@@ -1,5 +1,5 @@
 import css from './style.scss';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import { useDevice, useWindowSize } from '../../hooks';
 import { applyCss } from '../../helpers';
 import { MobileMenuContext } from '../../helpers/context';
@@ -42,8 +42,10 @@ const navigationLinks = [
   }
 ]
 
-export const Header = ({ route }) => {
+export const Header = ({ route, asPath }) => {
   const mobileMenu = useContext(MobileMenuContext);
+  const isStatsPage = asPath.includes('/stats/');
+
   return (
     <header className={css.container}>
       <Link href="/">
@@ -86,7 +88,12 @@ export const Header = ({ route }) => {
           );
         })}
       </nav>
-      <div className={css.searcher}>
+      <div 
+        {...applyCss(
+          css.searcher,
+          isStatsPage && css.searcher_stats
+        )}
+      >
         <PlayerSearcher
           height={300}
         />

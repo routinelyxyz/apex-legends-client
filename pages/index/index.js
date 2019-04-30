@@ -79,10 +79,10 @@ const HomePage = ({ dailyRanking, recentlyUpdated }) => {
           )}
         </>
       )}
-      {recentlyUpdated.length && (
+      {!!recentlyUpdated.length && (
         <>
           <h2 className={`${css.top_header} ${css.top_header__recent}`}>
-            Recently updated
+            Recent matches
           </h2>
           <Table
             thead={(

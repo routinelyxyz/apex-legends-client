@@ -61,7 +61,7 @@ class MyApp extends App {
         <Provider store={store}>
           <MobileMenuProvider>
             <ModalProvider>
-              <Layout route={router.route}>
+              <Layout route={router.route} asPath={router.asPath}>
                 <Component {...pageProps}/>
               </Layout>
             </ModalProvider>

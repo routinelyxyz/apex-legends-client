@@ -9,6 +9,7 @@ import { useDevice } from '../../hooks';
 import { MobileMenuContext, ModalContext } from '../../helpers/context';
 import axios from 'axios';
 import NProgress from 'nprogress';
+import { withRouter } from 'next/router';
 
 import { PlayerLabel } from '../../components/PlayersTable';
 import { BasicInput } from '../../reusable/Input';
@@ -164,5 +165,8 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
   )
 }
 
-const SearcherWithRedux = connect(mapStateDynamic(['stats']), mapDispatchToProps)(PlayerSearcher);
+const SearcherWithRedux = connect(
+  mapStateDynamic(['stats']), mapDispatchToProps
+)(PlayerSearcher);
+
 export { SearcherWithRedux as PlayerSearcher };
