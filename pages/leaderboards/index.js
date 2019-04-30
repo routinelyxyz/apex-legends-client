@@ -24,9 +24,9 @@ const LeadeboardsPage = ({ data, query, legends, router }) => {
   const { perPage = 100 } = data;
   const [leaderboards, setLeadboards] = useState([]);
   const page = router.query.page != null ? Number(router.query.page) : 1;
-  const [platform, setPlatform] = useState(initialPlatform);
-  const [legend, setLegend] = useState(initialLegend);
-  const [prop, setProp] = useState(initialProp);
+  const [platform, setPlatform] = useState(query.platform || initialPlatform);
+  const [legend, setLegend] = useState(query.legend || initialLegend);
+  const [prop, setProp] = useState(query.prop || initialProp);
   const [isFetching, setIsFetching] = useState(false);
   const isMounted = useMounted();
 
@@ -68,23 +68,16 @@ const LeadeboardsPage = ({ data, query, legends, router }) => {
 
   }, [platform, legend, prop]);
 
-  // useEffect(() => {
-  //   const lbLength = leaderboards.length;
-  //   if (
-  //     !lbLength ||
-  //     data.length && leaderboards[lbLength - 1].id !== data[0].id
-  //   ) {
-  //     setLeadboards(lb => [...lb, ...data]);
-  //   }
-  // }, [page]);
-
   return (
     <div>
       <Head>
         <title>Leaderboards | Apex-Legends.win</title>
       </Head>
       <h1>Leaderboards</h1>
-      <div className={css.query_container}>
+      <div
+        className={css.query_container}
+        data-testid="Leaderboards__query-container"
+      >
         <div className={css.query_item}>
           <H3>Platform</H3>
           <Select
@@ -171,8 +164,8 @@ LeadeboardsPage.getInitialProps = async (props) => {
     axios.get('/legends')
   ]);
   
-  if (props.asPath !== '/leaderboards') {
-    await new Promise(r => setTimeout(r, 250));
+  if (props.asPath !== '/leaderboards' && process.env.NODE_ENV === 'production') {
+    await new Promise(r => setTimeout(r, 200));
   }
 
   return {

@@ -1,42 +1,66 @@
 import css from './style.scss';
-import { useState, useRef, useContext, useEffect } from 'react';
-import { debounce, applyCss } from '../../util';
-import { getUrl, platformNames } from '../../helpers';
+import { useState, useRef, useContext, useEffect, useCallback } from 'react';
+import { debounce, applyCss, scrollTo } from '../../util';
 import useClickOutside from 'use-onclickoutside';
-import { animated, useTransition, config } from 'react-spring';
 import { connect } from 'react-redux';
 import { mapStateDynamic, mapDispatchToProps } from '../../store/mappers';
 import Router from 'next/router';
 import { useDevice } from '../../hooks';
 import { MobileMenuContext, ModalContext } from '../../helpers/context';
-import { Dropdown } from '../../reusable/Dropdown';
+import axios from 'axios';
+import NProgress from 'nprogress';
+import { withRouter } from 'next/router';
 
-import { Menu } from '../../reusable/Menu';
-import { PlayerLabel } from '../../components/PlayerLabel';
+import { PlayerLabel } from '../../components/PlayersTable';
 import { BasicInput } from '../../reusable/Input';
 import { PhraseSelector } from '../../reusable/PhraseSelector';
 import { SearcherPlatforms } from '../../components/SearcherPlatforms';
+import { SlidingContainer } from '../../reusable/SlidingContainer';
 
 const debounceA = debounce(350);
-const debounceB = debounce(100);
+let timeout;
 
-const PlayerItem = player => (
-  <PlayerLabel
-    key={player.id}
-    player={player}
-  />
-);
+const RenderPlayersResult = ({ isSearching, playersFound, phrase }) => {
+  if (!isSearching && phrase.length && !playersFound.length) {
+    return (
+      <p className={css.players_error}>
+        No players were found
+      </p>
+    );
+  }
 
-const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
+  return playersFound.map(player => (
+    <div
+      key={player.id}
+      className={css.player_label_searcher__container}
+    >
+      <PlayerLabel 
+        player={player}
+        renderName={name => (
+          <span className={css.player_label_searcher__name}>
+            <PhraseSelector
+              value={name}
+              phrase={phrase}
+            />
+          </span>
+        )}
+      />
+    </div>
+  ));
+}
+
+const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
   const [phrase, setPhrase] = useState('');
   const [focused, setFocused] = useState(false);
   const [playersFound, setPlayersFound] = useState([]);
   const [platform, setPlatform] = useState('pc');
+  const [isSearching, setIsSearching] = useState(false);
   const { favoritePlayers, recentPlayers } = props.reducers.stats;
   const { isPhone } = useDevice();
   const mobileMenu = useContext(MobileMenuContext);
   const modal = useContext(ModalContext);
   const refContainer = useRef();
+
   useClickOutside(refContainer, () => {
     setFocused(false);
     if (focused) {
@@ -46,35 +70,42 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
     }
   });
 
-  const transitions = useTransition(focused, null, {
-    from: { opacity: 0.7, height: 0 },
-    enter: { scale: 1, opacity: 1, height },
-    leave: { scale: 0, opacity: 0, height: 0 },
-    config: config.stiff
-  });
+  const findPlayers = async (name) => {
+    const response = await axios.get(`/stats/players/${encodeURI(name)}`);
+    if (phrase.length) {
+      setPlayersFound(response.data.data);
+    }
+    setIsSearching(false);
+    NProgress.done();
+  }
 
-  const getPlayers = e => {
-    setPhrase(e.target.value);
-    if (!phrase && !phrase.length) return;
-    debounceA(async () => {
-      const res = await fetch(
-        getUrl(`/stats/players/${encodeURI(phrase)}`)
-      );
-      const data = await res.json();
-      setPlayersFound(data.data);
-    });
+  const handleOnChange = event => {
+    const { value } = event.target;
+    setPhrase(value);
+    NProgress.start();
+    if (!isSearching) setIsSearching(true);
+    
+    if (!!!value) {
+      clearTimeout(timeout);
+      setIsSearching(false);
+      NProgress.done();
+      if (playersFound.length) {
+        setPlayersFound([]);
+      }
+      return;
+    }
+
+    timeout = debounceA(() => findPlayers(value));
   }
 
   const handleStatsSearch = e => {
     if (e.key === 'Enter' && phrase.length) {
-      debounceB(() => {
-        setFocused(false);
-        modal.setOpened(false);
-        Router.push(
-          `/stats?platform=${platform}&name=${phrase}&=id`,
-          `/stats/${platform}/${phrase}`
-        );
-      });
+      setFocused(false);
+      modal.setOpened(false);
+      Router.push(
+        `/stats?platform=${platform}&name=${phrase}&=id`,
+        `/stats/${platform}/${phrase}`
+      );
     }
   }
 
@@ -83,9 +114,8 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
     mobileMenu.setVisible(false);
     modal.setOpened(true);
     if (isPhone) {
-      window.scrollTo({
-        top: refContainer.current.offsetTop - 5,
-        behavior: 'smooth'
+      scrollTo({
+        top: refContainer.current.offsetTop - 5
       });
     }
   }
@@ -102,6 +132,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
         pageMode && css.page_mode
       )}
       ref={refContainer}
+      data-testid={['PlayerSearcher', testId].filter(Boolean).join('__')}
     >
       <div className={css.input_container}>
         <BasicInput
@@ -109,7 +140,7 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
           type="text"
           placeholder="Search player..."
           value={phrase}
-          onChange={getPlayers}
+          onChange={handleOnChange}
           onFocus={handleFocus}
           onKeyPress={handleStatsSearch}
         />
@@ -119,53 +150,23 @@ const PlayerSearcher = ({ height = 250, pageMode, ...props }) => {
           small={!pageMode}
         />
       </div>
-      {transitions.map(({ item, props, key }) => (
-        item &&
-        <animated.div
-          style={{
-            opacity: props.opacity,
-            // maxHeight: props.height
-              // .interpolate(v => v + 'px'),
-            height: props.height
-              .interpolate(v => v + 'px'),
-          }}
-          className={css.search_container}
-          key={key}
-        >
-          {phrase.length > 100
-            ? 
-              <div>
-                {playersFound.map(PlayerItem)}
-              </div>
-            :
-              <Menu>
-                <div className={css.content_container}>
-                  {[].map(PlayerItem)}
-                </div>
-                <div className={css.content_container}>
-                  {[].map(PlayerItem)}
-                </div>
-                <div>
-                  <PhraseSelector
-                    value="Popular players"
-                    phrase={phrase}
-                  />
-                </div>
-                <div>
-                  {playersFound.map(player => (
-                    <PlayerLabel
-                      key={player.id}
-                      player={player}
-                    />
-                  ))}
-                </div>
-              </Menu>
-          }
-        </animated.div>
-      ))}
+      <SlidingContainer
+        state={focused}
+        height={height}
+        className={css.search_container}
+      >
+        <RenderPlayersResult
+          isSearching={isSearching}
+          playersFound={playersFound}
+          phrase={phrase}
+        />
+      </SlidingContainer>
     </div>
   )
 }
 
-const SearcherWithRedux = connect(mapStateDynamic(['stats']), mapDispatchToProps)(PlayerSearcher);
+const SearcherWithRedux = connect(
+  mapStateDynamic(['stats']), mapDispatchToProps
+)(PlayerSearcher);
+
 export { SearcherWithRedux as PlayerSearcher };

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import App, { Container } from 'next/app'
 import LoadFonts from '../middleware/font';
 import '../assets/css/global.scss';
@@ -35,23 +35,12 @@ class MyApp extends App {
 
   componentDidMount() {
     LoadFonts();
-    if ('serviceWorker' in navigator) {
-      // navigator.serviceWorker
-      //   .register('/sw.js')
-      //   .then(registration => {
-      //     console.log('service worker registration successful')
-      //     console.log(registration)
-      //   })
-      //   .catch(err => {
-      //     console.warn('service worker registration failed', err.message)
-      //   });
-    }
     Router.events.on('routeChangeStart', url => {
       NProgress.start();
     });
     Router.events.on('routeChangeComplete', url => {
       NProgress.done();
-      if (window.gtag) {
+      if (process.env.NODE_ENV === 'production' && window.gtag) {
         window.gtag('config', GA_ID, {
           page_location: window.location.href,
           page_path: window.location.pathname,
@@ -72,7 +61,7 @@ class MyApp extends App {
         <Provider store={store}>
           <MobileMenuProvider>
             <ModalProvider>
-              <Layout route={router.route}>
+              <Layout route={router.route} asPath={router.asPath}>
                 <Component {...pageProps}/>
               </Layout>
             </ModalProvider>

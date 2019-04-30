@@ -1,12 +1,12 @@
 import css from './style.scss';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import { useDevice, useWindowSize } from '../../hooks';
 import { applyCss } from '../../helpers';
 import { MobileMenuContext } from '../../helpers/context';
+import Link from 'next/link';
 
 import { PlayerSearcher } from '../PlayerSearcher';
 import { NavLink } from '../../reusable/Elements';
-import { HeaderSearcher } from '../HeaderSearcher';
 
 const navigationLinks = [
   {
@@ -42,14 +42,17 @@ const navigationLinks = [
   }
 ]
 
-export const Header = ({ route }) => {
+export const Header = ({ route, asPath }) => {
   const mobileMenu = useContext(MobileMenuContext);
+  const isStatsPage = asPath.includes('/stats/');
+
   return (
     <header className={css.container}>
-      {/* <HeaderSearcher/> */}
-      <div className={css.logo}>
-        Apex-Legends.win
-      </div>
+      <Link href="/">
+        <a className={css.logo}>
+          <img src="/static/img/logo.png" />
+        </a>
+      </Link>
       <nav
         {...applyCss(
           css.header_nav,
@@ -85,7 +88,12 @@ export const Header = ({ route }) => {
           );
         })}
       </nav>
-      <div className={css.searcher}>
+      <div 
+        {...applyCss(
+          css.searcher,
+          isStatsPage && css.searcher_stats
+        )}
+      >
         <PlayerSearcher
           height={300}
         />

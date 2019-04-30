@@ -2,6 +2,7 @@
 export const debounce = (delay = 250, timeout) => fn => {
   clearTimeout(timeout);
   timeout = setTimeout(fn, delay);
+  return timeout;
 }
 
 export const round = (val, scale = 10) => Math.round(val * scale) / scale;
@@ -39,3 +40,15 @@ export const getUniqueById = items => Object.values(
     [item.id]: item
   }), {})
 );
+
+export const scrollTo = ({ top = 0, left = 0, behavior = 'smooth'}) => {
+  try {
+    window.scroll({ top, left, behavior });
+  } catch(err) {
+    if (err instanceof TypeError) {
+      window.scroll(top, left);
+    } else {
+      throw err;
+    }
+  }
+}

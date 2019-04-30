@@ -1,0 +1,14 @@
+{
+  "name": "Apex-Legends.win",
+  "short_name": "Apex-Legends.win",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#23232F",
+  "theme_color": "#23232F",
+  "description": "Apex Legends stats, leaderboards, interactive and detailed items explorer, legend details. Quick updates with live and daily match tracking.",
+  "icons": [{
+    "src": "/static/pwa-icon.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }]
+}

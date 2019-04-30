@@ -3,10 +3,57 @@ import { statsTitlesMap, getStatic, getAvatar, applyCss } from '../../helpers'
 
 import { PlayerLink } from '../../components/PlayerLink';
 
-const avatar = 'https://opgg-static.akamaized.net/images/profile_icons/profileIcon3379.jpg?image=c_scale,w_38&v=1518361200';
+export const Table = ({ thead, tbody }) => (
+  <table className={css.players_table}>
+    <thead>
+      {thead}
+    </thead>
+    <tbody>
+      {tbody}
+    </tbody>
+  </table>
+);
+
+export const PlayerLabel = ({ player, renderName = name => name }) => (
+  <PlayerLink player={player}>
+    <a className={css.player}>
+      <div {...applyCss(
+        css.platform_container,
+        css[player.platform]
+      )}>
+        <img
+          className={css.platform}
+          src={`/static/img/${player.platform}.svg`}
+        />
+      </div>
+      <img
+        src={getAvatar(player, 40)}
+        className={css.avatar}
+      />
+      {renderName(player.name)}
+    </a>
+  </PlayerLink>
+);
+
+export const Td = ({ children, align = 'left', fontSize = 14 }) => (
+  <td {...applyCss(
+    css['column__fs_' + fontSize],
+    css['column__' + align]
+  )}>
+    {children}
+  </td>
+);
+
+export const Th = ({ children, align = 'left', fontSize = 14 }) => (
+  <th {...applyCss(
+    css['column__fs_' + fontSize],
+    css['column__' + align]
+  )}>
+    {children}
+  </th>
+);
 
 export const PlayersTable = ({ data, prop, clearFilters, renderRank = i => i + 1 }) => {
-  // const avatar = 
   if (!data.length) return (
     <div className={css.not_found}>
       <p className={css.not_found_title}>
@@ -23,44 +70,29 @@ export const PlayersTable = ({ data, prop, clearFilters, renderRank = i => i + 1
     </div>
   )
   return (
-    <table className={css.players_table}>
-      <thead>
+    <Table
+      thead={(
         <tr>
-          <th>Rank</th>
+          <Th align="center">Rank</Th>
           <th>Player</th>
-          <th className={css.prop_name}>
-            {statsTitlesMap[prop] || prop}
-          </th>
+          <Th align="center">
+            <span className={css.prop_name}>
+              {statsTitlesMap[prop] || prop}
+            </span>
+          </Th>
         </tr>
-      </thead>
-      <tbody>
-        {data.map((row, index) => (
-          <tr key={index}> 
-            <td>{renderRank(index)}</td>
-            <td>
-              <PlayerLink player={row.player}>
-                <a className={css.player}>
-                  <div {...applyCss(
-                    css.platform_container,
-                    css[row.player.platform]
-                  )}>
-                    <img
-                      className={css.platform}
-                      src={`/static/img/${row.player.platform}.svg`}
-                    />
-                  </div>
-                  <img
-                    src={getAvatar(row.player, 40)}
-                    className={css.avatar}
-                  />
-                  {row.player.name}
-                </a>
-              </PlayerLink>
-            </td>
-            <td>{row[prop] && row[prop].toLocaleString('en-US')}</td>
-          </tr> 
-        ))}
-      </tbody>
-    </table>
+      )}
+      tbody={data.map((row, index) => (
+        <tr key={index}> 
+          <Td align="center">{renderRank(index)}</Td>
+          <Td>
+            <PlayerLabel player={row.player} />
+          </Td>
+          <Td align="center" fontSize={18}>
+            {(row[prop] && row[prop].toLocaleString('en-US')) || 0}
+          </Td>
+        </tr> 
+      ))}
+    />
   )
 }
