@@ -18,6 +18,8 @@ cache:
 cypress:
   stage: test
   image: cypress/browsers:node11.13.0-chrome73
+  only:
+    - disabled
   variables:
     NODE_ENV: "development"
   script:
@@ -36,13 +38,14 @@ cypress:
 deploy_staging:
   stage: deploy_staging
   image: node:11.14.0
-  only:
-    - master
-    - tags
+  # only:
+  #   - master
+  #   - tags
   variables:
     NODE_ENV: "production"
   script:
     - npx now alias $(npx now --token=$NOW_TOKEN) staging.apex-legends.win --token=$NOW_TOKEN
+    - npm run deploy:version
 
 test_staging:
   stage: test_staging
