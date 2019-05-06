@@ -1,7 +1,7 @@
 {
   "name": "apex-legends-client",
   "version": "1.0.2",
-  "description": "",
+  "description": "Apex-Legends.win client written with React.js & Next.js",
   "main": "index.js",
   "scripts": {
     "dev": "next",
