@@ -38,30 +38,7 @@ async function updateStats(player) {
 
 const countdown = process.env.NODE_ENV === 'production' ? 178 : 120;
 
-const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch = false, ...props }) => {
-
-  if (!props.stats || error) return (
-    <div className={css.error__container}>
-      <div className={css.error__searcher}>
-        <PlayerSearcher pageMode />
-      </div>
-      {error && (
-        <p className={css.error__title}>
-        {status === 404
-          ? (
-            <>
-              <strong className={css.error__player_name}>
-                {name}
-              </strong> doesn't exist on platform {platform}
-            </>
-          )
-          : `Server error. Please try again.` 
-        }
-        </p>
-      )}
-    </div>
-  );
-
+const StatsPage = ({ name, url, platform, router, skipFirstFetch = false, ...props }) => {
   const afterFirstRender = useFirstRender();
   const [stats, setStats] = useState(() => props.stats);
   const [matchHistory, setMatchHistory] = useState([]);
@@ -114,14 +91,12 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
       setNow(getTs());
     }, 1000);
 
-    if (stats && !error) {
-      if (afterFirstRender && props.stats.player.name !== stats.player.name) {
-        setStats(props.stats);
-        setTo(getTs() + 3);
-        // props.actions.savePlayerAsync(props.stats.player);
-      } else {
-        // props.actions.savePlayerAsync(stats.player);
-      }
+    if (stats && afterFirstRender && props.stats.player.name !== stats.player.name) {
+      setStats(props.stats);
+      setTo(getTs() + 3);
+      // props.actions.savePlayerAsync(props.stats.player);
+    } else {
+      // props.actions.savePlayerAsync(stats.player);
     }
 
     return () => clearInterval(interval);
@@ -277,7 +252,40 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
   )
 }
 
-StatsPage.getInitialProps = async ({ query }) => {
+const RenderError = ({ status, platform, name }) => {
+  if (!!!name) return null;
+  return (
+    <div className={css.error__container}>
+      <p className={css.error__title}>
+        {status === 404
+          ? (
+            <>
+              <strong className={css.error__player_name}>
+                {name}
+              </strong> doesn't exist on platform {platform}
+            </>
+          )
+          : `Server error. Please try again.` 
+        }
+      </p>
+    </div>
+  )
+}
+
+const StatsPageContainer = (props) => {
+  const { stats, error } = props;
+  const isError = error || !stats;
+  
+  return (
+    <>
+      {isError && <RenderError {...props} />}
+      <PlayerSearcher pageMode />
+      {!isError && <StatsPage {...props} />}
+    </>
+  );
+}
+
+StatsPageContainer.getInitialProps = async ({ query }) => {
   const { platform, name, id = '' } = query;
 
   if ((!name || !platform) && !id) {
@@ -308,4 +316,4 @@ StatsPage.getInitialProps = async ({ query }) => {
 export default connect(
   mapStateDynamic(['stats']),
   mapDispatchToProps
-)(withRouter(StatsPage));
+)(withRouter(StatsPageContainer));

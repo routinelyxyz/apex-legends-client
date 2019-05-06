@@ -118,12 +118,6 @@
 }
 
 .error__container {
-  min-height: 80vh;
-  .error__searcher {
-    @include phone {
-      display: none;
-    }
-  }
   .error__title {
     text-align: center;
     font-weight: normal;
