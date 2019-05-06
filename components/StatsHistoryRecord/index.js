@@ -18,7 +18,7 @@ export const StatsHistoryRecord = ({ match }) => {
         <span className={css.record__prop}>
           Kills:
         </span>
-        {match.kills}
+        {match.kills || 0}
       </div>
       <div className={css.record__box}>
         <span className={css.record__prop}>

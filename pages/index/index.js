@@ -100,7 +100,7 @@ const HomePage = ({ dailyRanking, recentlyUpdated }) => {
                   </div>
                 </Td>
                 <Td align="center" fontSize={18}>
-                  +{stats.kills}
+                  +{stats.kills || 0}
                 </Td>
                 <Td align="right">
                   <span className={css.table_field__last}>
