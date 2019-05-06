@@ -4,34 +4,38 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-}
-
-.badge {
-  position: relative;
-  margin-right: 15px;
-  @include phone {
-    margin: 0 auto;
+  .player__info {
+    @include phone {
+      width: 100%;
+    }
+  }
+  .player__badge {
+    position: relative;
+    margin-right: 15px;
+    @include phone {
+      margin: 0 auto;
+    }
+  }
+  .player__name {
+    font-size: 35px;
+    margin: 0;
+    @include phone {
+      text-align: center;
+      margin: 10px 0 15px 0;
+    }
+    @include tablet {
+      font-size: 30px;
+    }
+  }
+  .player__colored_rank {
+    text-shadow: 0 0 19px rgba(255,255,255, .8);
+    color: #fff;
   }
 }
 
-.player_info {
-  @include phone {
-    width: 100%;
-  }
-}
 
-.colored_rank {
-  text-shadow: 0 0 19px rgba(255,255,255, .8);
-  color: #fff;
-}
 
-.avatar {
-  width: 95px;
-  height: 95px;
-  border-radius: 50%;
-}
-
-.avatar_container {
+.avatar__container {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -43,19 +47,13 @@
   background: #23232F;
   padding: 7px;
   box-sizing: border-box;
+  .avatar__image {
+    width: 95px;
+    height: 95px;
+    border-radius: 50%;
+  }
 }
 
-.name {
-  font-size: 35px;
-  margin: 0;
-  @include phone {
-    text-align: center;
-    margin: 10px 0 15px 0;
-  }
-  @include tablet {
-    font-size: 30px;
-  }
-}
 .info_card__container {
   display: flex;
   margin-top: 10px;
@@ -66,14 +64,13 @@
     justify-content: center;
     flex-wrap: wrap;
   }
+  .info_card__platform_image {
+    width: 30px;
+    height: 30px;
+  }
 }
 
-.platform_image {
-  width: 30px;
-  height: 30px;
-}
-
-.update_container {
+.update__container {
   align-self: flex-end;
   justify-self: end;
   color: #9999c4;
@@ -84,25 +81,20 @@
     margin-top: 50px;
     text-align: center;
   }
-}
-.update_title {
-  color: #6d6d92;
-  margin: 0 0 5px 0;
-  font-size: 12px;
-  text-transform: uppercase;
-  font-weight: bold;
-}
-
-.lifetime_stats__list {
-  margin: 10px 0;
-  display: flex;
-  flex-wrap: wrap;
-  text-align: right;
-  list-style-type: none;
-  padding: 0;
+  .update__title {
+    color: #6d6d92;
+    margin: 0 0 5px 0;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
 }
 
-.lifetime_stats_container {
+.lifetime_stats__title {
+  margin-top: 50px;
+  text-align: center;
+}
+.lifetime_stats__container {
   padding: 10px;
   margin: 0 80px 80px 80px;
   background: rgba(95, 98, 136, 0.05);
@@ -115,9 +107,30 @@
     margin: 0 10px 80px 10px;
     padding: 5px;
   }
+  .lifetime_stats__list {
+    margin: 10px 0;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: right;
+    list-style-type: none;
+    padding: 0;
+  }
 }
 
-.lifetime_stats__title {
-  margin-top: 80px;
-  text-align: center;
+.error__container {
+  min-height: 80vh;
+  .error__title {
+    text-align: center;
+    font-weight: normal;
+    font-size: 16px;
+    background: rgba(255,255,255,.05);
+    padding: 10px 5px;
+    border-radius: 2px;
+    .error__player_name {
+      display: inline-block;
+      margin-right: 2px;
+      font-size: 18px;
+      font-style: italic;
+    }
+  }
 }

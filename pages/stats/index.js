@@ -44,19 +44,26 @@ async function updateStats(player) {
 const countdown = process.env.NODE_ENV === 'production' ? 178 : 178;
 
 const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch = false, ...props }) => {
+
   if (!props.stats || error) return (
-    <div className={css.searcher}>
-      <PlayerSearcher pageMode/>
+    <div className={css.error__container}>
       {error && (
-        <>
-          <p>{status === 404
-            ? `Player with nickname (${name}) doesn't exist on platform - ${platform}.` 
-            : `Server error. Please try again after few minutes.` 
-          }</p>
-        </>
+        <p className={css.error__title}>
+        {status === 404
+          ? (
+            <>
+              <strong className={css.error__player_name}>
+                {name}
+              </strong> doesn't exist on platform {platform}
+            </>
+          )
+          : `Server error. Please try again.` 
+        }
+        </p>
       )}
     </div>
   );
+  
   const afterFirstRender = useFirstRender();
   const [stats, setStats] = useState(() => props.stats);
   const [matchHistory, setMatchHistory] = useState([]);
@@ -187,28 +194,28 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
         <title>{stats.player.name} - Stats | Apex-Legends.win</title>
       </Head>
       <div className={css.player}>
-        <div className={css.badge}>
+        <div className={css.player__badge}>
           <ProgressRing
             radius={73}
             stroke={7}
             progress={stats.lifetime.lvlProgress}
           />
-          <div className={css.avatar_container}>
+          <div className={css.avatar__container}>
             <img
               src={getAvatar(stats.player)}
-              className={css.avatar}
+              className={css.avatar__image}
             />
           </div>
         </div>
-        <div className={css.player_info}>
-          <h1 className={css.name}>
+        <div className={css.player__info}>
+          <h1 className={css.player__name}>
             {stats.name || stats.player.name}
           </h1>
           <div className={css.info_card__container}>
             <InfoCard
               title="Rank"
               content={(
-                <animated.span className={stats.lifetime.kills.rank <= 10 && css.colored_rank}>
+                <animated.span className={stats.lifetime.kills.rank <= 10 && css.player__colored_rank}>
                   {rankProps.rank.interpolate(v => v.toFixed())}
                 </animated.span>
               )}
@@ -219,7 +226,7 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
               className={css.info_card__item}
               content={(
                 <img
-                  className={css.platform_image}
+                  className={css.info_card__platform_image}
                   src={`/static/img/${stats.player.platform}-rose.svg`}
                 />
               )}
@@ -234,8 +241,8 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
             />
           </div>
         </div>
-        <div className={css.update_container}>
-          <p className={css.update_title}>
+        <div className={css.update__container}>
+          <p className={css.update__title}>
             Update in:
           </p>
           {updateIn}
@@ -244,7 +251,7 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
       <h2 className={css.lifetime_stats__title}>
         Lifetime stats
       </h2>
-      <div className={css.lifetime_stats_container}>
+      <div className={css.lifetime_stats__container}>
         {lifetimeStats.length ? (
           <ul className={css.lifetime_stats__list}>
             {lifetimeStats.map(stats => (
