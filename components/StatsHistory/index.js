@@ -1,10 +1,12 @@
 import { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
-import dayjs from 'dayjs';
 import css from './style.scss';
+import dayjs from 'dayjs';
 
-async function fetchMatchHistory(id) {
-  const response = await axios.get(`/stats/v2/match-history/id/${id}`);
+import { StatsHistoryRecord } from '../StatsHistoryRecord';
+
+async function fetchMatchHistory(playerId) {
+  const response = await axios.get(`/stats/v2/match-history/id/${playerId}`);
   return response.data.data;
 }
 
@@ -31,18 +33,23 @@ export const StatsHistory = ({ player, matchHistory, setMatchHistory }) => {
   , [matchHistory]);
 
   return (
-    <div className={css.container}>
-      <ul>
+    <div className={css.history__container}>
+      <ul className={css.history__list}>
         {groupedByDay.map(dailyHistory => (
-          <li key={dailyHistory.day}>
-            <h4>{dailyHistory.day}</h4>
-            <ul>
-            {dailyHistory.matches.map(match => (
-              <li key={match.id}>
-                <h3>{match.legend.name}</h3>
-                <p>{dayjs(match.date).fromNow()}</p>
-              </li>
-            ))}
+          <li
+            className={css.history__item}
+            key={dailyHistory.day}
+          >
+            <p className={css.history__item_date}>
+              {dayjs(dailyHistory.day).format('dddd, MMMM D, YYYY')}
+            </p>
+            <ul className={css.history__records}>
+              {dailyHistory.matches.map(match => 
+                <StatsHistoryRecord
+                  key={match.id}
+                  match={match}
+                />
+              )}
             </ul>
           </li>
         ))}
