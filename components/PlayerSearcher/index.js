@@ -48,7 +48,7 @@ const RenderPlayersResult = ({ isSearching, playersFound, phrase }) => {
   ));
 }
 
-const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
+const PlayerSearcher = ({ height = 250, pageMode, statsPage, testId, ...props }) => {
   const [phrase, setPhrase] = useState('');
   const [focused, setFocused] = useState(false);
   const [playersFound, setPlayersFound] = useState([]);
@@ -128,7 +128,8 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
     <div
       {...applyCss(
         css.container,
-        pageMode && css.page_mode
+        pageMode && css.page_mode,
+        statsPage && css.stats_page
       )}
       ref={refContainer}
       data-testid={['PlayerSearcher', testId].filter(Boolean).join('__')}

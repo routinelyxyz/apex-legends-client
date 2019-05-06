@@ -279,7 +279,10 @@ const StatsPageContainer = (props) => {
   return (
     <>
       {isError && <RenderError {...props} />}
-      <PlayerSearcher pageMode />
+      <PlayerSearcher
+        statsPage={!isError}
+        pageMode
+      />
       {!isError && <StatsPage {...props} />}
     </>
   );
