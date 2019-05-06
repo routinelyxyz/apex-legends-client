@@ -39,14 +39,12 @@
     padding: $padding-vertical 20px;
     @include small {
       padding: $padding-vertical 5px;
+      font-size: 14px;
     }
     &:first-child {
       border-radius: 8px 0 0 0;
       @include phone {
         padding: $padding-vertical 0;
-      }
-      @include small {
-        max-width: 40px;
       }
     }
     &:last-child {
@@ -56,7 +54,6 @@
       }
       @include small {
         padding: $padding-vertical 5px;
-        font-size: 16px;
       }
     }
     border-collapse: collapse;
