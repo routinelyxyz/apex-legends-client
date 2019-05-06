@@ -42,6 +42,9 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
 
   if (!props.stats || error) return (
     <div className={css.error__container}>
+      <div className={css.error__searcher}>
+        <PlayerSearcher pageMode />
+      </div>
       {error && (
         <p className={css.error__title}>
         {status === 404

@@ -1,6 +1,5 @@
 import css from './style.scss';
-import { useState, useRef, useEffect, useContext } from 'react';
-import { useDevice, useWindowSize } from '../../hooks';
+import { useContext } from 'react';
 import { applyCss } from '../../helpers';
 import { MobileMenuContext } from '../../helpers/context';
 import Link from 'next/link';
@@ -44,7 +43,7 @@ const navigationLinks = [
 
 export const Header = ({ route, asPath }) => {
   const mobileMenu = useContext(MobileMenuContext);
-  const isStatsPage = asPath.includes('/stats/');
+  const isStatsPage = asPath.includes('/stats');
 
   return (
     <header className={css.container}>
