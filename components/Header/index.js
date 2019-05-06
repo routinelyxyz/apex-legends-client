@@ -41,10 +41,8 @@ const navigationLinks = [
   }
 ]
 
-export const Header = ({ route, asPath }) => {
+export const Header = ({ route }) => {
   const mobileMenu = useContext(MobileMenuContext);
-  const isStatsPage = asPath.includes('/stats');
-
   return (
     <header className={css.container}>
       <Link href="/">
@@ -87,12 +85,7 @@ export const Header = ({ route, asPath }) => {
           );
         })}
       </nav>
-      <div 
-        {...applyCss(
-          css.searcher,
-          isStatsPage && css.searcher_stats
-        )}
-      >
+      <div className={css.searcher}>
         <PlayerSearcher
           height={300}
         />
