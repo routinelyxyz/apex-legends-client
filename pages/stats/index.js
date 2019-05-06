@@ -1,9 +1,8 @@
 import 'isomorphic-unfetch';
 import css from './style.scss';
-import { getUrl, getStatic, getAvatar, statsProps } from '../../helpers';
-import { animated, useSpring, config } from 'react-spring';
+import { getAvatar, statsProps } from '../../helpers';
+import { animated, useSpring } from 'react-spring';
 import { useState, useEffect, useMemo } from 'react';
-import Link from 'next/link';
 import dayjs from 'dayjs';
 import { getTs, getUniqueById } from '../../util';
 import { connect } from 'react-redux';
@@ -22,10 +21,6 @@ import { PlayerSearcher } from '../../components/PlayerSearcher';
 import { LegendStatsValue } from '../../components/LegendStatsValue';
 import { InfoCard } from '../../components/InfoCard';
 
-const lifetimeStatsProps = [
-  'kills', 'damage', 'headshots', 'damagePerKill', 'headshotsPerKill'
-]
-
 const getURL = player => {
   const { platform, name, id = '' } = player;
   return `/stats/v2/${platform}/${encodeURIComponent(name)}?id=${id}`;
@@ -41,7 +36,7 @@ async function updateStats(player) {
   return response.data.latestMatch;
 }
 
-const countdown = process.env.NODE_ENV === 'production' ? 178 : 178;
+const countdown = process.env.NODE_ENV === 'production' ? 178 : 120;
 
 const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch = false, ...props }) => {
 
@@ -63,7 +58,7 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
       )}
     </div>
   );
-  
+
   const afterFirstRender = useFirstRender();
   const [stats, setStats] = useState(() => props.stats);
   const [matchHistory, setMatchHistory] = useState([]);
@@ -168,25 +163,6 @@ const StatsPage = ({ name, url, platform, error, status, router, skipFirstFetch 
       }))
       .filter(propObj => propObj.value != null)
   , [stats]);
-
-  /*
-  const legendStats = useMemo(() => 
-    stats.legends
-      .map(legendStats => statsProps.legend
-        .map(prop => ({
-          prop,
-          ...legendStats[prop]
-        }))
-        .filter(propObj => propObj.value != null)
-      )
-      .sort((a, b) =>
-          a.find(stats => stats.prop === 'kills').value >
-          b.find(stats => stats.prop === 'kills').value
-            ? -1
-            : 1
-        )
-  , [stats]);
-  */
 
   return (
     <div>
