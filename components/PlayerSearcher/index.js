@@ -9,7 +9,6 @@ import { useDevice } from '../../hooks';
 import { MobileMenuContext, ModalContext } from '../../helpers/context';
 import axios from 'axios';
 import NProgress from 'nprogress';
-import { withRouter } from 'next/router';
 
 import { PlayerLabel } from '../../components/PlayersTable';
 import { BasicInput } from '../../reusable/Input';
@@ -49,7 +48,7 @@ const RenderPlayersResult = ({ isSearching, playersFound, phrase }) => {
   ));
 }
 
-const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
+const PlayerSearcher = ({ height = 250, pageMode, statsPage, testId, ...props }) => {
   const [phrase, setPhrase] = useState('');
   const [focused, setFocused] = useState(false);
   const [playersFound, setPlayersFound] = useState([]);
@@ -129,7 +128,8 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
     <div
       {...applyCss(
         css.container,
-        pageMode && css.page_mode
+        pageMode && css.page_mode,
+        statsPage && css.stats_page
       )}
       ref={refContainer}
       data-testid={['PlayerSearcher', testId].filter(Boolean).join('__')}
@@ -165,8 +165,5 @@ const PlayerSearcher = ({ height = 250, pageMode, testId, ...props }) => {
   )
 }
 
-const SearcherWithRedux = connect(
-  mapStateDynamic(['stats']), mapDispatchToProps
-)(PlayerSearcher);
-
+const SearcherWithRedux = connect(mapStateDynamic(['stats']), mapDispatchToProps)(PlayerSearcher);
 export { SearcherWithRedux as PlayerSearcher };

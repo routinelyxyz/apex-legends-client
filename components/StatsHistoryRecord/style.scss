@@ -1,0 +1,30 @@
+
+.record__container {
+  background: rgba(95, 98, 136, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  display: flex;
+  margin-bottom: 10px;
+  .record__legend_image {
+    height: 60px;
+  }
+  .record__legend_name {
+    margin-right: 20px;
+  }
+  .record__box {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:not(:last-child) {  
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    flex-wrap: wrap;
+  }
+  .record__prop {
+    color: #78768d;
+    display: block;
+    margin-right: 7px;
+  }
+}
+
