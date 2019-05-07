@@ -22,8 +22,6 @@ import { BasicButton } from '../../reusable/BasicButton';
 
 const initialUpdateKey = '00nametrue';
 
-const debounceA = debounce(500);
-const [debounceB, timeoutB] = useDebounce(500);
 const sortProps = [
   ['name', 'Name'],
   ...weaponProps,
@@ -38,8 +36,6 @@ const WeaponsPage = ({ items, router, categories }) => {
   const [phrase, setPhrase] = useState('');
   const [sortProp, setSortProp] = useState(initialSortProp);
   const [sortAsc, setSortAsc] = useState(initialSortAsc);
-  const [state, dispatchProvider] = useReducer(reducer, initialState);
-  const dispatch = useDispatch(dispatchProvider);
 
   const ammoTypes = useMemo(() => 
     items.reduce((ammoTypes, item) => ({
@@ -47,20 +43,6 @@ const WeaponsPage = ({ items, router, categories }) => {
       [item.ammo.name]: item.ammo
     }), {})
   , [items]);
-
-
-  useEffect(() => {
-    dispatch('LOAD_DATA', { items });
-    // dispatchProvider({ type: 'LOAD_DATA', payload: { items }});
-  }, []);
-  // const ammTypes = useMemo(() =>
-  //   Object.values(items
-  //     .reduce((ammoTypes, item) => ({
-  //       ...ammoTypes,
-  //       [item.ammo.name]: item.ammo
-  //     }), {})
-  //   )
-  // , [items]);
 
   const weaponTypes = useMemo(() => items
     .reduce((weaponTypes, weapon) => [
@@ -157,7 +139,6 @@ const WeaponsPage = ({ items, router, categories }) => {
   , [updateKey]);
 
   useEffect(() => {
-    // Redirects even if router is on other page
     if (router.pathname === '/items') {
       const query = {};
 
@@ -227,7 +208,7 @@ const WeaponsPage = ({ items, router, categories }) => {
                 onChange={e => setWeaponTypes({
                   ...selectedWeaponTypes,
                   [type]: e.target.checked
-                }) || dispatch('TOGGLE_CATEGORY', type)}
+                })}
               /> 
             ))}
           </div>
@@ -249,7 +230,7 @@ const WeaponsPage = ({ items, router, categories }) => {
                 onChange={e => setAmmoTypes({
                   ...selectedAmmoTypes,
                   [type]: e.target.checked
-                }) || dispatch('TOGGLE_AMMO_TYPE', type)}
+                })}
               />
             ))}
           </div>
@@ -257,14 +238,6 @@ const WeaponsPage = ({ items, router, categories }) => {
       </MobileModal>
       <div className={css.items_wrapper}>
         <div className={css.sort_container}>
-          {/* <div className={css.sort_item}>
-            <BasicButton
-              title="Clear filters"
-              onClick={handleClearFilters}
-              active={appliedFilters}
-              className={css.clear_filters__btn}
-            />
-          </div> */}
           <div className={css.sort_item}>
             <h3 className={css.h3}>
               Sort By
@@ -291,7 +264,7 @@ const WeaponsPage = ({ items, router, categories }) => {
               checked={sortAsc}
               onChange={e => setSortAsc(
                 e.target.checked
-              ) || dispatch('TOGGLE_ORDER')}
+              )}
             />
           </div>
         </div>

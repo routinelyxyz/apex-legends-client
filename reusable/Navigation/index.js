@@ -1,7 +1,6 @@
 import css from './style.scss';
-import { useState, useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { withRouter } from 'next/router';
-import qs from 'querystringify';
 import Link from 'next/link';
 import { applyCss } from '../../helpers';
 
@@ -52,35 +51,6 @@ export const PaginationMenu = ({ page, pages, href = p => '?page=' + p }) => {
     </ul>
   );
 }
-
-/*
-const handle = entries => {
-  const ratio = entries[0].intersectionRatio;
-
-  if (isFetching) return;
-
-
-  if (ratio >= 0.8) {
-    setIsFetching(true);
-    
-    const href = '/leaderboards' + qs.stringify({ page: Number(page) + 1 }, true);
-    const as = href;
-    router.replace(href, as, { shallow: false });
-
-    setIsFetching(false);
-  }
-}
-
-
-useEffect(() => {
-  const observer = new IntersectionObserver(handle, {
-    root: null,
-    rootMargin: '0px',
-    threshold: 0.1
-  });
-  observer.observe(container.current);
-}, []);
-*/
 
 const Navigation = ({
   router, page, pagesCount,

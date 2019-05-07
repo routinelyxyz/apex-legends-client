@@ -1,19 +1,26 @@
+@import "../../assets/css/rwd.scss";
 
 .record__container {
   background: rgba(95, 98, 136, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 4px;
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   .record__legend_image {
-    height: 60px;
+    height: 55px;
+    @include small {
+      height: 35px;
+    }
   }
   .record__legend_name {
-    margin-right: 20px;
+    text-align: center;
+    margin: 2px 0 3px 0;
   }
   .record__box {
+    text-align: center;
     flex: 1;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     &:not(:last-child) {  
@@ -21,10 +28,31 @@
     }
     flex-wrap: wrap;
   }
+  .record__value {
+    font-size: 17px;
+    @include small {
+      font-size: 14px;
+    }
+  }
   .record__prop {
-    color: #78768d;
+    color: #7f7d99;
     display: block;
-    margin-right: 7px;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0 0 6px 0;
+    @include phone {
+      font-size: 11px;
+    }
+  }
+  .record__time_value {
+    font-size: 14px;
+    @include phone {
+      font-size: 13px;
+    }
+    @include small {
+      font-size: 11px;
+    }
   }
 }
 
