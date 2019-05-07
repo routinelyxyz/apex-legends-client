@@ -278,6 +278,9 @@ const StatsPageContainer = (props) => {
   
   return (
     <>
+      <Head>
+        <title>Stats | Apex-Legends.win</title>
+      </Head>
       {isError && <RenderError {...props} />}
       <PlayerSearcher
         statsPage={!isError}
