@@ -20,11 +20,24 @@ const debounceA = debounce(350);
 let timeout;
 
 const RenderPlayersResult = ({ isSearching, playersFound, phrase }) => {
-  if (!isSearching && phrase.length && !playersFound.length) {
+  if (!phrase.length) {
     return (
       <p className={css.players_error}>
-        No players were found
+        Start typing to find players.
       </p>
+    )
+  }
+
+  if (!isSearching && !playersFound.length) {
+    return (
+      <>
+        <p className={css.players_error}>
+          No saved players were found.
+        </p>
+        <p className={css.players_error}>
+          You can still try to find by pressing enter.
+        </p>
+      </>
     );
   }
 
@@ -54,7 +67,6 @@ const PlayerSearcher = ({ height = 250, pageMode, statsPage, testId, ...props })
   const [playersFound, setPlayersFound] = useState([]);
   const [platform, setPlatform] = useState('pc');
   const [isSearching, setIsSearching] = useState(false);
-  const { favoritePlayers, recentPlayers } = props.reducers.stats;
   const { isPhone } = useDevice();
   const mobileMenu = useContext(MobileMenuContext);
   const modal = useContext(ModalContext);
