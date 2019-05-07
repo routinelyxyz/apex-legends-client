@@ -117,6 +117,12 @@
   }
 }
 
+.searcher {
+  @include notDesktop {
+    display: none;
+  }
+}
+
 .error__container {
   .error__title {
     text-align: center;
