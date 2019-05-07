@@ -38,7 +38,6 @@ const WeaponsPage = ({ items, router, categories }) => {
   const [phrase, setPhrase] = useState('');
   const [sortProp, setSortProp] = useState(initialSortProp);
   const [sortAsc, setSortAsc] = useState(initialSortAsc);
-  const [state, dispatchProvider] = useReducer(reducer, initialState);
   const dispatch = useDispatch(dispatchProvider);
 
   const ammoTypes = useMemo(() => 
@@ -47,20 +46,6 @@ const WeaponsPage = ({ items, router, categories }) => {
       [item.ammo.name]: item.ammo
     }), {})
   , [items]);
-
-
-  useEffect(() => {
-    dispatch('LOAD_DATA', { items });
-    // dispatchProvider({ type: 'LOAD_DATA', payload: { items }});
-  }, []);
-  // const ammTypes = useMemo(() =>
-  //   Object.values(items
-  //     .reduce((ammoTypes, item) => ({
-  //       ...ammoTypes,
-  //       [item.ammo.name]: item.ammo
-  //     }), {})
-  //   )
-  // , [items]);
 
   const weaponTypes = useMemo(() => items
     .reduce((weaponTypes, weapon) => [
@@ -157,7 +142,6 @@ const WeaponsPage = ({ items, router, categories }) => {
   , [updateKey]);
 
   useEffect(() => {
-    // Redirects even if router is on other page
     if (router.pathname === '/items') {
       const query = {};
 
@@ -257,14 +241,6 @@ const WeaponsPage = ({ items, router, categories }) => {
       </MobileModal>
       <div className={css.items_wrapper}>
         <div className={css.sort_container}>
-          {/* <div className={css.sort_item}>
-            <BasicButton
-              title="Clear filters"
-              onClick={handleClearFilters}
-              active={appliedFilters}
-              className={css.clear_filters__btn}
-            />
-          </div> */}
           <div className={css.sort_item}>
             <h3 className={css.h3}>
               Sort By
@@ -316,7 +292,7 @@ WeaponsPage.getInitialProps = async () => {
     .filter(filterUnique)
     .sort();
 
-  return { items: data, categories };
+  return { items: data, categories, ammoTypes };
 }
 
 export default withRouter(WeaponsPage);
