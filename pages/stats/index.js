@@ -4,7 +4,7 @@ import { getAvatar, statsProps } from '../../helpers';
 import { animated, useSpring } from 'react-spring';
 import { useState, useEffect, useMemo } from 'react';
 import dayjs from 'dayjs';
-import { getTs, getUniqueById } from '../../util';
+import { getTs, getUniqueById, applyCss } from '../../util';
 import { connect } from 'react-redux';
 import { mapDispatchToProps, mapStateDynamic } from '../../store/mappers';
 import Head from 'next/head';
@@ -260,6 +260,7 @@ const RenderError = ({ status, platform, name }) => {
         {status === 404
           ? (
             <>
+              Player 
               <strong className={css.error__player_name}>
                 {name}
               </strong> doesn't exist on platform {platform}
@@ -282,7 +283,7 @@ const StatsPageContainer = (props) => {
         <title>Stats | Apex-Legends.win</title>
       </Head>
       {isError && <RenderError {...props} />}
-      <div className={css.searcher}>
+      <div {...applyCss(!isError && css.searcher)}>
         <PlayerSearcher
           statsPage={!isError}
           pageMode
