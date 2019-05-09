@@ -10,6 +10,7 @@ dayjs.extend(utc);
 import { PlayerCard } from '../../components/PlayerCard';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
 import { PlayersTable, Table, PlayerLabel, Td, Th } from '../../components/PlayersTable';
+import { Carousel3d } from '../../reusable/Carousel3d';
 
 const endOfDay = dayjs().utc().endOf('day');
 
@@ -47,6 +48,11 @@ const HomePage = ({ dailyRanking, recentlyUpdated }) => {
         <title>Homepage | Apex-Legends.win</title>
       </Head>
       <PlayerSearcher pageMode testId="main"/>
+      <Carousel3d>
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+      </Carousel3d>
       {!!top3Players.length && (
         <>
           <h2 className={css.top_header}>

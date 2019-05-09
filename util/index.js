@@ -52,3 +52,11 @@ export const scrollTo = ({ top = 0, left = 0, behavior = 'smooth'}) => {
     }
   }
 }
+
+export function extractItemsCount(array, count, startFrom) {
+  const { length } = array;
+  const itemsLeft = length - startFrom;
+  return itemsLeft < count
+    ? [...array.slice(0, itemsLeft), ...array.slice(startFrom, length - 1)]
+    : array.slice(startFrom, startFrom + count);
+}
