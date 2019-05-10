@@ -40,8 +40,8 @@ const WeaponsPage = ({ items, router, ammoTypes: newAmmoTypes, categories }) => 
   const [sortProp, setSortProp] = useState(initialSortProp);
   const [sortAsc, setSortAsc] = useState(initialSortAsc);
   const [selectedAmmoTypes, setSelectedAmmoTypes] = useState(reduceToObjectProps(newAmmoTypes));
+  const [state, dispatch] = useReducer(reducer, initialArg, init);
 
-  
 
   const weaponTypes = useMemo(() => items
     .reduce((weaponTypes, weapon) => [
