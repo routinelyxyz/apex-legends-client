@@ -6,10 +6,13 @@ import { useTransition } from 'react-spring';
 import { weaponProps, STATIC } from '../../helpers';
 import { withRouter } from 'next/router';
 import qs from 'querystringify';
-import { debounce, useDebounce, useDispatch, filterUnique } from '../../util';
+import {
+  debounce, useDebounce, useDispatch, filterUnique,
+  reduceToObjectProps
+} from '../../util';
 import Head from 'next/head';
 import axios from 'axios';
-import { reducer, initialState } from '../../store/hook-reducers/items';
+import { reducer, initialState } from '../../store/hooks-reducers/weapon-filters';
 
 import Item from '../../reusable/Item';
 import Input from '../../reusable/Input';
@@ -32,17 +35,13 @@ const initialSort = 'name';
 const initialSortProp = 'name';
 const initialSortAsc = true;
 
-const WeaponsPage = ({ items, router, categories }) => {
+const WeaponsPage = ({ items, router, ammoTypes: newAmmoTypes, categories }) => {
   const [phrase, setPhrase] = useState('');
   const [sortProp, setSortProp] = useState(initialSortProp);
   const [sortAsc, setSortAsc] = useState(initialSortAsc);
+  const [selectedAmmoTypes, setSelectedAmmoTypes] = useState(reduceToObjectProps(newAmmoTypes));
 
-  const ammoTypes = useMemo(() => 
-    items.reduce((ammoTypes, item) => ({
-      ...ammoTypes,
-      [item.ammo.name]: item.ammo
-    }), {})
-  , [items]);
+  
 
   const weaponTypes = useMemo(() => items
     .reduce((weaponTypes, weapon) => [
@@ -160,7 +159,7 @@ const WeaponsPage = ({ items, router, categories }) => {
     
     const timeoutId = setTimeout(() => {
       if (name) setPhrase(name);
-      if (ammo) setAmmoTypes(
+      if (ammo) setSelectedAmmoTypes(
         ammo
           .split(',')
           .reduce((updatedTypes, type) => ({
@@ -289,7 +288,7 @@ WeaponsPage.getInitialProps = async () => {
     .filter(filterUnique)
     .sort();
 
-  return { items: data, categories };
+  return { items: data, ammoTypes, categories };
 }
 
 export default withRouter(WeaponsPage);

@@ -52,3 +52,9 @@ export const scrollTo = ({ top = 0, left = 0, behavior = 'smooth'}) => {
     }
   }
 }
+
+export const reduceToObjectProps = (array, defaultValue = false) => 
+  array.reduce((reduced, item) => ({
+    ...reduced,
+    [item]: defaultValue
+  }), {});
