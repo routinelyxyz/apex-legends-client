@@ -1,24 +1,18 @@
-import React, { useState, useMemo, useEffect, useRef, useReducer } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import css from './style.scss';
-import fetch from 'isomorphic-unfetch';
-import Link from 'next/link';
-import { useTransition } from 'react-spring';
 import { weaponProps, STATIC } from '../../helpers';
 import { withRouter } from 'next/router';
 import qs from 'querystringify';
 import { filterTruthyEntry, filterUnique } from '../../util';
 import Head from 'next/head';
 import axios from 'axios';
-import { reducer, initialState } from '../../store/hook-reducers/items';
 
-import Item from '../../reusable/Item';
 import Input from '../../reusable/Input';
 import Checkmark from '../../reusable/Checkmark';
 import Select from '../../reusable/Select';
 import { SortDirection } from '../../reusable/SortDirection';
 import { WeaponsGrid } from '../../components/WeaponsGrid';
 import { MobileModal } from '../../components/MobileModal';
-import { BasicButton } from '../../reusable/BasicButton';
 
 const initialUpdateKey = '00nametrue';
 
@@ -32,7 +26,7 @@ const initialSort = 'name';
 const initialSortProp = 'name';
 const initialSortAsc = true;
 
-const WeaponsPage = ({ items, router, categories }) => {
+const WeaponsPage = ({ items, router }) => {
   const [phrase, setPhrase] = useState('');
   const [sortProp, setSortProp] = useState(initialSortProp);
   const [sortAsc, setSortAsc] = useState(initialSortAsc);
