@@ -16,11 +16,6 @@ const ItemsLayout = ({ children, route = '' }) => {
             route.includes('/items/weapon')
           }
         />
-        {/* <NavLink
-          href="/items/attachments"
-          title="Attachments"
-          active={route === '/items/attachments'}
-        /> */}
       </nav>
       {children}
     </article>

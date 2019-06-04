@@ -2,7 +2,6 @@ import css from './style.scss';
 import '../../../assets/css/global.scss';
 import Link from 'next/link';
 import Head from 'next/head';
-  // import Legend from "../../../components/Legend";
 import { HOST_URL, getStatic } from '../../../helpers';
 import { fetchify } from '../../../util/fetchify';
 
@@ -54,22 +53,6 @@ const LegendPage = ({ legend, top1 }) => {
           }
         ]}
       />
-      {/* <HorizontalNav className={css.hor_nav}>
-        <Link href={``}>
-          <a>Abilities</a>
-        </Link>
-        <Link href={``}>
-          <a>Leaderboards</a>
-        </Link>
-      </HorizontalNav>
-      <ul className={css.abilities}>
-        {legend.abilities.map(ability => (
-          <LegendAbility
-            key={ability.id}
-            ability={ability}
-          />
-        ))}
-      </ul> */}
     </div>
   )
 }

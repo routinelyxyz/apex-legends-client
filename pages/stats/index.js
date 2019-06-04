@@ -94,9 +94,6 @@ const StatsPage = ({ name, url, platform, router, skipFirstFetch = false, ...pro
     if (stats && afterFirstRender && props.stats.player.name !== stats.player.name) {
       setStats(props.stats);
       setTo(getTs() + 3);
-      // props.actions.savePlayerAsync(props.stats.player);
-    } else {
-      // props.actions.savePlayerAsync(stats.player);
     }
 
     return () => clearInterval(interval);

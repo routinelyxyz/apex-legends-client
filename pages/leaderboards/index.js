@@ -165,7 +165,7 @@ LeadeboardsPage.getInitialProps = async (props) => {
   ]);
   
   if (props.asPath !== '/leaderboards' && process.env.NODE_ENV === 'production') {
-    await new Promise(r => setTimeout(r, 200));
+    await new Promise(r => setTimeout(r, 150));
   }
 
   return {

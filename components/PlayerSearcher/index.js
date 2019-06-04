@@ -75,7 +75,6 @@ const PlayerSearcher = ({ height = 250, pageMode, statsPage, testId, ...props })
   useClickOutside(refContainer, () => {
     setFocused(false);
     if (focused) {
-      /* Weird behaviour */
       modal.setOpened(false);
       mobileMenu.setVisible(true);
     }
@@ -96,7 +95,7 @@ const PlayerSearcher = ({ height = 250, pageMode, statsPage, testId, ...props })
     NProgress.start();
     if (!isSearching) setIsSearching(true);
     
-    if (!!!value) {
+    if (value && value.length) {
       clearTimeout(timeout);
       setIsSearching(false);
       NProgress.done();
