@@ -52,3 +52,9 @@ export const scrollTo = ({ top = 0, left = 0, behavior = 'smooth'}) => {
     }
   }
 }
+
+export const filterTruthyProp = ([prop, val]) => val ? prop : [];
+
+export const filterTruthyEntry = (object) => Object
+  .entries(object)
+  .flatMap(filterTruthyProp);

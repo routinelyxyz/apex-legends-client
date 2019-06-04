@@ -6,7 +6,7 @@ import { useTransition } from 'react-spring';
 import { weaponProps, STATIC } from '../../helpers';
 import { withRouter } from 'next/router';
 import qs from 'querystringify';
-import { debounce, useDebounce, useDispatch, filterUnique } from '../../util';
+import { filterTruthyEntry, filterUnique } from '../../util';
 import Head from 'next/head';
 import axios from 'axios';
 import { reducer, initialState } from '../../store/hook-reducers/items';
@@ -60,12 +60,7 @@ const WeaponsPage = ({ items, router, categories }) => {
     }), {})
   );
 
-  const selectedTypeNames = useMemo(() => 
-    Object.entries(selectedWeaponTypes)
-      .filter(([prop, val]) => val)
-      .map(([prop]) => prop)
-  , [selectedWeaponTypes]);
-
+  const selectedWeaponTypeNames = useMemo(() => filterTruthyEntry(selectedWeaponTypes), [selectedWeaponTypes]);
   
   const [selectedAmmoTypes, setAmmoTypes] = useState(() =>
     items.reduce((types, weapon) => ({
@@ -74,15 +69,9 @@ const WeaponsPage = ({ items, router, categories }) => {
     }), {})
   );
 
-  const selectedAmmoNames = useMemo(() => 
-    Object
-      .entries(selectedAmmoTypes)
-      .filter(([prop, val]) => val)
-      .map(([prop]) => prop)
-  , [selectedAmmoTypes]);
+  const selectedAmmoTypeNames = useMemo(filterTruthyEntry(selectedAmmoTypes), [selectedAmmoTypes]);
 
-
-  const updateKey = phrase + selectedTypeNames.length + selectedAmmoNames.length + sortProp + sortAsc;
+  const updateKey = phrase + selectedWeaponTypeNames.length + selectedAmmoTypeNames.length + sortProp + sortAsc;
   const appliedFilters = updateKey !== initialUpdateKey;
 
   const handleClearFilters = () => {
@@ -93,13 +82,13 @@ const WeaponsPage = ({ items, router, categories }) => {
     setSortProp(initialSortProp);
     setSortAsc(initialSortAsc);
 
-    setWeaponTypes(selectedTypeNames
+    setWeaponTypes(selectedWeaponTypeNames
       .reduce((unselected, type) => ({
         ...unselected,
         [type]: false
       }), selectedWeaponTypes)
     );
-    setAmmoTypes(selectedAmmoNames
+    setAmmoTypes(selectedAmmoTypeNames
       .reduce((unselected, name) => ({
         ...unselected,
         [name]: false
@@ -115,11 +104,11 @@ const WeaponsPage = ({ items, router, categories }) => {
     .filter(item =>
       item.name.toLowerCase().includes(phrase.toLowerCase())
     )
-    .filter(item => selectedTypeNames.length
+    .filter(item => selectedWeaponTypeNames.length
       ? selectedWeaponTypes[item.type]
       : true
     )
-    .filter(item => selectedAmmoNames.length
+    .filter(item => selectedAmmoTypeNames.length
       ? selectedAmmoTypes[item.ammo.name]  
       : true
     )
@@ -143,10 +132,10 @@ const WeaponsPage = ({ items, router, categories }) => {
       const query = {};
 
       if (phrase.length) query.name = phrase;
-      if (selectedAmmoNames.length) query.ammo = selectedAmmoNames;
+      if (selectedAmmoTypeNames.length) query.ammo = selectedAmmoTypeNames;
       if (sortProp !== initialSortProp) query.sortBy = sortProp;
       if (sortAsc !== initialSortAsc) query.sortDesc = true;
-      if (selectedTypeNames.length) query.category = selectedTypeNames;
+      if (selectedWeaponTypeNames.length) query.category = selectedWeaponTypeNames;
 
       const href = '/items' + qs.stringify(query, true);
       const as = href;
