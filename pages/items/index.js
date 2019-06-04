@@ -96,9 +96,8 @@ const WeaponsPage = ({ items, router, categories }) => {
     );
   }
 
-  const ammoTypeNames = useMemo(() => 
-    Object.keys(selectedAmmoTypes)
-  , []);
+  const ammoTypeNames = useMemo(() => Object.keys(selectedAmmoTypes), []);
+  const weaponTypeNames = useMemo(() => Object.keys(selectedWeaponTypes), []);
 
   const filteredWeapons = useMemo(() => items
     .filter(item =>
@@ -172,6 +171,20 @@ const WeaponsPage = ({ items, router, categories }) => {
     return () => clearTimeout(timeoutId);
   }, []);
 
+  const handleWeaponTypeChange = (weaponType) => (event) => {
+    setWeaponTypes({
+      ...weaponTypes,
+      [weaponType]: event.target.checked
+    });
+  }
+
+  const handleAmmoTypeChange = (ammoType) => (event) => {
+    setAmmoTypes({
+      ...selectedAmmoTypes,
+      [ammoType]: event.target.checked
+    });
+  }
+
   return (
     <article className={css.container}>
       <Head>
@@ -189,21 +202,18 @@ const WeaponsPage = ({ items, router, categories }) => {
           </label>
           <div className={css.filters_section} data-testid="Items__category">
             <h3 className={css.h3}>Category</h3>
-            {Object.keys(selectedWeaponTypes).map(type => (
+            {weaponTypeNames.map(type => (
               <Checkmark
                 title={type}
                 key={type}
                 checked={selectedWeaponTypes[type]}
-                onChange={e => setWeaponTypes({
-                  ...selectedWeaponTypes,
-                  [type]: e.target.checked
-                })}
+                onChange={handleWeaponTypeChange(type)}
               /> 
             ))}
           </div>
           <div className={css.filters_section} data-testid="Items__ammo">
             <h3 className={css.h3}>Ammo type</h3>
-            {Object.keys(selectedAmmoTypes).map(type => (
+            {ammoTypeNames.map(type => (
               <Checkmark
                 content={
                   <div className={`${css.ammo_checkmark}`}>
@@ -216,10 +226,7 @@ const WeaponsPage = ({ items, router, categories }) => {
                 }
                 key={type}
                 checked={selectedAmmoTypes[type]}
-                onChange={e => setAmmoTypes({
-                  ...selectedAmmoTypes,
-                  [type]: e.target.checked
-                })}
+                onChange={handleAmmoTypeChange(type)}
               />
             ))}
           </div>
@@ -234,9 +241,7 @@ const WeaponsPage = ({ items, router, categories }) => {
             <Select
               value={sortProp}
               active={sortProp !== initialSortProp}
-              onChange={e => setSortProp(
-                e.target.value
-              )}
+              onChange={e => setSortProp(e.target.value)}
             >
               {sortProps.map(([prop, title]) => (
                 <option value={prop} key={prop}>
@@ -251,9 +256,7 @@ const WeaponsPage = ({ items, router, categories }) => {
             </h3>
             <SortDirection
               checked={sortAsc}
-              onChange={e => setSortAsc(
-                e.target.checked
-              )}
+              onChange={e => setSortAsc(e.target.checked)}
             />
           </div>
         </div>
