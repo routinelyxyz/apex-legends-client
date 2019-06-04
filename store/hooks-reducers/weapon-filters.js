@@ -1,7 +1,6 @@
 import { createSelector } from "reselect";
 
-/* Map props / values */
-const parse = (data, prop) => data
+const normalizeToObject = (data, prop) => data
   .reduce((parsed, item) => {
     const propName = typeof prop === 'function' ? prop(item) : item[prop];
     return {
@@ -23,14 +22,17 @@ export const initialState = {
   }
 }
 
-function reducer(state = initialState, action) {
+export function weaponFiltersReducer(
+  state = initialState,
+  action
+) {
   switch(action.type) {
     case 'LOAD_DATA': {
       const { items } = action.payload;
       return {
         ...state,
-        categories: parse(items, 'type'),
-        ammoTypes: parse(items, i => i.ammo.name)
+        categories: normalizeToObject(items, 'type'),
+        ammoTypes: normalizeToObject(items, i => i.ammo.name)
       }
     }
     case 'UPDATE_NAME': return { ...state, name: action.payload }
@@ -59,7 +61,6 @@ function reducer(state = initialState, action) {
 }
 
 export const weaponFilters = state => state;
-const weaponsState = state => state;
 
 export const selectedCategoryNames = state => Object.keys(state.categories);
 export const selectedAmmoTypeNames = state => Object.keys(state.ammoTypes);
@@ -83,8 +84,8 @@ export const filteredWeapons = createSelector(
     )
     .sort((a, b) => {
       const { categories, ammoTypes } = filters;
-
       const sortDir = sortAsc ? 1 : -1;
+
       if (sortProp === 'name') {
         return (a[sortProp] > b[sortProp] ? 1 : -1) * sortDir;
       }
@@ -98,5 +99,3 @@ export const filteredWeapons = createSelector(
     })
 
 );
-
-export default reducer;
