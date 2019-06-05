@@ -1,24 +1,15 @@
 import { createSelector } from "reselect";
 
-const normalizeToObject = (data, prop) => data
-  .reduce((parsed, item) => {
-    const propName = typeof prop === 'function' ? prop(item) : item[prop];
-    return {
-      ...parsed,
-      [propName]: false
-    }
-  }, {});
-
 export const initialState = {
   name: '',
   sortBy: 'name',
   sortAsc: true,
-  categories: {},
-  ammoTypes: {},
+  selectedCategories: {},
+  selectedAmmoTypes: {},
   static: {
     ammoTypes: [],
     categories: [],
-    weapons: []
+    items: []
   }
 }
 
@@ -27,12 +18,27 @@ export function weaponFiltersReducer(
   action
 ) {
   switch(action.type) {
-    case 'LOAD_DATA': {
-      const { items } = action.payload;
+    case 'LOAD_ITEMS': {
+      const items = action.payload;
+      const ammoTypes = items.map(item => item.ammo);
+      const categories = items.map(item => item.type).sort();
       return {
-        ...state,
-        categories: normalizeToObject(items, 'type'),
-        ammoTypes: normalizeToObject(items, i => i.ammo.name)
+        ...initialState,
+        selectedCategories: categories
+          .reduce((selected, category) => ({
+            ...selected,
+            [category]: false
+          }), {}),
+        selectedAmmoTypes: ammoTypes
+          .reduce((selected, ammoType) => ({
+            ...selected,
+            [ammoType.name]: ammoType.name
+          }), {}),
+        static: {
+          ammoTypes,
+          categories,
+          items
+        }
       }
     }
     case 'UPDATE_NAME': return { ...state, name: action.payload }
@@ -40,20 +46,30 @@ export function weaponFiltersReducer(
     case 'UPDATE_SORT_BY': return { ...state, sortBy: action.payload }
     case 'TOGGLE_CATEGORY': return {
       ...state,
-      categories: {
-        ...state.categories,
-        [action.payload]: !state.categories[action.payload]
+      selectedCategories: {
+        ...state.selectedCategories,
+        [action.payload]: !state.selectedCategories[action.payload]
       }
     }
     case 'TOGGLE_AMMO_TYPE': return {
       ...state,
-      ammoTypes: {
-        ...state.ammoTypes,
-        [action.payload]: !state.ammoTypes[action.payload]
+      selectedAmmoTypes: {
+        ...state.selectedAmmoTypes,
+        [action.payload]: !state.selectedAmmoTypes[action.payload]
       }
     }
     case 'CLEAR_FILTERS': return {
       ...initialState,
+      selectedAmmoTypes: Object.fromEntries(
+        Object
+          .entries(state.selectedAmmoTypes)
+          .map(([prop]) => [prop, false])
+      ),
+      selectedCategories: Object.fromEntries(
+        Object
+          .entries(state.selectedCategories)
+          .map(([prop]) => [prop, false])
+      ),
       static: state.static
     }
     default: return state;
