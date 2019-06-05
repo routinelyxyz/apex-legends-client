@@ -24,7 +24,7 @@ const HomePage = ({ dailyRanking, recentlyUpdated }) => {
     const hours  = Math.floor(secondsLeft / 3600);
 
     const formatted = [hours, minutes, seconds]
-      .map(value => value.padStart(2, '0'))
+      .map(value => value.toString().padStart(2, '0'))
       .join(' : ');
 
     setTimeLeft(formatted);
