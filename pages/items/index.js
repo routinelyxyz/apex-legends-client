@@ -284,11 +284,6 @@ WeaponsPage.getInitialProps = async () => {
     .map(item => item.ammo.name)
     .filter(filterUnique);
 
-  const categories = data
-    .map(item => item.type)
-    .filter(filterUnique)
-    .sort();
-
   return { items: data, ammoTypes, categories };
 }
 
