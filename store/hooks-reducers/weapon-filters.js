@@ -24,7 +24,10 @@ export function weaponFiltersReducer(
       const ammoTypes = items
         .map(item => item.ammo)
         .filter((ammoType, index, self) => self.indexOf(ammoType.name) === index);
-      const categories = items.map(item => item.type).filter(filterUnique).sort();
+      const categories = items
+        .map(item => item.type)
+        .filter(filterUnique)
+        .sort();
 
       return {
         ...initialState,
@@ -119,3 +122,36 @@ export const filteredWeapons = createSelector(
     })
 
 );
+
+
+export const _filteredWeapons = (state) => {
+  const selectedCategoryNames = Object.keys(state.categories);
+  const selectedAmmoTypeNames = Object.keys(state.ammoTypes);
+
+  return state.static.items
+    .filter(item =>
+      item.name.toLowerCase().includes(state.name.toLowerCase())
+    )
+    .filter(item => selectedCategoryNames.length
+      ? state.selectedCategories[item.type]
+      : true
+    )
+    .filter(item => selectedAmmoTypeNames.length
+      ? state.selectedAmmoTypes[item.ammo.name]  
+      : true
+    )
+    .sort((a, b) => {
+      const sortDir = state.sortAsc ? 1 : -1;
+      
+      if (state.sortBy === 'name') {
+        return (a[sortProp] > b[sortProp] ? 1 : -1) * sortDir;
+      }
+      if (state.sortBy === 'ammoType') {
+        const indexA = ammoTypeNames.indexOf(a.ammo.name);
+        const indexB = ammoTypeNames.indexOf(b.ammo.name);
+
+        return (indexA > indexB ? 1 : -1) * sortDir;
+      }
+      return (a[sortProp] - b[sortProp]) * sortDir;
+    });
+}
