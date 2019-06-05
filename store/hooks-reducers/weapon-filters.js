@@ -124,11 +124,11 @@ export const filteredWeapons = createSelector(
 );
 
 
-export const _filteredWeapons = (state) => {
+export const weaponsFilter = (state) => {
   const selectedCategoryNames = Object.keys(state.categories);
   const selectedAmmoTypeNames = Object.keys(state.ammoTypes);
 
-  return state.static.items
+  const filteredWeapons = state.static.items
     .filter(item =>
       item.name.toLowerCase().includes(state.name.toLowerCase())
     )
@@ -154,4 +154,10 @@ export const _filteredWeapons = (state) => {
       }
       return (a[sortProp] - b[sortProp]) * sortDir;
     });
+
+  return {
+    filteredWeapons,
+    selectedCategoryNames,
+    selectedAmmoTypeNames
+  }
 }

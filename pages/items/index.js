@@ -12,7 +12,7 @@ import {
 } from '../../util';
 import Head from 'next/head';
 import axios from 'axios';
-import { reducer, initialState } from '../../store/hooks-reducers/weapon-filters';
+import { reducer, initialState, weaponsFilter } from '../../store/hooks-reducers/weapon-filters';
 
 import Item from '../../reusable/Item';
 import Input from '../../reusable/Input';
@@ -42,6 +42,7 @@ const WeaponsPage = ({ items, router, ammoTypes: newAmmoTypes, categories }) => 
   const [selectedAmmoTypes, setSelectedAmmoTypes] = useState(reduceToObjectProps(newAmmoTypes));
   const [state, dispatch] = useReducer(reducer, initialArg, init);
 
+  const __filteredWeapons = useMemo(() => weaponsFilter(state), [state]);
 
   const weaponTypes = useMemo(() => items
     .reduce((weaponTypes, weapon) => [
