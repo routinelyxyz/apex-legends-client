@@ -20,11 +20,11 @@ const HomePage = ({ dailyRanking, recentlyUpdated }) => {
     const secondsLeft = endOfDay.diff(dayjs().utc(), 'seconds');
 
     const seconds = secondsLeft % 60;
-    const minutes  = ~~((secondsLeft % 3600) / 60);
-    const hours  = ~~(secondsLeft / 3600);
+    const minutes  = Math.floor((secondsLeft % 3600) / 60);
+    const hours  = Math.floor(secondsLeft / 3600);
 
     const formatted = [hours, minutes, seconds]
-      .map(v => v < 10 ? '0' + v : v)
+      .map(value => value.padStart(2, '0'))
       .join(' : ');
 
     setTimeLeft(formatted);
