@@ -1,4 +1,5 @@
 import { createSelector } from "reselect";
+import { filterUnique } from '../../util';
 
 export const initialState = {
   name: '',
@@ -20,8 +21,11 @@ export function weaponFiltersReducer(
   switch(action.type) {
     case 'LOAD_ITEMS': {
       const items = action.payload;
-      const ammoTypes = items.map(item => item.ammo);
-      const categories = items.map(item => item.type).sort();
+      const ammoTypes = items
+        .map(item => item.ammo)
+        .filter((ammoType, index, self) => self.indexOf(ammoType.name) === index);
+      const categories = items.map(item => item.type).filter(filterUnique).sort();
+
       return {
         ...initialState,
         selectedCategories: categories
