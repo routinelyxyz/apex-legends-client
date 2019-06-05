@@ -3,7 +3,7 @@ import { useState, useRef, useContext, useEffect, useCallback } from 'react';
 import { debounce, applyCss, scrollTo } from '../../util';
 import useClickOutside from 'use-onclickoutside';
 import { connect } from 'react-redux';
-import { mapStateDynamic, mapDispatchToProps } from '../../store/mappers';
+import { mapDispatchToProps } from '../../store/mappers';
 import Router from 'next/router';
 import { useDevice } from '../../hooks';
 import { MobileMenuContext, ModalContext } from '../../helpers/context';
@@ -61,7 +61,7 @@ const RenderPlayersResult = ({ isSearching, playersFound, phrase }) => {
   ));
 }
 
-const PlayerSearcher = ({ height = 250, pageMode, statsPage, testId, ...props }) => {
+const PlayerSearcher = ({ height = 250, pageMode, statsPage, testId }) => {
   const [phrase, setPhrase] = useState('');
   const [focused, setFocused] = useState(false);
   const [playersFound, setPlayersFound] = useState([]);
@@ -108,8 +108,8 @@ const PlayerSearcher = ({ height = 250, pageMode, statsPage, testId, ...props })
     timeout = debounceA(() => findPlayers(value));
   }
 
-  const handleStatsSearch = e => {
-    if (e.key === 'Enter' && phrase.length) {
+  const handleStatsSearch = (event) => {
+    if (event.key === 'Enter' && phrase.length) {
       setFocused(false);
       modal.setOpened(false);
       Router.push(
@@ -176,5 +176,9 @@ const PlayerSearcher = ({ height = 250, pageMode, statsPage, testId, ...props })
   )
 }
 
-const SearcherWithRedux = connect(mapStateDynamic(['stats']), mapDispatchToProps)(PlayerSearcher);
+const SearcherWithRedux = connect(
+  (state) => ({ stats: state.stats }),
+  mapDispatchToProps
+)(PlayerSearcher);
+
 export { SearcherWithRedux as PlayerSearcher };
