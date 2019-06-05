@@ -31,8 +31,8 @@ const WeaponsPage = ({ items, router }) => {
   const [sortProp, setSortProp] = useState(initialSortProp);
   const [sortAsc, setSortAsc] = useState(initialSortAsc);
 
-  const ammoTypes = useMemo(() => 
-    items.reduce((ammoTypes, item) => ({
+  const ammoTypes = useMemo(() => items
+    .reduce((ammoTypes, item) => ({
       ...ammoTypes,
       [item.ammo.name]: item.ammo
     }), {})
@@ -47,7 +47,7 @@ const WeaponsPage = ({ items, router }) => {
     ], [])
   , [items]);
 
-  const [selectedWeaponTypes, setWeaponTypes] = useState(() =>
+  const [selectedWeaponTypes, setSelectedWeaponTypes] = useState(() =>
     weaponTypes.reduce((selected, type) => ({
       ...selected,
       [type]: false
@@ -56,14 +56,14 @@ const WeaponsPage = ({ items, router }) => {
 
   const selectedWeaponTypeNames = useMemo(() => filterTruthyEntry(selectedWeaponTypes), [selectedWeaponTypes]);
   
-  const [selectedAmmoTypes, setAmmoTypes] = useState(() =>
+  const [selectedAmmoTypes, setSelectedAmmoTypes] = useState(() =>
     items.reduce((types, weapon) => ({
       ...types,
       [weapon.ammo.name]: false
     }), {})
   );
 
-  const selectedAmmoTypeNames = useMemo(filterTruthyEntry(selectedAmmoTypes), [selectedAmmoTypes]);
+  const selectedAmmoTypeNames = useMemo(() => filterTruthyEntry(selectedAmmoTypes), [selectedAmmoTypes]);
 
   const updateKey = phrase + selectedWeaponTypeNames.length + selectedAmmoTypeNames.length + sortProp + sortAsc;
   const appliedFilters = updateKey !== initialUpdateKey;
@@ -76,13 +76,13 @@ const WeaponsPage = ({ items, router }) => {
     setSortProp(initialSortProp);
     setSortAsc(initialSortAsc);
 
-    setWeaponTypes(selectedWeaponTypeNames
+    setSelectedWeaponTypes(selectedWeaponTypeNames
       .reduce((unselected, type) => ({
         ...unselected,
         [type]: false
       }), selectedWeaponTypes)
     );
-    setAmmoTypes(selectedAmmoTypeNames
+    setSelectedAmmoTypes(selectedAmmoTypeNames
       .reduce((unselected, name) => ({
         ...unselected,
         [name]: false
@@ -142,7 +142,7 @@ const WeaponsPage = ({ items, router }) => {
     
     const timeoutId = setTimeout(() => {
       if (name) setPhrase(name);
-      if (ammo) setAmmoTypes(
+      if (ammo) setSelectedAmmoTypes(
         ammo
           .split(',')
           .reduce((updatedTypes, type) => ({
@@ -150,7 +150,7 @@ const WeaponsPage = ({ items, router }) => {
             [type]: true
           }), selectedAmmoTypes)
       );
-      if (category) setWeaponTypes(
+      if (category) setSelectedWeaponTypes(
         category
           .split(',')
           .reduce((updatedCats, category) => ({
@@ -166,14 +166,14 @@ const WeaponsPage = ({ items, router }) => {
   }, []);
 
   const handleWeaponTypeChange = (weaponType) => (event) => {
-    setWeaponTypes({
+    setSelectedWeaponTypes({
       ...weaponTypes,
       [weaponType]: event.target.checked
     });
   }
 
   const handleAmmoTypeChange = (ammoType) => (event) => {
-    setAmmoTypes({
+    setSelectedAmmoTypes({
       ...selectedAmmoTypes,
       [ammoType]: event.target.checked
     });
@@ -201,7 +201,7 @@ const WeaponsPage = ({ items, router }) => {
                 title={type}
                 key={type}
                 checked={selectedWeaponTypes[type]}
-                onChange={handleWeaponTypeChange(type)}
+                onChange={(event) => handleWeaponTypeChange(type)(event)}
               /> 
             ))}
           </div>
