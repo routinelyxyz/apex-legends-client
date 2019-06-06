@@ -12,7 +12,10 @@ import {
 } from '../../util';
 import Head from 'next/head';
 import axios from 'axios';
-import { weaponsReducer, initWeaponsReducer, weaponsFilter } from '../../store/hooks-reducers/weapon-filters';
+import {
+  weaponsReducer, initWeaponsReducer,
+  weaponsFilter, initialState
+} from '../../store/hooks-reducers/weapon-filters';
 
 import Item from '../../reusable/Item';
 import Input from '../../reusable/Input';
@@ -24,33 +27,37 @@ import { MobileModal } from '../../components/MobileModal';
 import { BasicButton } from '../../reusable/BasicButton';
 
 const initialUpdateKey = '00nametrue';
-
 const sortProps = [
   ['name', 'Name'],
   ...weaponProps,
   ['ammoType', 'Ammo type']
 ];
 
-const initialSortProp = 'name';
-const initialSortAsc = true;
-
 const WeaponsPage = ({ items, router }) => {
   const [state, dispatch] = useReducer(weaponsReducer, items, initWeaponsReducer);
-  const { filteredWeapons } = useMemo(() => weaponsFilter(state), [state]);
+  const {
+    filteredWeapons,
+    selectedCategoryNames,
+    selectedAmmoTypeNames
+  } = useMemo(() => weaponsFilter(state), [state]);
   
-  const updateKey = phrase + selectedTypeNames.length + selectedAmmoNames.length + sortProp + sortAsc;
-  const appliedFilters = updateKey !== initialUpdateKey;
+  const updateKey = state.phrase +
+    state.sortAsc +
+    state.sortBy +
+    selectedCategoryNames.length +
+    selectedAmmoTypeNames.length;
+
   const areFiltersApplied = updateKey !== initialUpdateKey;
 
   useEffect(() => {
     if (router.pathname === '/items') {
       const query = {};
 
-      if (phrase.length) query.name = phrase;
-      if (selectedAmmoNames.length) query.ammo = selectedAmmoNames;
-      if (sortProp !== initialSortProp) query.sortBy = sortProp;
-      if (sortAsc !== initialSortAsc) query.sortDesc = true;
-      if (selectedTypeNames.length) query.category = selectedTypeNames;
+      if (state.phrase.length) query.name = state.phrase;
+      if (state.sortBy !== initialState.sortBy) query.sortBy = state.sortBy;
+      if (state.sortAsc !== initialState.sortAsc) query.sortDesc = state.sortAsc;
+      if (selectedCategoryNames.length) query.category = selectedCategoryNames;
+      if (selectedAmmoTypeNames.length) query.ammo = selectedAmmoTypeNames;
 
       const href = '/items' + qs.stringify(query, true);
       const as = href;
@@ -103,7 +110,7 @@ const WeaponsPage = ({ items, router }) => {
       <Head>
         <title>Weapons explorer | Apex-Legends.win</title>
       </Head>
-      <MobileModal title={'Show filters ' + (updateKey === initialUpdateKey ? '' : '(*)')}>
+      <MobileModal title={'Show filters ' + (areFiltersApplied ? '' : '(*)')}>
         <nav className={css.search_filters}>
           <label className={css.filters_searcher} data-testid="Items__input">
             <h3 className={css.h3}>Name</h3>
@@ -196,12 +203,7 @@ const WeaponsPage = ({ items, router }) => {
 
 WeaponsPage.getInitialProps = async () => {
   const { data: { data }} = await axios.get('/items/weapons');
-
-  const ammoTypes = data
-    .map(item => item.ammo.name)
-    .filter(filterUnique);
-
-  return { items: data, ammoTypes, categories };
+  return { items: data };
 }
 
 export default withRouter(WeaponsPage);
