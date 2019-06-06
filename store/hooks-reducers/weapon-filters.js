@@ -1,61 +1,20 @@
-import { filterUnique } from '../../util';
 
-export const initialState = {
+const initialState = {
   isLoading: true,
   phrase: '',
   sortBy: 'name',
   sortAsc: true,
   ammoTypes: [],
-  categories: [],
-  selectedCategories: {},
-  selectedAmmoTypes: {},
-  static: {
-    ammoTypes: [],
-    categories: [],
-    items: []
-  }
+  categories: []
 }
 
 export function weaponsReducer(state, action) {
   switch(action.type) {
-    case 'LOAD_ITEMS': {
-      const items = action.payload;
-      const ammoTypes = items
-        .map(item => item.ammo)
-        .filter((ammoType, index, self) => self.indexOf(ammoType.name) === index);
-      const categories = items
-        .map(item => item.type)
-        .filter(filterUnique)
-        .sort();
-
-      return {
-        ...initialState,
-        selectedCategories: categories
-          .reduce((selected, category) => ({
-            ...selected,
-            [category]: false
-          }), {}),
-        selectedAmmoTypes: ammoTypes
-          .reduce((selected, ammoType) => ({
-            ...selected,
-            [ammoType.name]: ammoType.name
-          }), {}),
-        static: {
-          ammoTypes,
-          categories,
-          items
-        }
-      }
-    }
     case 'UPDATE_PHRASE': return { ...state, phrase: action.payload }
     case 'TOGGLE_ORDER': return { ...state, sortAsc: !state.sortAsc }
     case 'UPDATE_SORT_BY': return { ...state, sortBy: action.payload }
     case 'TOGGLE_CATEGORY': return {
       ...state,
-      selectedCategories: {
-        ...state.selectedCategories,
-        [action.payload]: !state.selectedCategories[action.payload]
-      },
       categories: state.categories.map(category => {
         if (category.name === action.payload) {
           return { ...category, selected: !category.selected }
@@ -65,10 +24,6 @@ export function weaponsReducer(state, action) {
     }
     case 'TOGGLE_AMMO_TYPE': return {
       ...state,
-      selectedAmmoTypes: {
-        ...state.selectedAmmoTypes,
-        [action.payload]: !state.selectedAmmoTypes[action.payload]
-      },
       ammoTypes: state.ammoTypes.map(ammoType => {
         if (ammoType.name === action.payload) {
           return { ...ammoType, selected: !ammoType.selected };
@@ -95,23 +50,12 @@ export function weaponsReducer(state, action) {
     }
     case 'CLEAR_FILTERS': return {
       ...initialState,
-      selectedAmmoTypes: Object.fromEntries(
-        Object
-          .entries(state.selectedAmmoTypes)
-          .map(([prop]) => [prop, false])
-      ),
-      selectedCategories: Object.fromEntries(
-        Object
-          .entries(state.selectedCategories)
-          .map(([prop]) => [prop, false])
-      ),
       categories: state.categories.map(category => 
         ({ ...category, selected: false })
       ),
       ammoTypes: state.ammoTypes.map(ammoType =>
         ({ ...ammoType, selected: false })
-      ),
-      static: state.static
+      )
     }
     default: return state;
   }
@@ -151,9 +95,6 @@ export function initWeaponsReducer(items) {
 
 
 export const weaponsFilter = (state) => {
-  const selectedCategoryEntries = Object.entries(state.selectedCategories);
-  const selectedAmmoTypeEntries = Object.entries(state.selectedAmmoTypes);
-
   const selectedCategoryNames = state.categories.flatMap(category =>
     category.selected ? category.name : []
   );
@@ -198,7 +139,5 @@ export const weaponsFilter = (state) => {
     filteredWeapons,
     selectedCategoryNames,
     selectedAmmoTypeNames,
-    selectedCategoryEntries,
-    selectedAmmoTypeEntries
   }
 }

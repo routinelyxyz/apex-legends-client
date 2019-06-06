@@ -12,7 +12,7 @@ import {
 } from '../../util';
 import Head from 'next/head';
 import axios from 'axios';
-import { weaponsReducer, initialState, initWeaponsReducer, weaponsFilter } from '../../store/hooks-reducers/weapon-filters';
+import { weaponsReducer, initWeaponsReducer, weaponsFilter } from '../../store/hooks-reducers/weapon-filters';
 
 import Item from '../../reusable/Item';
 import Input from '../../reusable/Input';
@@ -36,11 +36,7 @@ const initialSortAsc = true;
 
 const WeaponsPage = ({ items, router }) => {
   const [state, dispatch] = useReducer(weaponsReducer, items, initWeaponsReducer);
-
-  const {
-    filteredWeapons
-  } = useMemo(() => weaponsFilter(state), [state]);
-
+  const { filteredWeapons } = useMemo(() => weaponsFilter(state), [state]);
   
   const updateKey = phrase + selectedTypeNames.length + selectedAmmoNames.length + sortProp + sortAsc;
   const appliedFilters = updateKey !== initialUpdateKey;
@@ -61,7 +57,7 @@ const WeaponsPage = ({ items, router }) => {
 
       router.replace(href, as, { shallow: true });
     }
-  }, [updateKey]);
+  }, [state]);
 
   useEffect(() => {
     const {
