@@ -117,44 +117,35 @@ export function weaponsReducer(state, action) {
   }
 }
 
-
 export function initWeaponsReducer(items) {
   const ammoTypes = items
-    .map(item => ({ ...item.ammo, selected: false }))
-    .filter((ammoType, index, self) => self.indexOf(ammoType.name) === index)
+    .flatMap((item, index, self) => {
+      const foundIndex = self.findIndex(anyItem => 
+        anyItem.ammo.name === item.ammo.name
+      );
+      if (foundIndex === index) {
+        return { ...item, selected: false };
+      }
+      return [];
+    });
 
   const categories = items
-    .map(item => item.type)
-    .filter(filterUnique)
-    .sort();
+    .flatMap((item, index, self) => {
+      const foundIndex = self.findIndex(anyItem =>
+        anyItem.type === item.type
+      );
+      if (foundIndex === index) {
+        return { ...item, selected: false };
+      }
+      return [];
+    })
+    .sort((a, b) => a.name > b.name ? 1 : -1);
 
   return {
     ...initialState,
-    selectedCategories: categories
-      .reduce((selected, category) => ({
-        ...selected,
-        [category]: false
-      }), {}),
-    selectedAmmoTypes: ammoTypes
-      .reduce((selected, ammoType) => ({
-        ...selected,
-        [ammoType.name]: false
-      }), {}),
-    selectedAmmoTypesV2: ammoTypes
-      .reduce((selected, ammoType) => ({
-        ...selected,
-        [ammoType.name]: {
-          ...ammoType,
-          selected: false
-        }
-      }), {}),
     ammoTypes,
     categories,
-    static: {
-      ammoTypes,
-      categories,
-      items
-    }
+    items
   }
 }
 
