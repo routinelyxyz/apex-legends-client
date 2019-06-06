@@ -12,7 +12,7 @@ import {
 } from '../../util';
 import Head from 'next/head';
 import axios from 'axios';
-import { reducer, initialState, weaponsFilter } from '../../store/hooks-reducers/weapon-filters';
+import { weaponsReducer, initialState, initWeaponsReducer, weaponsFilter } from '../../store/hooks-reducers/weapon-filters';
 
 import Item from '../../reusable/Item';
 import Input from '../../reusable/Input';
@@ -36,107 +36,18 @@ const initialSortProp = 'name';
 const initialSortAsc = true;
 
 const WeaponsPage = ({ items, router, ammoTypes: newAmmoTypes, categories }) => {
-  const [phrase, setPhrase] = useState('');
-  const [sortProp, setSortProp] = useState(initialSortProp);
-  const [sortAsc, setSortAsc] = useState(initialSortAsc);
-  const [selectedAmmoTypes, setSelectedAmmoTypes] = useState(reduceToObjectProps(newAmmoTypes));
-  const [state, dispatch] = useReducer(reducer, initialArg, init);
+  const [state, dispatch] = useReducer(weaponsReducer, initialState, initWeaponsReducer(items));
+  // dispatch({ type: 'LOAD_ITEMS', payload: items });
 
-  const __filteredWeapons = useMemo(() => weaponsFilter(state), [state]);
-
-  const weaponTypes = useMemo(() => items
-    .reduce((weaponTypes, weapon) => [
-      ...weaponTypes,
-      ...weaponTypes.includes(weapon.type)
-        ? []
-        : [weapon.type]
-    ], [])
-  , [items]);
-
-  const [selectedWeaponTypes, setWeaponTypes] = useState(() =>
-    weaponTypes.reduce((selected, type) => ({
-      ...selected,
-      [type]: false
-    }), {})
-  );
-
-  const selectedTypeNames = useMemo(() => 
-    Object.entries(selectedWeaponTypes)
-      .filter(([prop, val]) => val)
-      .map(([prop]) => prop)
-  , [selectedWeaponTypes]);
-
-  
-  const [selectedAmmoTypes, setAmmoTypes] = useState(() =>
-    items.reduce((types, weapon) => ({
-      ...types,
-      [weapon.ammo.name]: false
-    }), {})
-  );
-
-  const selectedAmmoNames = useMemo(() => 
-    Object
-      .entries(selectedAmmoTypes)
-      .filter(([prop, val]) => val)
-      .map(([prop]) => prop)
-  , [selectedAmmoTypes]);
-
+  const {
+    filteredWeapons,
+    selectedAmmoTypeNames,
+    selectedCategoryNames
+  } = useMemo(() => weaponsFilter(state), [state]);
 
   const updateKey = phrase + selectedTypeNames.length + selectedAmmoNames.length + sortProp + sortAsc;
   const appliedFilters = updateKey !== initialUpdateKey;
-
-  const handleClearFilters = () => {
-    if (!appliedFilters) {
-      return;
-    }
-    setPhrase('');
-    setSortProp(initialSortProp);
-    setSortAsc(initialSortAsc);
-
-    setWeaponTypes(selectedTypeNames
-      .reduce((unselected, type) => ({
-        ...unselected,
-        [type]: false
-      }), selectedWeaponTypes)
-    );
-    setAmmoTypes(selectedAmmoNames
-      .reduce((unselected, name) => ({
-        ...unselected,
-        [name]: false
-      }), ammoTypes)
-    );
-  }
-
-  const ammoTypeNames = useMemo(() => 
-    Object.keys(selectedAmmoTypes)
-  , []);
-
-  const filteredWeapons = useMemo(() => items
-    .filter(item =>
-      item.name.toLowerCase().includes(phrase.toLowerCase())
-    )
-    .filter(item => selectedTypeNames.length
-      ? selectedWeaponTypes[item.type]
-      : true
-    )
-    .filter(item => selectedAmmoNames.length
-      ? selectedAmmoTypes[item.ammo.name]  
-      : true
-    )
-    .sort((a, b) => {
-      const sortDir = sortAsc ? 1 : -1;
-      if (sortProp === 'name') {
-        return (a[sortProp] > b[sortProp] ? 1 : -1) * sortDir;
-      }
-      if (sortProp === 'ammoType') {
-        const indexA = ammoTypeNames.indexOf(a.ammo.name);
-        const indexB = ammoTypeNames.indexOf(b.ammo.name);
-
-        return (indexA > indexB ? 1 : -1) * sortDir;
-      }
-      return (a[sortProp] - b[sortProp]) * sortDir;
-    })
-  , [updateKey]);
+  const areFiltersApplied = updateKey !== initialUpdateKey;
 
   useEffect(() => {
     if (router.pathname === '/items') {

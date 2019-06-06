@@ -1,7 +1,39 @@
 import { filterUnique } from '../../util';
 
-const initialState = {
-  name: '',
+export function initWeaponsReducer(items) {
+  const items = action.payload;
+
+  const ammoTypes = items
+    .map(item => item.ammo)
+    .filter((ammoType, index, self) => self.indexOf(ammoType.name) === index);
+
+  const categories = items
+    .map(item => item.type)
+    .filter(filterUnique)
+    .sort();
+
+  return {
+    ...initialState,
+    selectedCategories: categories
+      .reduce((selected, category) => ({
+        ...selected,
+        [category]: false
+      }), {}),
+    selectedAmmoTypes: ammoTypes
+      .reduce((selected, ammoType) => ({
+        ...selected,
+        [ammoType.name]: false
+      }), {}),
+    static: {
+      ammoTypes,
+      categories,
+      items
+    }
+  }
+}
+
+export const initialState = {
+  phrase: '',
   sortBy: 'name',
   sortAsc: true,
   selectedCategories: {},
@@ -13,7 +45,7 @@ const initialState = {
   }
 }
 
-export function weaponFiltersReducer(
+export function weaponsReducer(
   state = initialState,
   action
 ) {
@@ -47,7 +79,7 @@ export function weaponFiltersReducer(
         }
       }
     }
-    case 'UPDATE_NAME': return { ...state, name: action.payload }
+    case 'UPDATE_PHRASE': return { ...state, phrase: action.payload }
     case 'TOGGLE_ORDER': return { ...state, sortAsc: !state.sortAsc }
     case 'UPDATE_SORT_BY': return { ...state, sortBy: action.payload }
     case 'TOGGLE_CATEGORY': return {
@@ -89,7 +121,7 @@ export const weaponsFilter = (state) => {
 
   const filteredWeapons = state.static.items
     .filter(item =>
-      item.name.toLowerCase().includes(state.name.toLowerCase())
+      item.name.toLowerCase().includes(state.phrase.toLowerCase())
     )
     .filter(item => selectedCategoryNames.length
       ? state.selectedCategories[item.type]
