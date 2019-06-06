@@ -39,11 +39,7 @@ const WeaponsPage = ({ items, router }) => {
   // dispatch({ type: 'LOAD_ITEMS', payload: items });
 
   const {
-    filteredWeapons,
-    selectedAmmoTypeNames,
-    selectedCategoryNames,
-    selectedAmmoTypeEntries,
-    selectedCategoryEntries
+    filteredWeapons
   } = useMemo(() => weaponsFilter(state), [state]);
 
   
@@ -96,10 +92,10 @@ const WeaponsPage = ({ items, router }) => {
     return () => clearTimeout(timeoutId);
   }, []);
 
-  const handleCategoryToggle = (category) => {
+  const handleCategoryToggle = (categoryName) => {
     dispatch({
       type: 'TOGGLE_CATEGORY',
-      payload: category
+      payload: categoryName
     });
   }
 
@@ -130,25 +126,25 @@ const WeaponsPage = ({ items, router }) => {
           </label>
           <div className={css.filters_section} data-testid="Items__category">
             <h3 className={css.h3}>Category</h3>
-            {selectedCategoryEntries.map(([category, isSelected]) => (
+            {state.categories.map(category => (
               <Checkmark
-                title={category}
-                key={category}
-                checked={isSelected}
-                onChange={() => handleCategoryToggle(category)}
+                title={category.name}
+                key={category.name}
+                checked={category.selected}
+                onChange={() => handleCategoryToggle(category.name)}
               />
             ))}
           </div>
           <div className={css.filters_section} data-testid="Items__ammo">
             <h3 className={css.h3}>Ammo type</h3>
-            {state.static.ammoTypes.map(ammoType => (
+            {state.ammoTypes.map(ammoType => (
               <Checkmark
                 content={(
                   <div className={`${css.ammo_checkmark}`}>
                     <img
                       {...applyCss(
                         css.ammo_icon,
-                        state.selectedAmmoTypes[ammoType.name] && css.ammo_icon__checked
+                        ammoType.selected && css.ammo_icon__checked
                       )}
                       src={STATIC + ammoType.img}
                     />
@@ -156,7 +152,7 @@ const WeaponsPage = ({ items, router }) => {
                   </div>
                 )}
                 key={ammoType.name}
-                checked={state.selectedAmmoTypes[ammoType.name]}
+                checked={ammoType.selected}
                 onChange={() => handleAmmoTypeToggle(ammoType.name)}
               />
             ))}
