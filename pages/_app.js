@@ -35,8 +35,10 @@ class MyApp extends App {
 
   componentDidMount() {
     LoadFonts();
-    Router.events.on('routeChangeStart', url => {
-      NProgress.start();
+    Router.events.on('routeChangeStart', (url) => {
+      if (!url.includes('/items?')) {
+        NProgress.start();
+      }
     });
     Router.events.on('routeChangeComplete', url => {
       NProgress.done();
