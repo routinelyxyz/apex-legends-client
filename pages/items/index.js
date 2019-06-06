@@ -35,8 +35,7 @@ const initialSortProp = 'name';
 const initialSortAsc = true;
 
 const WeaponsPage = ({ items, router }) => {
-  const [state, dispatch] = useReducer(weaponsReducer, initialState, initWeaponsReducer(items));
-  // dispatch({ type: 'LOAD_ITEMS', payload: items });
+  const [state, dispatch] = useReducer(weaponsReducer, items, initWeaponsReducer);
 
   const {
     filteredWeapons

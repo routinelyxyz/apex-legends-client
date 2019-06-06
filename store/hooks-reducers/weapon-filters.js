@@ -1,47 +1,5 @@
 import { filterUnique } from '../../util';
 
-export function initWeaponsReducer(items) {
-  const items = action.payload;
-
-  const ammoTypes = items
-    .map(item => ({ ...item.ammo, selected: false }))
-    .filter((ammoType, index, self) => self.indexOf(ammoType.name) === index)
-
-  const categories = items
-    .map(item => item.type)
-    .filter(filterUnique)
-    .sort();
-
-  return {
-    ...initialState,
-    selectedCategories: categories
-      .reduce((selected, category) => ({
-        ...selected,
-        [category]: false
-      }), {}),
-    selectedAmmoTypes: ammoTypes
-      .reduce((selected, ammoType) => ({
-        ...selected,
-        [ammoType.name]: false
-      }), {}),
-    selectedAmmoTypesV2: ammoTypes
-      .reduce((selected, ammoType) => ({
-        ...selected,
-        [ammoType.name]: {
-          ...ammoType,
-          selected: false
-        }
-      }), {}),
-    ammoTypes,
-    categories,
-    static: {
-      ammoTypes,
-      categories,
-      items
-    }
-  }
-}
-
 export const initialState = {
   isLoading: true,
   phrase: '',
@@ -58,10 +16,7 @@ export const initialState = {
   }
 }
 
-export function weaponsReducer(
-  state = initialState,
-  action
-) {
+export function weaponsReducer(state, action) {
   switch(action.type) {
     case 'LOAD_ITEMS': {
       const items = action.payload;
@@ -159,6 +114,47 @@ export function weaponsReducer(
       static: state.static
     }
     default: return state;
+  }
+}
+
+
+export function initWeaponsReducer(items) {
+  const ammoTypes = items
+    .map(item => ({ ...item.ammo, selected: false }))
+    .filter((ammoType, index, self) => self.indexOf(ammoType.name) === index)
+
+  const categories = items
+    .map(item => item.type)
+    .filter(filterUnique)
+    .sort();
+
+  return {
+    ...initialState,
+    selectedCategories: categories
+      .reduce((selected, category) => ({
+        ...selected,
+        [category]: false
+      }), {}),
+    selectedAmmoTypes: ammoTypes
+      .reduce((selected, ammoType) => ({
+        ...selected,
+        [ammoType.name]: false
+      }), {}),
+    selectedAmmoTypesV2: ammoTypes
+      .reduce((selected, ammoType) => ({
+        ...selected,
+        [ammoType.name]: {
+          ...ammoType,
+          selected: false
+        }
+      }), {}),
+    ammoTypes,
+    categories,
+    static: {
+      ammoTypes,
+      categories,
+      items
+    }
   }
 }
 
