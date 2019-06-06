@@ -6,7 +6,6 @@ export function initWeaponsReducer(items) {
   const ammoTypes = items
     .map(item => ({ ...item.ammo, selected: false }))
     .filter((ammoType, index, self) => self.indexOf(ammoType.name) === index)
-    // .sort((a, b) => a.name > b.name ? 1 : -1);
 
   const categories = items
     .map(item => item.type)
@@ -44,19 +43,14 @@ export function initWeaponsReducer(items) {
 }
 
 export const initialState = {
+  isLoading: true,
   phrase: '',
   sortBy: 'name',
   sortAsc: true,
   ammoTypes: [],
+  categories: [],
   selectedCategories: {},
   selectedAmmoTypes: {},
-  selectedAmmoTypesV2: [
-    {
-      name: 'assault rifle',
-      img: 'api.apex-legends.win/23423',
-      selected: false
-    }
-  ],
   static: {
     ammoTypes: [],
     categories: [],
@@ -127,6 +121,23 @@ export function weaponsReducer(
         return ammoType;
       })
     }
+    case 'LOAD_FILTERS': return {
+      ...state,
+      ...action.payload,
+      isLoading: false,
+      ammoTypes: state.ammoTypes.map(ammoType => {
+        if (action.payload.ammoTypeNames.includes(ammoType.name)) {
+          return { ...ammoType, selected: true }
+        }
+        return ammoType;
+      }),
+      categories: state.categories.map(category => {
+        if (action.payload.categoryNames.includes(category.name)) {
+          return { ...category, selected: true }
+        }
+        return category;
+      })
+    }
     case 'CLEAR_FILTERS': return {
       ...initialState,
       selectedAmmoTypes: Object.fromEntries(
@@ -139,10 +150,12 @@ export function weaponsReducer(
           .entries(state.selectedCategories)
           .map(([prop]) => [prop, false])
       ),
-      categories: state.categories
-        .map(category => ({ ...category, selected: false })),
-      ammoTypes: state.ammoTypes
-        .map(ammoType => ({ ...ammoType, selected: false })),
+      categories: state.categories.map(category => 
+        ({ ...category, selected: false })
+      ),
+      ammoTypes: state.ammoTypes.map(ammoType =>
+        ({ ...ammoType, selected: false })
+      ),
       static: state.static
     }
     default: return state;

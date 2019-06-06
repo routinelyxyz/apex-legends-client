@@ -65,28 +65,25 @@ const WeaponsPage = ({ items, router }) => {
   }, [updateKey]);
 
   useEffect(() => {
-    const { name, ammo, sortBy, sortDesc, category } = router.query;
-    
+    const {
+      name: phrase = '',
+      sortBy = initialState.sortBy,
+      sortDesc: sortAsc = initialState.sortAsc,
+      ammo = '',
+      category = ''
+    } = router.query;
+
     const timeoutId = setTimeout(() => {
-      if (name) setPhrase(name);
-      if (ammo) setSelectedAmmoTypes(
-        ammo
-          .split(',')
-          .reduce((updatedTypes, type) => ({
-            ...updatedTypes,
-            [type]: true
-          }), selectedAmmoTypes)
-      );
-      if (category) setWeaponTypes(
-        category
-          .split(',')
-          .reduce((updatedCats, category) => ({
-            ...updatedCats,
-            [category]: true
-          }), selectedWeaponTypes)
-      )
-      if (sortBy != null && sortBy !== initialSort) setSortProp(sortBy);
-      if (sortDesc != null && sortDesc !== initialSortAsc) setSortAsc(false);
+      dispatch({
+        type: 'LOAD_FILTERS',
+        payload: {
+          phrase,
+          categoryNames: category.split(','),
+          ammoTypeNames: ammo.split(','),
+          sortAsc,
+          sortBy
+        }
+      });
     }, 150);
 
     return () => clearTimeout(timeoutId);
