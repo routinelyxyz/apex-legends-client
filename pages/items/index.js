@@ -15,7 +15,7 @@ import axios from 'axios';
 import {
   weaponsReducer, initWeaponsReducer,
   weaponsFilter, initialState
-} from '../../store/hooks-reducers/weapon-filters';
+} from '../../store/hooks-reducers/weapons';
 
 import Item from '../../reusable/Item';
 import Input from '../../reusable/Input';

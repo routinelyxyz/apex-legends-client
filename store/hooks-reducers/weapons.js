@@ -5,7 +5,8 @@ export const initialState = {
   sortBy: 'name',
   sortAsc: true,
   ammoTypes: [],
-  categories: []
+  categories: [],
+  items: []
 }
 
 export function weaponsReducer(state, action) {
@@ -55,7 +56,8 @@ export function weaponsReducer(state, action) {
       ),
       ammoTypes: state.ammoTypes.map(ammoType =>
         ({ ...ammoType, selected: false })
-      )
+      ),
+      items: state.items
     }
     default: return state;
   }
