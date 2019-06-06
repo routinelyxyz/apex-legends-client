@@ -70,7 +70,7 @@ export function initWeaponsReducer(items) {
         anyItem.ammo.name === item.ammo.name
       );
       if (foundIndex === index) {
-        return { ...item, selected: false };
+        return { ...item.ammo, selected: false };
       }
       return [];
     });
@@ -81,7 +81,7 @@ export function initWeaponsReducer(items) {
         anyItem.type === item.type
       );
       if (foundIndex === index) {
-        return { ...item, selected: false };
+        return { name: item.type, selected: false };
       }
       return [];
     })
@@ -104,7 +104,7 @@ export const weaponsFilter = (state) => {
     ammoType.selected ? ammoType.name : []    
   );
 
-  const filteredWeapons = state.static.items
+  const filteredWeapons = state.items
     .filter(item =>
       item.name.toLowerCase().includes(state.phrase.toLowerCase())
     )

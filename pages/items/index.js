@@ -139,7 +139,7 @@ const WeaponsPage = ({ items, router }) => {
             {state.ammoTypes.map(ammoType => (
               <Checkmark
                 content={(
-                  <div className={`${css.ammo_checkmark}`}>
+                  <div className={css.ammo_checkmark}>
                     <img
                       {...applyCss(
                         css.ammo_icon,
