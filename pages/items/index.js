@@ -3,7 +3,7 @@ import css from './style.scss';
 import fetch from 'isomorphic-unfetch';
 import Link from 'next/link';
 import { useTransition } from 'react-spring';
-import { weaponProps, STATIC } from '../../helpers';
+import { weaponProps, STATIC, applyCss } from '../../helpers';
 import { withRouter } from 'next/router';
 import qs from 'querystringify';
 import {
@@ -30,12 +30,11 @@ const sortProps = [
   ...weaponProps,
   ['ammoType', 'Ammo type']
 ];
-const initialSort = 'name';
 
 const initialSortProp = 'name';
 const initialSortAsc = true;
 
-const WeaponsPage = ({ items, router, ammoTypes: newAmmoTypes, categories }) => {
+const WeaponsPage = ({ items, router }) => {
   const [state, dispatch] = useReducer(weaponsReducer, initialState, initWeaponsReducer(items));
   // dispatch({ type: 'LOAD_ITEMS', payload: items });
 
@@ -94,6 +93,20 @@ const WeaponsPage = ({ items, router, ammoTypes: newAmmoTypes, categories }) => 
     return () => clearTimeout(timeoutId);
   }, []);
 
+  const handleCategoryToggle = (category) => {
+    dispatch({
+      type: 'TOGGLE_CATEGORY',
+      payload: category
+    });
+  }
+
+  const handleAmmoTypeToggle = (ammoTypeName) => {
+    dispatch({
+      type: 'TOGGLE_AMMO_TYPE',
+      payload: ammoTypeName
+    });
+  }
+
   return (
     <article className={css.container}>
       <Head>
@@ -105,43 +118,43 @@ const WeaponsPage = ({ items, router, ammoTypes: newAmmoTypes, categories }) => 
             <h3 className={css.h3}>Name</h3>
             <Input
               placeholder="Weapon name..."
-              value={phrase}
-              onChange={e => setPhrase(e.target.value)}
+              value={state.phrase}
+              onChange={e => dispatch({
+                type: 'UPDATE_PHRASE',
+                payload: e.target.value
+              })}
             />
           </label>
           <div className={css.filters_section} data-testid="Items__category">
             <h3 className={css.h3}>Category</h3>
-            {Object.keys(selectedWeaponTypes).map(type => (
+            {state.static.categories.map(category => (
               <Checkmark
-                title={type}
-                key={type}
-                checked={selectedWeaponTypes[type]}
-                onChange={e => setWeaponTypes({
-                  ...selectedWeaponTypes,
-                  [type]: e.target.checked
-                })}
-              /> 
+                title={category}
+                key={category}
+                checked={state.selectedCategories[category]}
+                onChange={() => handleCategoryToggle(category)}
+              />
             ))}
           </div>
           <div className={css.filters_section} data-testid="Items__ammo">
             <h3 className={css.h3}>Ammo type</h3>
-            {Object.keys(selectedAmmoTypes).map(type => (
+            {state.static.ammoTypes.map(ammoType => (
               <Checkmark
-                content={
+                content={(
                   <div className={`${css.ammo_checkmark}`}>
                     <img
-                      className={`${css.ammo_icon} ${selectedAmmoTypes[type] && css.ammo_icon__checked}`}
-                      src={STATIC + ammoTypes[type].img}
+                      {...applyCss(
+                        css.ammo_icon,
+                        state.selectedAmmoTypes[ammoType.name] && css.ammo_icon__checked
+                      )}
+                      src={STATIC + ammoType.img}
                     />
-                    <span>{type}</span>
+                    <span>{ammoType.name}</span>
                   </div>
-                }
-                key={type}
-                checked={selectedAmmoTypes[type]}
-                onChange={e => setAmmoTypes({
-                  ...selectedAmmoTypes,
-                  [type]: e.target.checked
-                })}
+                )}
+                key={ammoType.name}
+                checked={state.selectedAmmoTypes[ammoType.name]}
+                onChange={() => handleAmmoTypeToggle(ammoType.name)}
               />
             ))}
           </div>
@@ -154,11 +167,12 @@ const WeaponsPage = ({ items, router, ammoTypes: newAmmoTypes, categories }) => 
               Sort By
             </h3>
             <Select
-              value={sortProp}
-              active={sortProp !== initialSortProp}
-              onChange={e => setSortProp(
-                e.target.value
-              )}
+              value={state.sortBy}
+              active={state.sortBy !== initialState.sortBy}
+              onChange={e => dispatch({
+                type: 'UPDATE_SORT_BY',
+                payload: e.target.value
+              })}
             >
               {sortProps.map(([prop, title]) => (
                 <option value={prop} key={prop}>
@@ -172,10 +186,11 @@ const WeaponsPage = ({ items, router, ammoTypes: newAmmoTypes, categories }) => 
               Direction
             </h3>
             <SortDirection
-              checked={sortAsc}
-              onChange={e => setSortAsc(
-                e.target.checked
-              )}
+              checked={state.sortAsc}
+              onChange={e => dispatch({
+                type: 'TOGGLE_ORDER',
+                payload: e.target.checked
+              })}
             />
           </div>
         </div>
