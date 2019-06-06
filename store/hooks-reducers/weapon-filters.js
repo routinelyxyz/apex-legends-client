@@ -5,7 +5,8 @@ export function initWeaponsReducer(items) {
 
   const ammoTypes = items
     .map(item => item.ammo)
-    .filter((ammoType, index, self) => self.indexOf(ammoType.name) === index);
+    .filter((ammoType, index, self) => self.indexOf(ammoType.name) === index)
+    .sort((a, b) => a.name > b.name ? 1 : -1);
 
   const categories = items
     .map(item => item.type)
@@ -118,37 +119,47 @@ export function weaponsReducer(
 export const weaponsFilter = (state) => {
   const selectedCategoryNames = Object.keys(state.categories);
   const selectedAmmoTypeNames = Object.keys(state.ammoTypes);
+  const selectedCategoryEntries = Object.entries(state.selectedCategories);
+  const selectedAmmoTypeEntries = Object.entries(state.selectedAmmoTypes);
 
   const filteredWeapons = state.static.items
     .filter(item =>
       item.name.toLowerCase().includes(state.phrase.toLowerCase())
     )
-    .filter(item => selectedCategoryNames.length
+    .filter(item => selectedCategoryEntries.length
       ? state.selectedCategories[item.type]
       : true
     )
-    .filter(item => selectedAmmoTypeNames.length
+    .filter(item => selectedAmmoTypeEntries.length
       ? state.selectedAmmoTypes[item.ammo.name]  
       : true
     )
     .sort((a, b) => {
       const sortDir = state.sortAsc ? 1 : -1;
-      
-      if (state.sortBy === 'name') {
-        return (a[sortProp] > b[sortProp] ? 1 : -1) * sortDir;
-      }
-      if (state.sortBy === 'ammoType') {
-        const indexA = ammoTypeNames.indexOf(a.ammo.name);
-        const indexB = ammoTypeNames.indexOf(b.ammo.name);
+      const { sortBy, static: { ammoTypes }} = state;
 
-        return (indexA > indexB ? 1 : -1) * sortDir;
+      function calcDiff() {
+        if (sortBy === 'name') {
+          return a[sortBy] > b[sortBy] ? 1 : -1;
+        }
+        if (sortBy === 'ammoType') {
+          const indexA = ammoTypes.findIndex(ammoType => ammoType.name === a.ammo.name);
+          const indexB = ammoTypes.findIndex(ammoType => ammoType.name === b.ammo.name);
+  
+          return indexA > indexB ? 1 : -1;
+        }
+
+        return a[sortBy] - b[sortBy];
       }
-      return (a[sortProp] - b[sortProp]) * sortDir;
+      
+      return calcDiff() * sortDir;
     });
 
   return {
     filteredWeapons,
     selectedCategoryNames,
-    selectedAmmoTypeNames
+    selectedAmmoTypeNames,
+    selectedCategoryEntries,
+    selectedAmmoTypeEntries
   }
 }

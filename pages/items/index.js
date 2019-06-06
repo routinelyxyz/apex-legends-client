@@ -41,9 +41,12 @@ const WeaponsPage = ({ items, router }) => {
   const {
     filteredWeapons,
     selectedAmmoTypeNames,
-    selectedCategoryNames
+    selectedCategoryNames,
+    selectedAmmoTypeEntries,
+    selectedCategoryEntries
   } = useMemo(() => weaponsFilter(state), [state]);
 
+  
   const updateKey = phrase + selectedTypeNames.length + selectedAmmoNames.length + sortProp + sortAsc;
   const appliedFilters = updateKey !== initialUpdateKey;
   const areFiltersApplied = updateKey !== initialUpdateKey;
@@ -127,11 +130,11 @@ const WeaponsPage = ({ items, router }) => {
           </label>
           <div className={css.filters_section} data-testid="Items__category">
             <h3 className={css.h3}>Category</h3>
-            {state.static.categories.map(category => (
+            {selectedCategoryEntries.map(([category, isSelected]) => (
               <Checkmark
                 title={category}
                 key={category}
-                checked={state.selectedCategories[category]}
+                checked={isSelected}
                 onChange={() => handleCategoryToggle(category)}
               />
             ))}
