@@ -6,7 +6,7 @@ import { useState, useEffect, useMemo } from 'react';
 import dayjs from 'dayjs';
 import { getTs, getUniqueById, applyCss } from '../../util';
 import { connect } from 'react-redux';
-import { mapDispatchToProps, mapStateDynamic } from '../../store/mappers';
+import { mapDispatchToProps } from '../../store/mappers';
 import Head from 'next/head';
 import axios from 'axios';
 import { withRouter } from 'next/router';
@@ -21,18 +21,18 @@ import { PlayerSearcher } from '../../components/PlayerSearcher';
 import { LegendStatsValue } from '../../components/LegendStatsValue';
 import { InfoCard } from '../../components/InfoCard';
 
-const getURL = player => {
+function getStatsUrl(player) {
   const { platform, name, id = '' } = player;
   return `/stats/v2/${platform}/${encodeURIComponent(name)}?id=${id}`;
 }
 
 async function fetchStats(player) {
-  const response = await axios.get(getURL(player));
+  const response = await axios.get(getStatsUrl(player));
   return response.data.data;
 }
 
 async function updateStats(player) {
-  const response = await axios.post(getURL(player));
+  const response = await axios.post(getStatsUrl(player));
   return response.data.latestMatch;
 }
 
@@ -127,16 +127,17 @@ const StatsPage = ({ name, url, platform, router, skipFirstFetch = false, ...pro
   });
 
   const sortedLegends = useMemo(() =>
-    stats.legends.sort((a, b) => a.kills.value > b.kills.value ? -1 : 1)
+    [...stats.legends].sort((a, b) =>
+      a.kills.value > b.kills.value ? -1 : 1
+    )
   , [stats]);
 
   const lifetimeStats = useMemo(() =>
     statsProps.legend
-      .map(prop => ({
-        prop,
-        ...stats.lifetime[prop]
-      }))
-      .filter(propObj => propObj.value != null)
+      .flatMap(prop => {
+        const propData = stats.lifetime[prop];
+        return propData.value != null ? { prop, ...propData } : [];
+      })
   , [stats]);
 
   return (
@@ -250,7 +251,7 @@ const StatsPage = ({ name, url, platform, router, skipFirstFetch = false, ...pro
 }
 
 const RenderError = ({ status, platform, name }) => {
-  if (!!!name) return null;
+  if (name == null || !name.length) return null;
   return (
     <div className={css.error__container}>
       <p className={css.error__title}>
@@ -263,7 +264,7 @@ const RenderError = ({ status, platform, name }) => {
               </strong> doesn't exist on platform {platform}
             </>
           )
-          : `Server error. Please try again.` 
+          : 'Server error. Please try again.' 
         }
       </p>
     </div>
@@ -320,6 +321,6 @@ StatsPageContainer.getInitialProps = async ({ query }) => {
 }
 
 export default connect(
-  mapStateDynamic(['stats']),
+  ({ stats }) => ({ stats }),
   mapDispatchToProps
 )(withRouter(StatsPageContainer));
