@@ -1,7 +1,5 @@
 import Document, { Head, Main, NextScript } from 'next/document';
-// import Manifest from 'next-manifest/manifest';
 import { GA_ID } from '../helpers/consts';
-// import css from '../assets/css/_document.scss';
 
 const title = 'Apex Legends Stats & Items Explorer & Leaderboards & Legends';
 const description = 'Apex Legends stats, leaderboards, interactive and detailed items explorer, legend details. Quick updates with live and daily match tracking.';
@@ -23,14 +21,13 @@ class MyDocument extends Document {
     
       gtag('config', '${GA_ID}');
     `
-  })
+  });
 
   render() {
     const { isProduction } = this.props;
     return (
       <html lang="en">
         <Head>
-          {/* <Manifest/> */}
           <meta charSet="UTF-8" key="charSet"/>
           <meta name="viewport" content="width=device-width, initial-scale=1" key="viewport"/>
           <meta name="description" content={description} key="description"/>

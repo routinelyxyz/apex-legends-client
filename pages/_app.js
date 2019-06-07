@@ -4,33 +4,29 @@ import LoadFonts from '../middleware/font';
 import '../assets/css/global.scss';
 import { withReduxStore } from '../middleware/with-redux-store';
 import { Provider } from 'react-redux';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import "../assets/css/global.scss";
 import dayjs from 'dayjs';
-dayjs.extend(relativeTime);
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { loadSavedPlayersAsync } from '../store/actions-async/stats';
 import axios from 'axios';
-import { HOST_URL } from '../helpers';
-import { GA_ID } from '../helpers/consts';
+import { GA_ID, HOST_URL } from '../helpers/consts';
 import Router from 'next/router';
 import NProgress from 'nprogress';
 import { MobileMenuProvider, ModalProvider } from '../helpers/context';
+import Layout from '../layouts';
 
+dayjs.extend(relativeTime);
 axios.defaults.baseURL = HOST_URL;
 axios.defaults.timeout = 9000;
-
-import Layout from '../layouts';
 
 class MyApp extends App {
 
   static async getInitialProps({ Component, ctx }) {
-    let pageProps = {}
-
     if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
+      const pageProps = await Component.getInitialProps(ctx);
+      return { pageProps }
     }
 
-    return { pageProps }
+    return { pageProps: {} }
   }
 
   componentDidMount() {
@@ -51,8 +47,10 @@ class MyApp extends App {
       }
     });
     Router.events.on('routeChangeError', () => NProgress.done());
-    this.props.store.dispatch(
-      loadSavedPlayersAsync()
+    setTimeout(() =>
+      this.props.store.dispatch(
+        loadSavedPlayersAsync()
+      )
     );
   }
 

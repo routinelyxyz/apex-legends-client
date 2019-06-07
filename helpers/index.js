@@ -1,3 +1,5 @@
+import * as consts from './consts';
+export * from './consts';
 
 export const platforms = [
   { name: 'All', value: 'all' },
@@ -60,18 +62,8 @@ export const applyCss = (...inputs) => ({
     .join(' ')
 });
 
-const isProduction = process.env.NODE_ENV === 'production';
-
-export const HOST_URL = isProduction
-  ? 'https://api.apex-legends.win'
-  : 'http://localhost:4000';
-
-export const STATIC = isProduction
-  ? 'https://static.apex-legends.win'
-  : 'http://static.localhost';
-
-export const getStatic = url => STATIC + url;
-export const getUrl = url => HOST_URL + url;
+export const getStatic = url => consts.STATIC + url;
+export const getUrl = url => consts.HOST_URL + url;
 export const getAvatar = (player, size = 115) => getStatic(
   `/avatars/${player.avatar ? player.id : 'default'}-${size}.jpg`
 );
