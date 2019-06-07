@@ -4,35 +4,39 @@ import { withRouter } from 'next/router';
 import Link from 'next/link';
 import { applyCss } from '../../helpers';
 
-export const PaginationMenu = ({ page, pages, href = p => '?page=' + p }) => {
+export const PaginationMenu = ({
+  page: activePage,
+  pages: pagesCount,
+  href = p => '?activePage=' + p
+}) => {
 
   const buttons = useMemo(() => {
 
-    if (pages <= 5) {
+    if (pagesCount <= 5) {
       return Array
-        .from({ length: pages })
+        .from({ length: pagesCount })
         .map((_, index) => index + 1);
     }
 
-    function getPagesArray(page, pages) {
-      if (pages - 3 >= page) {
-        if (page === 1) {
-          return [page , page + 1, page + 2, pages];
+    function getPagesArray(activePage, pagesCount) {
+      if (pagesCount - 3 >= activePage) {
+        if (activePage === 1) {
+          return [activePage , activePage + 1, activePage + 2, pagesCount];
         }
-        return [page - 1, page, page + 1, pages];
+        return [activePage - 1, activePage, activePage + 1, pagesCount];
       }
-      return [1, pages - 2, pages - 1, pages];
+      return [1, pagesCount - 2, pagesCount - 1, pagesCount];
     }
 
-    const pagesArray = getPagesArray(page, pages);
-    const isBelowOrEqHalf = page / pages <= 0.5;
+    const pagesArray = getPagesArray(activePage, pagesCount);
+    const isBelowOrEqHalf = activePage / pagesCount <= 0.5;
 
     if (isBelowOrEqHalf) {
       return pagesArray.splice(pagesArray.length - 1, 0, '...');
     }
     return pagesArray.splice(1, 0, '...');
-    
-  }, [page, pages]);
+
+  }, [activePage, pagesCount]);
 
   return (
     <ul className={css.menu}>
@@ -49,7 +53,7 @@ export const PaginationMenu = ({ page, pages, href = p => '?page=' + p }) => {
             key={button}
             {...applyCss(
               css.menu_item,
-              button === page && css.active
+              button === activePage && css.active
             )}
           >
             <Link href={href(button)}>
