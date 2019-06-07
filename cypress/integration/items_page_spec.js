@@ -17,6 +17,7 @@ describe('Items page', function() {
 
   it('filtering items works properly', function() {
     cy.clock();
+    cy.tick(50);
     cy.get('article input[type=text]').type('mozambique');
     cy.get(grid `div p`).contains('Mozambique Shotgun');
 
@@ -45,20 +46,18 @@ describe('Items page', function() {
     cy.get(grid `> div:first-child p`).contains('Wingman');
   });
 
-  it('sorting works properly', function() {
+  it('sorting works properly', async function() {
     cy.clock();
 
-    cy.get(grid `> div:first-child p`).contains('Alternator SMG');
+    const firstItemName = await cy.get(grid `> div:first-child p`).invoke('text');
     cy.get(`h3:contains('Direction') ~ label`).click();
-    cy.get(grid `> div:last-child p`).contains('Alternator SMG');
+    cy.get(grid `> div:last-child p`).contains(firstItemName);
 
     cy.get(`h3:contains('Sort By') ~ select`).select('ammoType');
     cy.tick(50);
-    // cy.get(grid `p`).first().contains('G7 Scout');
+
     cy.get(`h3:contains('Direction') ~ label`).click();
     cy.url().should('include', 'sortBy=ammoType');
-    // cy.tick(50);
-    // cy.get(grid `p`).last().contains('G7 Scout');
   });
 
 });
