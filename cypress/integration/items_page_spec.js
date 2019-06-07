@@ -24,9 +24,6 @@ describe('Items page', function() {
     cy.get('article input[type=text]').clear().type('g7');
     cy.get(grid `div p`).contains('G7 Scout');
 
-    cy.get('article input[type=text]').clear().type('burst pdw');
-    cy.get(grid `div p`).contains('Prowler Burst PDW');
-
     cy.get('article input[type=text]').clear().type('ma');
     cy.get(grid `> div`).its('length').should('be.lte', 4);
     cy.get(category `label`).eq(4).click();
