@@ -1,3 +1,4 @@
+export { applyCss as applyCss } from '../helpers';
 
 export const debounce = (delay = 250, timeout) => fn => {
   clearTimeout(timeout);
@@ -7,12 +8,15 @@ export const debounce = (delay = 250, timeout) => fn => {
 
 export const round = (val, scale = 10) => Math.round(val * scale) / scale;
 
-export const parsePercent = val => 
-  val < 0
-    ? 0
-    : val > 100
-      ? 100
-      : val;
+export const parsePercent = (number) => {
+  if (number < 0) {
+    return 0;
+  }
+  if (number > 100) {
+    return 100;
+  }
+  return number;
+}
 
 export const useDebounce = (delay = 250, timeout) => [
   fn => {
@@ -23,11 +27,6 @@ export const useDebounce = (delay = 250, timeout) => [
 ];
 
 export const getTs = () => Math.floor(Date.now() / 1000); 
-
-export { applyCss as applyCss } from '../helpers';
-
-export const useDispatch = dispatch => (type, payload, meta) => 
-  dispatch({ type, payload, meta });
 
 export const filterUnique = (value, index, self) => self.indexOf(value) === index;
 
@@ -53,8 +52,8 @@ export const scrollTo = ({ top = 0, left = 0, behavior = 'smooth'}) => {
   }
 }
 
-export const reduceToObjectProps = (array, defaultValue = false) => 
-  array.reduce((reduced, item) => ({
-    ...reduced,
-    [item]: defaultValue
-  }), {});
+export const filterTruthyProp = ([prop, val]) => val ? prop : [];
+
+export const filterTruthyEntry = (object) => Object
+  .entries(object)
+  .flatMap(filterTruthyProp);

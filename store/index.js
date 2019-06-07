@@ -10,12 +10,10 @@ const reducers = combineReducers({
   stats
 });
 
-
 export const initializeStore = (intialState = {}) => createStore(
   reducers,
   intialState,
   compose(
-    applyMiddleware(thunk),
-    // window && window.devToolsExtension ? window.devToolsExtension() : f => f
+    applyMiddleware(thunk)
   )
 );

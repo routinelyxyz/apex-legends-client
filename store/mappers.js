@@ -1,6 +1,5 @@
 import { bindActionCreators } from 'redux';
 import actions from './actions';
-import selectors from './selectors';
 
 export const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(actions, dispatch),
@@ -16,10 +15,4 @@ export const mapStateDynamic = (reducerNames = [], selectorNames = []) => state 
           [reducerName]: state[reducerName]
         })
     }, {})
-  ,
-  selectors: selectorNames
-    .reduce((normalized, selectorName) => ({
-      ...normalized,
-      [selectorName]: selectors[selectorName](state)
-    }), {})
 });

@@ -5,12 +5,12 @@ import axios from 'axios';
 import { useState, useMemo, useEffect } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-dayjs.extend(utc);
 
 import { PlayerCard } from '../../components/PlayerCard';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
 import { PlayersTable, Table, PlayerLabel, Td, Th } from '../../components/PlayersTable';
 
+dayjs.extend(utc);
 const endOfDay = dayjs().utc().endOf('day');
 
 const HomePage = ({ dailyRanking, recentlyUpdated }) => {
