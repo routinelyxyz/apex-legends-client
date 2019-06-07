@@ -24,7 +24,11 @@ export function statsReducer(state, action) {
     case 'UPDATE_STATS_SUCCEEDED': return {
       ...state,
       isUpdating: false,
-      lifetimeStats: action.payload.stats.lifetime,
+      lifetimeStats: Object.fromEntries(
+        Object
+          .entries(action.payload.stats.lifetime)
+          .filter(([prop, data]) => data.value != null)
+      ),
       legendStats: action.payload.stats.legends,
       matchHistory: [...action.payload.matchHistory, ...state.matchHistory]
         .filter(filterByUniqueId)
