@@ -26,7 +26,8 @@ import { WeaponsGrid } from '../../components/WeaponsGrid';
 import { MobileModal } from '../../components/MobileModal';
 import { BasicButton } from '../../reusable/BasicButton';
 
-const initialUpdateKey = '00nametrue';
+const debounceA = debounce(500);
+const initialUpdateKey = 'truename00';
 const sortProps = [
   ['name', 'Name'],
   ...weaponProps,
@@ -50,21 +51,26 @@ const WeaponsPage = ({ items, router }) => {
   const areFiltersApplied = updateKey !== initialUpdateKey;
 
   useEffect(() => {
-    if (router.pathname === '/items') {
-      const query = {};
+    const query = {};
+    let timeout;
 
-      if (state.phrase.length) query.name = state.phrase;
-      if (state.sortBy !== initialState.sortBy) query.sortBy = state.sortBy;
-      if (state.sortAsc !== initialState.sortAsc) query.sortDesc = state.sortAsc;
-      if (selectedCategoryNames.length) query.category = selectedCategoryNames;
-      if (selectedAmmoTypeNames.length) query.ammo = selectedAmmoTypeNames;
+    if (state.phrase.length) query.name = state.phrase;
+    if (state.sortBy !== initialState.sortBy) query.sortBy = state.sortBy;
+    if (state.sortAsc !== initialState.sortAsc) query.sortDesc = state.sortAsc;
+    if (selectedCategoryNames.length) query.category = selectedCategoryNames;
+    if (selectedAmmoTypeNames.length) query.ammo = selectedAmmoTypeNames;
 
-      const href = '/items' + qs.stringify(query, true);
-      const as = href;
+    const href = '/items' + qs.stringify(query, true);
+    const as = href;
 
-      router.replace(href, as, { shallow: true });
-    }
-  }, [state]);
+    timeout = debounceA(() => {
+      if (router.pathname === '/items' && updateKey !== initialUpdateKey) {
+        router.replace(href, as, { shallow: true });
+      }
+    });
+
+    return () => clearTimeout(timeout);
+  }, [updateKey]);
 
   useEffect(() => {
     const {
@@ -139,7 +145,7 @@ const WeaponsPage = ({ items, router }) => {
             {state.ammoTypes.map(ammoType => (
               <Checkmark
                 content={(
-                  <div className={`${css.ammo_checkmark}`}>
+                  <div className={css.ammo_checkmark}>
                     <img
                       {...applyCss(
                         css.ammo_icon,
