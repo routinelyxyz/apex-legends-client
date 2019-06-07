@@ -52,6 +52,11 @@ export const scrollTo = ({ top = 0, left = 0, behavior = 'smooth'}) => {
   }
 }
 
+export const filterByUniqueId = (record, index, self) => {
+  const foundIndex = self.findIndex(anyRecord => anyRecord.id == record.id);
+  return foundIndex === index ? true : false;
+}
+
 export const filterTruthyProp = ([prop, val]) => val ? prop : [];
 
 export const filterTruthyEntry = (object) => Object
