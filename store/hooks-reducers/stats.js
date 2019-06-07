@@ -13,6 +13,7 @@ export function statsReducer(state, action) {
   switch(action.type) {
     case 'UPDATE_MATCH_HISTORY': return {
       ...state,
+      isLoadingHistory: false,
       matchHistory: [...action.payload, ...state.matchHistory]
         .filter(filterByUniqueId)
     }
@@ -36,8 +37,11 @@ export function initStatsReducer(stats) {
 
 }
 
-export const sortedLegendsFilter = (legends) => 
-  [...legends].sort()
+export const sortedLegendsFilter = (legends) => {
+  return [...legends].sort((a, b) =>
+    a.kills.value > b.kills.value ? -1 : 1
+  );
+}
 
 export const lifetimeStats = (lifetimeStats) => {
   return statsProps.flatMap(prop => {
