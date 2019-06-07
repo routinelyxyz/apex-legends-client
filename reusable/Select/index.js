@@ -1,7 +1,7 @@
 import css from './style.scss';
 import { applyCss } from '../../helpers';
 
-export const Select = ({ children, active, className = '', disabled, ...selectProps }) => (
+export const Select = ({ active, className, disabled, ...props }) => (
   <select
     {...applyCss(
       css.container,
@@ -10,10 +10,8 @@ export const Select = ({ children, active, className = '', disabled, ...selectPr
       className
     )}
     disabled={disabled}
-    {...selectProps}
-  >
-    {children}
-  </select>
+    {...props}
+  />
 );
 
 export default Select;

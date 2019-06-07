@@ -1,11 +1,11 @@
 import css from './style.scss';
 
-export const SortDirection = inputProps => (
+export const SortDirection = (props) => (
   <label className={css.container}>
     <input
       type="checkbox"
       className={css.checkbox}
-      {...inputProps}
+      {...props}
     />
     <img
       src="/static/arrows.svg"

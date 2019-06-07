@@ -6,35 +6,46 @@ import { applyCss } from '../../helpers';
 
 export const PaginationMenu = ({ page, pages, href = p => '?page=' + p }) => {
 
-  const buttons = () => {
-    if (pages <= 5) return Array
-      .from({ length: pages })
-      .map((_, index) => index + 1);
+  const buttons = useMemo(() => {
 
-    const btns = pages - 3 >= page
-      ? page === 1
-        ? [page , page + 1, page + 2, pages]
-        : [page - 1, page, page + 1, pages]
-      : [1, pages - 2, pages - 1, pages];
+    if (pages <= 5) {
+      return Array
+        .from({ length: pages })
+        .map((_, index) => index + 1);
+    }
 
-    page / pages <= 0.5
-      ? btns.splice(btns.length - 1, 0, '...')
-      : btns.splice(1, 0, '...');
+    function getPagesArray(page, pages) {
+      if (pages - 3 >= page) {
+        if (page === 1) {
+          return [page , page + 1, page + 2, pages];
+        }
+        return [page - 1, page, page + 1, pages];
+      }
+      return [1, pages - 2, pages - 1, pages];
+    }
 
-    return btns;
-  }
+    const pagesArray = getPagesArray(page, pages);
+    const isBelowOrEqHalf = page / pages <= 0.5;
+
+    if (isBelowOrEqHalf) {
+      return pagesArray.splice(pagesArray.length - 1, 0, '...');
+    }
+    return pagesArray.splice(1, 0, '...');
+    
+  }, [page, pages]);
 
   return (
     <ul className={css.menu}>
-      {buttons().map(button => (
-        typeof button === 'string'
-        ? <li
+      {buttons.map(button => (
+        typeof button === 'string' ? (
+          <li
             key={button}
             className={css.menu_item}
           >
             <span>{button}</span>
           </li>
-        : <li
+        ) : (
+          <li
             key={button}
             {...applyCss(
               css.menu_item,
@@ -47,18 +58,17 @@ export const PaginationMenu = ({ page, pages, href = p => '?page=' + p }) => {
               </a>
             </Link>
           </li>
+        )
       ))}
     </ul>
   );
 }
 
 const Navigation = ({
-  router, page, pagesCount,
-  isFetching,
+  page,
   pages,
-  pagination = true,
   href,
-  count, children, ...props
+  children
 }) => {
   const container = useRef(null);
 

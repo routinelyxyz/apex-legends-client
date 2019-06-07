@@ -1,7 +1,7 @@
 import React from 'react';
 import { animated, useTransition, config } from 'react-spring';
 
-const SlidingContainer = ({ children, state, height = 250, ...rest }) => {
+const SlidingContainer = ({ state, height = 250, ...rest }) => {
 
   const transitions = useTransition(state, null, {
     from: { opacity: 0.7, height: 0 },
@@ -11,18 +11,17 @@ const SlidingContainer = ({ children, state, height = 250, ...rest }) => {
   });
   
   return transitions.map(({ item, props, key }) => (
-    item &&
-    <animated.div
-      style={{
-        opacity: props.opacity,
-        height: props.height
-          .interpolate(v => v + 'px'),
-      }}
-      key={key}
-      {...rest}
-    >
-      {children}
-    </animated.div>
+    item && (
+      <animated.div
+        style={{
+          opacity: props.opacity,
+          height: props.height
+            .interpolate(v => v + 'px'),
+        }}
+        key={key}
+        {...rest}
+      />
+    )
   ));
 }
 

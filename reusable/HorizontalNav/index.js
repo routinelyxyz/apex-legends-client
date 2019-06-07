@@ -4,10 +4,8 @@ import { applyCss } from '../../util';
 import Link from 'next/link';
 import { withRouter } from 'next/router';
 
-export const HorizontalNavLink = ({ children }) => (
-  <li className={css.link}>
-    {children}
-  </li>
+export const HorizontalNavLink = () => (
+  <li className={css.link} />
 );
 
 export const HorizontalNav = ({ children, className }) => {
@@ -79,10 +77,11 @@ export const HorizontalNavTab = ({ tabs, className, navCss, withMargin, children
       >
         {tabs.map((tab, index) => (
           <li
-            {...applyCss(css.link, activeTab === index ? css.active : '')}
-            onClick={() => {
-              setActiveTab(index)
-            }}
+            {...applyCss(
+              css.link,
+              activeTab === index && css.active
+            )}
+            onClick={() => setActiveTab(index)}
             key={index}
           >
             {tab.title}

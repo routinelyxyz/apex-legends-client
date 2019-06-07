@@ -1,8 +1,9 @@
 import css from './style.scss';
 import Link from 'next/link';
-import { STATIC } from '../../helpers';
+import { STATIC } from '../../helpers/consts';
+import { applyCss } from '../../helpers';
 
-const Item = ({ item, ...flipProps }) => (
+export const Item = ({ item, ...flipProps }) => (
   <div
     className={`${css.container} ${css.item_rare}`}
     {...flipProps}
@@ -20,17 +21,22 @@ const Item = ({ item, ...flipProps }) => (
           <img
             className={css.item__img}
             src={STATIC + item.img}
-            alt={`${item.name} - Apex Legends`}
+            alt={`${item.name} weapon image - Apex Legends`}
           />
           <img
-            alt={`${item.ammo.name} ammo - Apex Legends`}
-            className={`${css.ammo_img} ${item.ammo.name === 'Unique' && css.unique}`}
+            alt={`${item.ammo.name} weapon ammo - Apex Legends`}
             src={STATIC + item.ammo.img}
+            {...applyCss(
+              css.ammo_img,
+              item.ammo.name === 'Unique' && css.unique
+            )}
           />
         </div>
       </a>
     </Link>
   </div>
 );
+
+export { Item as WeaponItem };
 
 export default Item;
