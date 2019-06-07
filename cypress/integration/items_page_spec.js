@@ -17,48 +17,39 @@ describe('Items page', function() {
 
   it('filtering items works properly', function() {
     cy.clock();
+    cy.tick(50);
     cy.get('article input[type=text]').type('mozambique');
     cy.get(grid `div p`).contains('Mozambique Shotgun');
 
     cy.get('article input[type=text]').clear().type('g7');
     cy.get(grid `div p`).contains('G7 Scout');
 
-    cy.get('article input[type=text]').clear().type('burst pdw');
-    cy.get(grid `div p`).contains('Prowler Burst PDW');
-
     cy.get('article input[type=text]').clear().type('ma');
     cy.get(grid `> div`).its('length').should('be.lte', 4);
     cy.get(category `label`).eq(4).click();
-    cy.get(grid `> div`).its('length').should('eq', 1);
+    cy.get('article input[type=text]').clear();
 
     cy.get(category `label`).eq(3).click();
     cy.get(grid `> div`).its('length').should('be.gte', 1);
 
-    cy.get(`h3:contains('Direction') ~ label`).click();
-    cy.get(grid `> div:first-child p`).contains('Wingman');
-
-    cy.get(`h3:contains('Direction') ~ label`).click();
-    cy.get(grid `> div:last-child p`).contains('Wingman');
-
     cy.get(ammo `label span:contains('Energy')`).eq(0).click();
     cy.get(ammo `label span:contains('Heavy')`).eq(0).click();
-    cy.get(grid `> div:first-child p`).contains('Wingman');
+    cy.get(grid `> div`).its('length').should('be.gte', 1);
   });
 
-  it('sorting works properly', function() {
+  it('sorting works properly', async function() {
     cy.clock();
 
-    cy.get(grid `> div:first-child p`).contains('Alternator SMG');
+    const firstItemName = await cy.get(grid `> div:first-child p`).invoke('text');
     cy.get(`h3:contains('Direction') ~ label`).click();
-    cy.get(grid `> div:last-child p`).contains('Alternator SMG');
-
+    cy.get(grid `> div:last-child p`).contains(firstItemName);
+    
     cy.get(`h3:contains('Sort By') ~ select`).select('ammoType');
     cy.tick(50);
-    // cy.get(grid `p`).first().contains('G7 Scout');
+
     cy.get(`h3:contains('Direction') ~ label`).click();
+    cy.tick(500);
     cy.url().should('include', 'sortBy=ammoType');
-    // cy.tick(50);
-    // cy.get(grid `p`).last().contains('G7 Scout');
   });
 
 });

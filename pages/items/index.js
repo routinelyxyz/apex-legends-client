@@ -1,11 +1,15 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import css from './style.scss';
-import { weaponProps, STATIC } from '../../helpers';
+import { weaponProps, STATIC, applyCss } from '../../helpers';
 import { withRouter } from 'next/router';
 import qs from 'querystringify';
-import { filterTruthyEntry, filterUnique } from '../../util';
+import { debounce } from '../../util';
 import Head from 'next/head';
 import axios from 'axios';
+import {
+  weaponsReducer, initWeaponsReducer,
+  weaponsFilter, initialState
+} from '../../store/hooks-reducers/weapons';
 
 import Input from '../../reusable/Input';
 import Checkmark from '../../reusable/Checkmark';
@@ -14,168 +18,88 @@ import { SortDirection } from '../../reusable/SortDirection';
 import { WeaponsGrid } from '../../components/WeaponsGrid';
 import { MobileModal } from '../../components/MobileModal';
 
-const initialUpdateKey = '00nametrue';
-
+const debounceA = debounce(500);
+const initialUpdateKey = 'truename00';
 const sortProps = [
   ['name', 'Name'],
   ...weaponProps,
   ['ammoType', 'Ammo type']
 ];
-const initialSort = 'name';
-
-const initialSortProp = 'name';
-const initialSortAsc = true;
 
 const WeaponsPage = ({ items, router }) => {
-  const [phrase, setPhrase] = useState('');
-  const [sortProp, setSortProp] = useState(initialSortProp);
-  const [sortAsc, setSortAsc] = useState(initialSortAsc);
-
-  const ammoTypes = useMemo(() => items
-    .reduce((ammoTypes, item) => ({
-      ...ammoTypes,
-      [item.ammo.name]: item.ammo
-    }), {})
-  , [items]);
-
-  const weaponTypes = useMemo(() => items
-    .reduce((weaponTypes, weapon) => [
-      ...weaponTypes,
-      ...weaponTypes.includes(weapon.type)
-        ? []
-        : [weapon.type]
-    ], [])
-  , [items]);
-
-  const [selectedWeaponTypes, setSelectedWeaponTypes] = useState(() =>
-    weaponTypes.reduce((selected, type) => ({
-      ...selected,
-      [type]: false
-    }), {})
-  );
-
-  const selectedWeaponTypeNames = useMemo(() => filterTruthyEntry(selectedWeaponTypes), [selectedWeaponTypes]);
+  const [state, dispatch] = useReducer(weaponsReducer, items, initWeaponsReducer);
+  const {
+    filteredWeapons,
+    selectedCategoryNames,
+    selectedAmmoTypeNames
+  } = useMemo(() => weaponsFilter(state), [state]);
   
-  const [selectedAmmoTypes, setSelectedAmmoTypes] = useState(() =>
-    items.reduce((types, weapon) => ({
-      ...types,
-      [weapon.ammo.name]: false
-    }), {})
-  );
+  const updateKey = state.phrase +
+    state.sortAsc +
+    state.sortBy +
+    selectedCategoryNames.length +
+    selectedAmmoTypeNames.length;
 
-  const selectedAmmoTypeNames = useMemo(() => filterTruthyEntry(selectedAmmoTypes), [selectedAmmoTypes]);
-
-  const updateKey = phrase + selectedWeaponTypeNames.length + selectedAmmoTypeNames.length + sortProp + sortAsc;
-  const appliedFilters = updateKey !== initialUpdateKey;
-
-  const handleClearFilters = () => {
-    if (!appliedFilters) {
-      return;
-    }
-    setPhrase('');
-    setSortProp(initialSortProp);
-    setSortAsc(initialSortAsc);
-
-    setSelectedWeaponTypes(selectedWeaponTypeNames
-      .reduce((unselected, type) => ({
-        ...unselected,
-        [type]: false
-      }), selectedWeaponTypes)
-    );
-    setSelectedAmmoTypes(selectedAmmoTypeNames
-      .reduce((unselected, name) => ({
-        ...unselected,
-        [name]: false
-      }), ammoTypes)
-    );
-  }
-
-  const ammoTypeNames = useMemo(() => Object.keys(selectedAmmoTypes), []);
-  const weaponTypeNames = useMemo(() => Object.keys(selectedWeaponTypes), []);
-
-  const filteredWeapons = useMemo(() => items
-    .filter(item =>
-      item.name.toLowerCase().includes(phrase.toLowerCase())
-    )
-    .filter(item => selectedWeaponTypeNames.length
-      ? selectedWeaponTypes[item.type]
-      : true
-    )
-    .filter(item => selectedAmmoTypeNames.length
-      ? selectedAmmoTypes[item.ammo.name]  
-      : true
-    )
-    .sort((a, b) => {
-      const sortDir = sortAsc ? 1 : -1;
-      if (sortProp === 'name') {
-        return (a[sortProp] > b[sortProp] ? 1 : -1) * sortDir;
-      }
-      if (sortProp === 'ammoType') {
-        const indexA = ammoTypeNames.indexOf(a.ammo.name);
-        const indexB = ammoTypeNames.indexOf(b.ammo.name);
-
-        return (indexA > indexB ? 1 : -1) * sortDir;
-      }
-      return (a[sortProp] - b[sortProp]) * sortDir;
-    })
-  , [updateKey]);
+  const areFiltersApplied = updateKey !== initialUpdateKey;
 
   useEffect(() => {
-    if (router.pathname === '/items') {
-      const query = {};
+    const query = {};
+    let timeout;
 
-      if (phrase.length) query.name = phrase;
-      if (selectedAmmoTypeNames.length) query.ammo = selectedAmmoTypeNames;
-      if (sortProp !== initialSortProp) query.sortBy = sortProp;
-      if (sortAsc !== initialSortAsc) query.sortDesc = true;
-      if (selectedWeaponTypeNames.length) query.category = selectedWeaponTypeNames;
+    if (state.phrase.length) query.name = state.phrase;
+    if (state.sortBy !== initialState.sortBy) query.sortBy = state.sortBy;
+    if (state.sortAsc !== initialState.sortAsc) query.sortDesc = state.sortAsc;
+    if (selectedCategoryNames.length) query.category = selectedCategoryNames;
+    if (selectedAmmoTypeNames.length) query.ammo = selectedAmmoTypeNames;
 
-      const href = '/items' + qs.stringify(query, true);
-      const as = href;
+    const href = '/items' + qs.stringify(query, true);
+    const as = href;
 
-      router.replace(href, as, { shallow: true });
-    }
+    timeout = debounceA(() => {
+      if (router.pathname === '/items' && updateKey !== initialUpdateKey) {
+        router.replace(href, as, { shallow: true });
+      }
+    });
+
+    return () => clearTimeout(timeout);
   }, [updateKey]);
 
   useEffect(() => {
-    const { name, ammo, sortBy, sortDesc, category } = router.query;
-    
+    const {
+      name: phrase = '',
+      sortBy = initialState.sortBy,
+      sortDesc: sortAsc = initialState.sortAsc,
+      ammo = '',
+      category = ''
+    } = router.query;
+
     const timeoutId = setTimeout(() => {
-      if (name) setPhrase(name);
-      if (ammo) setSelectedAmmoTypes(
-        ammo
-          .split(',')
-          .reduce((updatedTypes, type) => ({
-            ...updatedTypes,
-            [type]: true
-          }), selectedAmmoTypes)
-      );
-      if (category) setSelectedWeaponTypes(
-        category
-          .split(',')
-          .reduce((updatedCats, category) => ({
-            ...updatedCats,
-            [category]: true
-          }), selectedWeaponTypes)
-      )
-      if (sortBy != null && sortBy !== initialSort) setSortProp(sortBy);
-      if (sortDesc != null && sortDesc !== initialSortAsc) setSortAsc(false);
+      dispatch({
+        type: 'LOAD_FILTERS',
+        payload: {
+          phrase,
+          categoryNames: category.split(','),
+          ammoTypeNames: ammo.split(','),
+          sortAsc,
+          sortBy
+        }
+      });
     }, 150);
 
     return () => clearTimeout(timeoutId);
   }, []);
 
-  const handleWeaponTypeChange = (weaponType) => (event) => {
-    setSelectedWeaponTypes({
-      ...weaponTypes,
-      [weaponType]: event.target.checked
+  const handleCategoryToggle = (categoryName) => {
+    dispatch({
+      type: 'TOGGLE_CATEGORY',
+      payload: categoryName
     });
   }
 
-  const handleAmmoTypeChange = (ammoType) => (event) => {
-    setSelectedAmmoTypes({
-      ...selectedAmmoTypes,
-      [ammoType]: event.target.checked
+  const handleAmmoTypeToggle = (ammoTypeName) => {
+    dispatch({
+      type: 'TOGGLE_AMMO_TYPE',
+      payload: ammoTypeName
     });
   }
 
@@ -184,43 +108,49 @@ const WeaponsPage = ({ items, router }) => {
       <Head>
         <title>Weapons explorer | Apex-Legends.win</title>
       </Head>
-      <MobileModal title={'Show filters ' + (updateKey === initialUpdateKey ? '' : '(*)')}>
+      <MobileModal title={'Show filters ' + (areFiltersApplied ? '' : '(*)')}>
         <nav className={css.search_filters}>
           <label className={css.filters_searcher} data-testid="Items__input">
             <h3 className={css.h3}>Name</h3>
             <Input
               placeholder="Weapon name..."
-              value={phrase}
-              onChange={e => setPhrase(e.target.value)}
+              value={state.phrase}
+              onChange={e => dispatch({
+                type: 'UPDATE_PHRASE',
+                payload: e.target.value
+              })}
             />
           </label>
           <div className={css.filters_section} data-testid="Items__category">
             <h3 className={css.h3}>Category</h3>
-            {weaponTypeNames.map(type => (
+            {state.categories.map(category => (
               <Checkmark
-                title={type}
-                key={type}
-                checked={selectedWeaponTypes[type]}
-                onChange={(event) => handleWeaponTypeChange(type)(event)}
-              /> 
+                title={category.name}
+                key={category.name}
+                checked={category.selected}
+                onChange={() => handleCategoryToggle(category.name)}
+              />
             ))}
           </div>
           <div className={css.filters_section} data-testid="Items__ammo">
             <h3 className={css.h3}>Ammo type</h3>
-            {ammoTypeNames.map(type => (
+            {state.ammoTypes.map(ammoType => (
               <Checkmark
-                content={
-                  <div className={`${css.ammo_checkmark}`}>
+                content={(
+                  <div className={css.ammo_checkmark}>
                     <img
-                      className={`${css.ammo_icon} ${selectedAmmoTypes[type] && css.ammo_icon__checked}`}
-                      src={STATIC + ammoTypes[type].img}
+                      {...applyCss(
+                        css.ammo_icon,
+                        ammoType.selected && css.ammo_icon__checked
+                      )}
+                      src={STATIC + ammoType.img}
                     />
-                    <span>{type}</span>
+                    <span>{ammoType.name}</span>
                   </div>
-                }
-                key={type}
-                checked={selectedAmmoTypes[type]}
-                onChange={handleAmmoTypeChange(type)}
+                )}
+                key={ammoType.name}
+                checked={ammoType.selected}
+                onChange={() => handleAmmoTypeToggle(ammoType.name)}
               />
             ))}
           </div>
@@ -233,9 +163,12 @@ const WeaponsPage = ({ items, router }) => {
               Sort By
             </h3>
             <Select
-              value={sortProp}
-              active={sortProp !== initialSortProp}
-              onChange={e => setSortProp(e.target.value)}
+              value={state.sortBy}
+              active={state.sortBy !== initialState.sortBy}
+              onChange={e => dispatch({
+                type: 'UPDATE_SORT_BY',
+                payload: e.target.value
+              })}
             >
               {sortProps.map(([prop, title]) => (
                 <option value={prop} key={prop}>
@@ -249,8 +182,11 @@ const WeaponsPage = ({ items, router }) => {
               Direction
             </h3>
             <SortDirection
-              checked={sortAsc}
-              onChange={e => setSortAsc(e.target.checked)}
+              checked={state.sortAsc}
+              onChange={e => dispatch({
+                type: 'TOGGLE_ORDER',
+                payload: e.target.checked
+              })}
             />
           </div>
         </div>
@@ -265,13 +201,7 @@ const WeaponsPage = ({ items, router }) => {
 
 WeaponsPage.getInitialProps = async () => {
   const { data: { data }} = await axios.get('/items/weapons');
-
-  const categories = data
-    .map(item => item.type)
-    .filter(filterUnique)
-    .sort();
-
-  return { items: data, categories };
+  return { items: data };
 }
 
 export default withRouter(WeaponsPage);
