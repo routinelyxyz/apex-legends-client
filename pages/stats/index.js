@@ -87,7 +87,7 @@ const StatsPage = ({ name, url, platform, router, skipFirstFetch = false, ...pro
   }
 
   useEffect(() => {
-    let interval = setInterval(() => {
+    const interval = setInterval(() => {
       setNow(getTs());
     }, 1000);
 
@@ -321,6 +321,6 @@ StatsPageContainer.getInitialProps = async ({ query }) => {
 }
 
 export default connect(
-  ({ stats }) => ({ stats }),
+  null,
   mapDispatchToProps
 )(withRouter(StatsPageContainer));

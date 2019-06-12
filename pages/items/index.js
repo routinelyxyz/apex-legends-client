@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useReducer } from 'react';
 import css from './style.scss';
 import { weaponProps, STATIC, applyCss } from '../../helpers';
 import { withRouter } from 'next/router';

@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
 import { applyCss } from '../../helpers';
+import { useMemo } from 'react';
 
 export const PaginationMenu = ({
   page: activePage,

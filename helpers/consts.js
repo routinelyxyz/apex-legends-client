@@ -1,3 +1,4 @@
+export const isProduction = process.env.NODE_ENV === 'production';
 
 export const GA_ID = 'UA-136317731-1';
 

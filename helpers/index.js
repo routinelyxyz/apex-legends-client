@@ -19,7 +19,7 @@ export const weaponProps = [
   ['bodyDamage', 'Body damage'],
   ['headshotDamage', 'Headshot damage'],
   ['bodyDPS', 'Body DPS'],
-  ['reload', 'Reload time',  v => parseFloat(v) + ' s'],
+  ['reloadTime', 'Reload time',  v => parseFloat(v) + ' s'],
   ['emptyReload', 'Reload time (empty magazine)', v => parseFloat(v) + ' s'],
   ['magazine', 'Magazine size'],
 ];
@@ -29,7 +29,7 @@ export const weaponPropTitles = {
   headshotDamage: 'Headshot damage',
   bodyDPS: 'Body DPS',
   headshotDPS: 'Headshot DPS',
-  reload: 'Reload time',
+  reloadTime: 'Reload time',
   emptyReload: 'Reload time (empty mag)',
   magazine: 'Magazine size'
 }
