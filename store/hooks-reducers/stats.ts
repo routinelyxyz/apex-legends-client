@@ -1,6 +1,7 @@
 import 'core-js/features/object/from-entries';
 import { statsProps } from '../../helpers';
 import { filterByUniqueId } from '../../util';
+import { StatsPayload, MatchHistory, KeyedObject, LegendStats } from '../../components/types';
 
 function normalizeLifetimeStats<T>(lifetimeStats: T) {
   const notNullEntries = Object
@@ -72,23 +73,26 @@ export const sortLegends = (legends: LegendStats[]) => {
   );
 }
 
-export const groupMatchHistory = (matchHistory) => {
+export function groupMatchHistory(
+  matchHistory: MatchHistory
+): [string, MatchHistory] {
+
   const grouped = matchHistory
-    .reduce((grouped, record) => {
+    .reduce((grouped: KeyedObject, record) => {
       grouped[record.day] = grouped[record.day] || [];
       grouped[record.day].push(record);
       return grouped;
     }, {});
 
-  return Object.entries(grouped);
+  return <any>Object.entries(grouped);
 }
 
 interface StatsState {
   isLoadingHistory: boolean
   isUpdating: boolean
-  legendStats: []
+  legendStats: LegendStats[]
   lifetimeStats: {}
-  matchHistory: { [day: string]: any }[]
+  matchHistory: MatchHistory
 }
 
 interface UpdateStatsRequested {
@@ -114,57 +118,3 @@ type StatsActions =
   UpdateStatsSucceeded |
   MatchHistoryRequested |
   MatchHistorySucceeded
-
-
-interface Player {
-  id: number
-  name: string
-  avatar: boolean
-  avatarUrl: string
-  platform: 'pc' | 'ps4' | 'xbox'
-}
-
-type StatsValue = {
-  rank?: number
-  percents?: number
-  value: number | null
-}
-
-interface LifetimeStats {
-  id: number
-  lvl: number
-  lvlProgress: number
-  kills: StatsValue
-  damage: StatsValue
-  headshots: StatsValue
-  damagePerKill: StatsValue
-  headshotsPerKill: StatsValue
-}
-
-interface Legend {
-  id: number
-  name: string
-  img: string
-}
-
-interface LegendStats {
-  id: number
-  kills: StatsValue
-  damage: StatsValue
-  headshots: StatsValue
-  damagePerKill: StatsValue
-  headshotsPerKill: StatsValue
-  legend: Legend
-}
-
-interface MatchHistory {
-
-}
-
-export type Stats = {
-  player: Player
-  lifetime: LifetimeStats
-  legends: LegendStats[]
-}
-
-export type StatsPayload = { stats: Stats }
