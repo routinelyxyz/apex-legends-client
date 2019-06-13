@@ -6,10 +6,7 @@ import qs from 'querystringify';
 import { debounce } from '../../util';
 import Head from 'next/head';
 import axios from 'axios';
-import {
-  weaponsReducer, initWeaponsReducer,
-  weaponsFilter, initialState
-} from '../../store/hooks-reducers/weapons';
+import { weaponsReducer, initWeaponsReducer, weaponsFilter, initialState } from './reducer';
 
 import Input from '../../reusable/Input';
 import Checkmark from '../../reusable/Checkmark';
