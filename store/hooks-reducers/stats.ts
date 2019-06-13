@@ -16,14 +16,6 @@ function normalizeLifetimeStats<T>(lifetimeStats: T) {
   return Object.fromEntries(notNullEntries);
 }
 
-interface StatsState {
-  isLoadingHistory: boolean
-  isUpdating: boolean
-  legendStats: []
-  lifetimeStats: {}
-  matchHistory: { [day: string]: any }[]
-}
-
 export const initialState: StatsState = {
   isLoadingHistory: true,
   isUpdating: false,
@@ -33,8 +25,8 @@ export const initialState: StatsState = {
 }
 
 export function statsReducer(
-  state,
-  action
+  state: StatsState,
+  action: StatsActions
 ) {
   switch(action.type) {
     case 'UPDATE_STATS_REQUESTED': return {
@@ -65,7 +57,7 @@ export function statsReducer(
   }
 }
 
-export function initStatsReducer(payload: InitialStatsPayload) {
+export function initStatsReducer(payload: StatsPayload) {
   return {
     ...initialState,
     legendStats: payload.stats.legends,
@@ -91,7 +83,37 @@ export const groupMatchHistory = (matchHistory) => {
   return Object.entries(grouped);
 }
 
+interface StatsState {
+  isLoadingHistory: boolean
+  isUpdating: boolean
+  legendStats: []
+  lifetimeStats: {}
+  matchHistory: { [day: string]: any }[]
+}
 
+interface UpdateStatsRequested {
+  type: 'UPDATE_STATS_REQUESTED'
+}
+
+interface UpdateStatsSucceeded {
+  type: 'UPDATE_STATS_SUCCEEDED'
+  payload: StatsPayload
+}
+
+interface MatchHistoryRequested {
+  type: 'MATCH_HISTORY_REQUESTED'
+}
+
+interface MatchHistorySucceeded {
+  type: 'MATCH_HISTORY_SUCCEEDED'
+  // payload: any
+}
+
+type StatsActions =
+  UpdateStatsRequested |
+  UpdateStatsSucceeded |
+  MatchHistoryRequested |
+  MatchHistorySucceeded
 
 
 interface Player {
@@ -139,10 +161,10 @@ interface MatchHistory {
 
 }
 
-export type Stats = null | {
+export type Stats = {
   player: Player
   lifetime: LifetimeStats
   legends: LegendStats[]
 }
 
-export type InitialStatsPayload = { stats: Stats }
+export type StatsPayload = { stats: Stats }
