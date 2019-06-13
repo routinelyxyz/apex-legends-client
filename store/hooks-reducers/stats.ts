@@ -1,7 +1,7 @@
 import 'core-js/features/object/from-entries';
 import { statsProps } from '../../helpers';
 import { filterByUniqueId } from '../../util';
-import { StatsPayload, MatchHistory, KeyedObject, LegendStats } from '../../components/types';
+import { StatsPayload, MatchHistory, KeyedObject, LegendStats } from '../../types';
 
 function normalizeLifetimeStats<T>(lifetimeStats: T) {
   const notNullEntries = Object

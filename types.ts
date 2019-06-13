@@ -1,10 +1,12 @@
 
+export type Platform = 'pc' | 'ps4' | 'xbox';
+
 export interface Player {
   id: number
   name: string
   avatar: boolean
   avatarUrl: string
-  platform: 'pc' | 'ps4' | 'xbox'
+  platform: Platform
 }
 
 export type StatsValue = number | null;
@@ -32,7 +34,7 @@ export interface Legend {
   name: string
   slug: string
   img: string
-}
+} 
 
 export interface LegendStats {
   id: number
