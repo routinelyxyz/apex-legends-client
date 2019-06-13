@@ -19,7 +19,7 @@ interface StatsState {
     legend: Legend
     data: LegendStatsData[]
   }[]
-  matchHistory: MatchHistoryData
+  matchHistory: MatchHistoryState
 
   nextUpdateAt: number
   isUpdating: boolean
@@ -129,7 +129,7 @@ function sortLegendStats(a: LegendStats, b: LegendStats) {
 }
 
 export function groupMatchHistory(
-  matchHistory: MatchHistoryData
+  matchHistory: MatchHistoryState
 ): GroupMatchHistoryResult {
 
   const grouped = matchHistory
@@ -142,7 +142,7 @@ export function groupMatchHistory(
   return <any>Object.entries(grouped);
 }
 
-export type GroupMatchHistoryResult = [string, MatchHistoryData][];
+export type GroupMatchHistoryResult = [string, MatchHistoryState][];
 
 interface UpdateStatsRequested {
   type: 'UPDATE_STATS_REQUESTED'
@@ -182,8 +182,8 @@ interface LifetimeStatsData extends StatsData<number> {
   prop: 'lvl' | 'lvlProgress' | 'kills' | 'damage' | 'headshots' | 'damagePerKill' | 'headshotsPerKill'
 }
 
-export interface MatchHistoryRecordData extends MatchHistoryRecord {
+export interface MatchHistoryRecordWithDay extends MatchHistoryRecord {
   day: string
 }
 
-export type MatchHistoryData = MatchHistoryRecordData[];
+export type MatchHistoryState = MatchHistoryRecordWithDay[];
