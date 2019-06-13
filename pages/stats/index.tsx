@@ -23,7 +23,7 @@ import { LegendStatsValue } from '../../components/LegendStatsValue';
 import { InfoCard } from '../../components/InfoCard';
 import { Stats, Player, MatchHistoryRecord, Platform } from '../../types';
 import { fetchInitialStats, FetchInitialStatsResult, updateStats, fetchStats } from './fetchInitialStats';
-import { statsReducer, initStatsReducer, sortLegends } from '../../store/hooks-reducers/stats';
+import { statsReducer, initStatsReducer } from '../../store/hooks-reducers/stats';
 
 const countdown = process.env.NODE_ENV === 'production' ? 178 : 120;
 
@@ -59,7 +59,6 @@ const StatsPage = ({
     try {
       dispatch({ type: 'UPDATE_STATS_REQUESTED' });
       NProgress.start();
-
       const latestMatch = await updateStats(player);
 
       if (latestMatch) {
@@ -67,7 +66,6 @@ const StatsPage = ({
           type: 'MATCH_HISTORY_SUCCEEDED',
           payload: [latestMatch]
         });
-
         const nextStats = await fetchStats(player);
 
         if (
@@ -133,10 +131,6 @@ const StatsPage = ({
     delay: 100,
     config: { mass: 1, tension: 150, friction: 50 }
   });
-
-  const sortedLegendStats = useMemo(() => 
-    sortLegends(state.legendStats)
-  , [state.legendStats]);
 
   return (
     <div>
@@ -220,7 +214,7 @@ const StatsPage = ({
         tabs={[
           {
             title: 'Legend Stats',
-            content: sortedLegends.map(legendStats => (
+            content: state.legendStats.map(legendStats => (
               <LegendStats
                 stats={legendStats}
                 key={legendStats.id}

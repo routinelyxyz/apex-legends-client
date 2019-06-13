@@ -11,22 +11,22 @@ export interface Player {
 
 export type StatsValue = number | null;
 
-export type StatsData = {
+export type StatsData<T = StatsValue> = {
   rank: number
   percentile: number
-  value: StatsValue
+  value: T
 }
 
-export interface LifetimeStats {
+export interface LifetimeStats<T = StatsValue> {
   id: number
   season: number
-  lvl: StatsData
-  lvlProgress: StatsData
-  kills: StatsData
-  damage: StatsData
-  headshots: StatsData
-  damagePerKill: StatsData
-  headshotsPerKill: StatsData
+  lvl: StatsData<T>
+  lvlProgress: StatsData<T>
+  kills: StatsData<T>
+  damage: StatsData<T>
+  headshots: StatsData<T>
+  damagePerKill: StatsData<T>
+  headshotsPerKill: StatsData<T>
 }
 
 export interface Legend {
