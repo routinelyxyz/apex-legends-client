@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useMemo } from 'react';
 import 'isomorphic-unfetch';
 import css from './style.scss';
 import { getAvatar } from '../../helpers';
@@ -11,7 +11,7 @@ import { useFirstRender } from '../../hooks';
 import NProgress from 'nprogress';
 import { Stats } from '../../types';
 import { fetchInitialStats, FetchInitialStatsResult, updateStats, fetchStats, fetchMatchHistory } from './fetchInitialStats';
-import { statsReducer, initStatsReducer } from '../../store/hooks-reducers/stats';
+import { statsReducer, initStatsReducer, groupMatchHistory } from '../../store/hooks-reducers/stats';
 
 import { ProgressRing } from '../../components/ProgressRing';
 import { HorizontalNavTab } from '../../reusable/HorizontalNav';
@@ -129,6 +129,8 @@ const StatsPage = ({
     config: { mass: 1, tension: 150, friction: 50 }
   });
 
+  const matchHistory = useMemo(() => groupMatchHistory(state.matchHistory), [state.matchHistory]);
+
   return (
     <div>
       <Head>
@@ -222,10 +224,9 @@ const StatsPage = ({
             title: 'Match history',
             content: (
               <StatsHistory
-                player={stats.player}
                 matchHistory={matchHistory}
-                setMatchHistory={handleMatchHistoryUpdate}
-                dispatch={dispatch}
+                isUpdating={state.isLoadingHistory}
+                updateMatchHistory={handleMatchHistoryUpdate}
               />
             )
           }
@@ -285,7 +286,7 @@ const StatsPageContainer = (props: FetchInitialStatsResult) => {
   );
 }
 
-StatsPageContainer.getInitialProps = async ({ query }: any) => {
+StatsPageContainer.getInitialProps = async ({ query, ...props }: any) => {
   const { platform, name, id } = query;
 
   if (!name || !platform) {
@@ -293,7 +294,7 @@ StatsPageContainer.getInitialProps = async ({ query }: any) => {
   }
 
   const result = await fetchInitialStats(query);
-  return result;
+  return { ...result, ...props }
 }
 
 interface QueryParams {

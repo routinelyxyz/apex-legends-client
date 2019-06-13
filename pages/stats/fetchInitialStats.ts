@@ -1,5 +1,6 @@
 import Axios from "axios";
 import { Player, Stats, MatchHistoryRecord, Platform, MatchHistory } from "../../types";
+import { RouterProps } from "next/router";
 
 function getStatsUrl(player: Player) {
   const { platform, name, id = '' } = player;
@@ -73,5 +74,6 @@ export interface FetchInitialStatsResult {
   name: string
   status?: number
   error: boolean
+  router: RouterProps
   skipFirstFetch: boolean
 }
