@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import css from './style.scss';
 import dayjs from 'dayjs';
-import { GroupMatchHistoryResult } from '../../store/hooks-reducers/stats';
+import { GroupMatchHistoryResult } from '../../pages/stats/reducer';
 
 import { StatsHistoryRecord } from '../StatsHistoryRecord';
 
