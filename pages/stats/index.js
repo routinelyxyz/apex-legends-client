@@ -222,16 +222,12 @@ const StatsPage = ({ name, url, platform, router, skipFirstFetch = false, ...pro
         tabs={[
           {
             title: 'Legend Stats',
-            content: (
-              <>
-                {sortedLegends.map(legendStats => (
-                  <LegendStats
-                    stats={legendStats}
-                    key={legendStats.id}
-                  />
-                ))}
-              </>
-            )
+            content: sortedLegends.map(legendStats => (
+              <LegendStats
+                stats={legendStats}
+                key={legendStats.id}
+              />
+            ))
           },
           {
             title: 'Match history',
