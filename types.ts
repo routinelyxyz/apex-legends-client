@@ -57,8 +57,6 @@ export interface MatchHistoryRecord {
   damagePerKill: StatsValue
   headshotsPerKill: StatsValue
   legend: Legend
-  // 
-  day: string
 }
 
 export type KeyedObject = {

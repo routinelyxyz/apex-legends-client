@@ -10,7 +10,7 @@ async function fetchMatchHistory(playerId) {
   return response.data.data;
 }
 
-export const StatsHistory = ({ player, matchHistory, setMatchHistory }) => {
+export const StatsHistory = ({ player, matchHistory, setMatchHistory, dispatch }) => {
 
   useEffect(() => {
     fetchMatchHistory(player.id)

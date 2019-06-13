@@ -1,18 +1,17 @@
 import React, { useReducer } from 'react';
 import 'isomorphic-unfetch';
 import css from './style.scss';
-import { getAvatar, statsProps } from '../../helpers';
+import { getAvatar } from '../../helpers';
 import { animated, useSpring } from 'react-spring';
-import { useState, useEffect, useMemo } from 'react';
-import dayjs from 'dayjs';
-import { getTs, getUniqueById, applyCss } from '../../util';
-import { connect } from 'react-redux';
-import { mapDispatchToProps } from '../../store/mappers';
+import { useState, useEffect } from 'react';
+import { getTs, applyCss } from '../../util';
 import Head from 'next/head';
-import axios from 'axios';
 import { withRouter, RouterProps } from 'next/router';
 import { useFirstRender } from '../../hooks';
 import NProgress from 'nprogress';
+import { Stats } from '../../types';
+import { fetchInitialStats, FetchInitialStatsResult, updateStats, fetchStats, fetchMatchHistory } from './fetchInitialStats';
+import { statsReducer, initStatsReducer } from '../../store/hooks-reducers/stats';
 
 import { ProgressRing } from '../../components/ProgressRing';
 import { HorizontalNavTab } from '../../reusable/HorizontalNav';
@@ -21,52 +20,35 @@ import { StatsHistory } from '../../components/StatsHistory';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
 import { LegendStatsValue } from '../../components/LegendStatsValue';
 import { InfoCard } from '../../components/InfoCard';
-import { Stats, Player, MatchHistoryRecord, Platform } from '../../types';
-import { fetchInitialStats, FetchInitialStatsResult, updateStats, fetchStats } from './fetchInitialStats';
-import { statsReducer, initStatsReducer } from '../../store/hooks-reducers/stats';
 
-const countdown = process.env.NODE_ENV === 'production' ? 178 : 120;
 
 const StatsPage = ({
   stats,
   router,
   skipFirstFetch
 }: StatsPageProps) => {
-  const [state, dispatch] = useReducer(statsReducer, stats, initStatsReducer);
-  const afterFirstRender = useFirstRender();
+  const [state, dispatch] = useReducer(statsReducer, { stats, skipFirstFetch }, initStatsReducer);
   const [now, setNow] = useState(getTs());
-  const [to, setTo] = useState(getTs() + (skipFirstFetch ? countdown : 3));
-  const counter = to - now;
+  const afterFirstRender = useFirstRender();
+  const counter = state.nextUpdateAt - now;
 
-  const handleMatchHistoryUpdate = nextMatchHistory => {
-    const addDayToRecord = record => ({
-      ...record,
-      day: dayjs(record.date).format('YYYY-MM-DD')
-    });
-    const nextMatchHistoryWithDay = nextMatchHistory.map(addDayToRecord);
-
-    setMatchHistory(prevMatchHistory => 
-      getUniqueById([...nextMatchHistoryWithDay, ...prevMatchHistory])
-        .sort((a, b) => a.id > b.id ? -1 : 1)
-    );
-  }
-
-  const handleStatsUpdate = async (player = stats.player) => {
-    if (state.isUpdating) {
-      return;
-    }
-
+  async function handleStatsUpdate(player = state.player) {
     try {
-      dispatch({ type: 'UPDATE_STATS_REQUESTED' });
-      NProgress.start();
+      if (state.isUpdating || !player) {
+        return;
+      }
       const latestMatch = await updateStats(player);
 
+      dispatch({ type: 'UPDATE_STATS_REQUESTED' });
+      NProgress.start();
+
       if (latestMatch) {
+        const nextStats = await fetchStats(player);
+
         dispatch({
-          type: 'MATCH_HISTORY_SUCCEEDED',
+          type: 'MATCH_HISTORY_UPDATE',
           payload: [latestMatch]
         });
-        const nextStats = await fetchStats(player);
 
         if (
           nextStats &&
@@ -83,40 +65,55 @@ const StatsPage = ({
     } catch (err) {
       console.error(err);
     } finally {
-      setTo(getTs() + countdown);
-      dispatch({ type: 'UPDATE_STATS_FINISHED '});
+      dispatch({ type: 'UPDATE_STATS_FINISHED'});
       NProgress.done();
     }
   }
 
+  async function handleMatchHistoryUpdate() {
+    if (!state.player || state.isLoadingHistory) {
+      return;
+    }
+    dispatch({ type: 'MATCH_HISTORY_REQUESTED' });
+
+    const matchHistory = await fetchMatchHistory(state.player.id);
+
+    dispatch({
+      type: 'MATCH_HISTORY_SUCCEEDED',
+      payload: matchHistory
+    });
+  }
+
   useEffect(() => {
-    const interval = setInterval(() => 
-      setNow(getTs())
-    , 1000);
+    const interval = setInterval(() => setNow(getTs()), 1000);
+    if (
+      stats &&
+      state.player &&
+      afterFirstRender &&
+      stats.player.name !== state.player.name
+    ) {
+      dispatch({
+        type: 'UPDATE_STATS',
+        payload: stats
+      });
+    }
+
     return () => clearInterval(interval);
-  }, []);
+  }, [stats, afterFirstRender]);
 
-  useEffect(() => {
-    if (stats && afterFirstRender && props.stats.player.name !== stats.player.name) {
-      setStats(props.stats);
-      setTo(getTs() + 3);
-    }
-  }, [props.stats, afterFirstRender]);
-
-  useEffect(() => {
-    if (counter <= 0 && !state.isUpdating) {
-      handleStatsUpdate();
-    }
-  }, [counter]);
-
-  const updateIn = useMemo(() => {
+  const calcNextUpdate = () => {
     const seconds = counter % 60;
     const minutes = Math.floor(counter / 60);
     if ((minutes <= 0 && seconds <= 0) || state.isUpdating) {
       return 'Just now';
     }
     return (minutes ? `${minutes} min. ` : '') + `${seconds} sec.`;
-  }, [counter, state.isUpdating]);
+  }
+  const updateIn = calcNextUpdate();
+
+  if (counter <= 0 && !state.isUpdating) {
+    handleStatsUpdate();
+  }
 
   const lvlProps = useSpring({
     from: { lvl: 0 },
@@ -228,6 +225,7 @@ const StatsPage = ({
                 player={stats.player}
                 matchHistory={matchHistory}
                 setMatchHistory={handleMatchHistoryUpdate}
+                dispatch={dispatch}
               />
             )
           }

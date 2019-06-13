@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { Player, Stats, MatchHistoryRecord, Platform } from "../../types";
+import { Player, Stats, MatchHistoryRecord, Platform, MatchHistory } from "../../types";
 
 function getStatsUrl(player: Player) {
   const { platform, name, id = '' } = player;
@@ -18,6 +18,13 @@ export async function updateStats(
 ): Promise<MatchHistoryRecord | null> {
   const response = await Axios.post(getStatsUrl(player));
   return response.data.latestMatch;
+}
+
+export async function fetchMatchHistory(
+  playerId: number
+): Promise<MatchHistory> {
+  const response = await Axios.get(`/stats/v2/match-history/id/${playerId}`);
+  return response.data.data;
 }
 
 export async function fetchInitialStats(queryParams: any) {

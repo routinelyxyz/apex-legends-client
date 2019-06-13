@@ -1,7 +1,8 @@
 import 'core-js/features/object/from-entries';
-import { statsProps, NODE_ENV } from '../../helpers';
-import { filterByUniqueId } from '../../util';
-import { StatsPayload, MatchHistory, KeyedObject, LegendStats, Stats, LifetimeStats, MatchHistoryRecord, Player, Legend, StatsData } from '../../types';
+import { NODE_ENV } from '../../helpers';
+import { filterByUniqueId, getTs } from '../../util';
+import { MatchHistory, KeyedObject, LegendStats, Stats, MatchHistoryRecord, Player, Legend, StatsData } from '../../types';
+import dayjs from 'dayjs';
 
 export const countdown = NODE_ENV === 'production' ? 178 : 120;
 
@@ -18,9 +19,9 @@ interface StatsState {
     legend: Legend
     data: LegendStatsData[]
   }[]
-  matchHistory: MatchHistory
+  matchHistory: MatchHistoryData[]
 
-  updateAt: number
+  nextUpdateAt: number
   isUpdating: boolean
   isLoadingHistory: boolean
 }
@@ -35,7 +36,7 @@ export const initialState: StatsState = {
   legendStats: [],
   matchHistory: [],
 
-  updateAt: 0,
+  nextUpdateAt: 1000,
   isUpdating: false,
   isLoadingHistory: true
 }
@@ -49,12 +50,14 @@ export function statsReducer(
       ...state,
       isUpdating: true
     }
+    case 'UPDATE_STATS':
     case 'UPDATE_STATS_SUCCEEDED':
       const { id, season, ...rest } = action.payload.lifetime;
       return {
         ...state,
         isUpdating: false,
         player: action.payload.player,
+        nextUpdateAt: getTs() + countdown,
         lifetimeStats: {
           id,
           season,
@@ -86,37 +89,33 @@ export function statsReducer(
       isLoadingHistory: true
     }
     case 'MATCH_HISTORY_UPDATE':
-    case 'MATCH_HISTORY_SUCCEEDED': return {
-      ...state,
-      isLoadingHistory: false,
-      matchHistory: [...action.payload, ...state.matchHistory]
-        .filter(filterByUniqueId)
-    }
+    case 'MATCH_HISTORY_SUCCEEDED':
+      const matchHistoryWithDay = action.payload
+        .map(record => ({
+          ...record,
+          day: dayjs(record.date).format('YYYY-MM-DD')
+        }));
+      return {
+        ...state,
+        isLoadingHistory: false,
+        matchHistory: [...matchHistoryWithDay, ...state.matchHistory]
+          .filter(filterByUniqueId)
+      }
     default: throw new Error('Unknown action type');
   }
 }
 
-export function initStatsReducer(stats: Stats) {
+export function initStatsReducer({ stats, skipFirstFetch }: {
+  stats: Stats
+  skipFirstFetch: boolean
+}): StatsState {
   return {
     ...initialState,
     legendStats: stats.legends.sort(sortLegendStats),
     lifetimeStats: stats.lifetime,
-    player: stats.player
+    player: stats.player,
+    nextUpdateAt: skipFirstFetch ? countdown : 3
   }
-}
-
-function normalizeLifetimeStats<T>(lifetimeStats: T) {
-  const notNullEntries = Object
-    .entries(lifetimeStats)
-    .filter(([prop, value]) => 
-      statsProps.lifetime.includes(prop) && value != null
-    );
-
-  if (!notNullEntries.length) {
-    return null;
-  }
-  
-  return Object.fromEntries(notNullEntries);
 }
 
 function sortLegendStats(a: LegendStats, b: LegendStats) {
@@ -129,25 +128,9 @@ function sortLegendStats(a: LegendStats, b: LegendStats) {
   return -1;
 }
 
-/**
- * @version 2
- * legendStats: state.legendStats
-  .sort((a, b) => {
-    const killsA = a.data.find(el => el.prop === 'kills');
-    const killsB = b.data.find(el => el.prop === 'kills');
-    if (killsA) {
-      if (killsB) {
-        return killsA.value > killsB.value ? 1 : -1; 
-      }
-      return 1;
-    }
-    return -1;
-  })
- */
-
 export function groupMatchHistory(
-  matchHistory: MatchHistory
-): [string, MatchHistory] {
+  matchHistory: MatchHistoryData[]
+): [string, MatchHistoryData[]] {
 
   const grouped = matchHistory
     .reduce((grouped: KeyedObject, record) => {
@@ -164,7 +147,7 @@ interface UpdateStatsRequested {
 }
 
 interface UpdateStatsSucceeded {
-  type: 'UPDATE_STATS_SUCCEEDED'
+  type: 'UPDATE_STATS_SUCCEEDED' | 'UPDATE_STATS'
   payload: Stats
 }
 
@@ -173,14 +156,9 @@ interface MatchHistoryRequested {
 }
 
 interface MatchHistorySucceeded {
-  type: 'MATCH_HISTORY_SUCCEEDED'
+  type: 'MATCH_HISTORY_SUCCEEDED' | 'MATCH_HISTORY_UPDATE'
   payload: MatchHistory
 }
-
-interface MatchHistoryUpdate {
-  type: 'MATCH_HISTORY_UPDATE'
-  payload: MatchHistory
-} 
 
 interface UpdateStatsFinished {
   type: 'UPDATE_STATS_FINISHED'
@@ -191,8 +169,7 @@ type StatsActions =
   UpdateStatsSucceeded  |
   UpdateStatsFinished   |
   MatchHistoryRequested |
-  MatchHistorySucceeded |
-  MatchHistoryUpdate
+  MatchHistorySucceeded
 
   
 interface LegendStatsData extends StatsData<number> {
@@ -201,4 +178,8 @@ interface LegendStatsData extends StatsData<number> {
 
 interface LifetimeStatsData extends StatsData<number> {
   prop: 'lvl' | 'lvlProgress' | 'kills' | 'damage' | 'headshots' | 'damagePerKill' | 'headshotsPerKill'
+}
+
+interface MatchHistoryData extends MatchHistoryRecord {
+  day: string
 }
