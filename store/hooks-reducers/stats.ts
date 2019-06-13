@@ -1,7 +1,7 @@
 import 'core-js/features/object/from-entries';
 import { statsProps } from '../../helpers';
 import { filterByUniqueId } from '../../util';
-import { StatsPayload, MatchHistory, KeyedObject, LegendStats } from '../../types';
+import { StatsPayload, MatchHistory, KeyedObject, LegendStats, Stats, LifetimeStats, MatchHistoryRecord } from '../../types';
 
 function normalizeLifetimeStats<T>(lifetimeStats: T) {
   const notNullEntries = Object
@@ -21,14 +21,14 @@ export const initialState: StatsState = {
   isLoadingHistory: true,
   isUpdating: false,
   legendStats: [],
-  lifetimeStats: {}, // null
+  lifetimeStats: null,
   matchHistory: []
 }
 
 export function statsReducer(
   state: StatsState,
   action: StatsActions
-) {
+): StatsState {
   switch(action.type) {
     case 'UPDATE_STATS_REQUESTED': return {
       ...state,
@@ -44,6 +44,10 @@ export function statsReducer(
         : [...action.payload.matchHistory, ...state.matchHistory]
             .filter(filterByUniqueId)
     }
+    case 'UPDATE_STATS_FINISHED': return {
+      ...state,
+      isUpdating: false
+    }
     case 'MATCH_HISTORY_REQUESTED': return {
       ...state,
       isLoadingHistory: true
@@ -58,7 +62,7 @@ export function statsReducer(
   }
 }
 
-export function initStatsReducer(payload: StatsPayload) {
+export function initStatsReducer(stats: Stats) {
   return {
     ...initialState,
     legendStats: payload.stats.legends,
@@ -91,7 +95,7 @@ interface StatsState {
   isLoadingHistory: boolean
   isUpdating: boolean
   legendStats: LegendStats[]
-  lifetimeStats: {}
+  lifetimeStats: LifetimeStats | null
   matchHistory: MatchHistory
 }
 
@@ -101,7 +105,7 @@ interface UpdateStatsRequested {
 
 interface UpdateStatsSucceeded {
   type: 'UPDATE_STATS_SUCCEEDED'
-  payload: StatsPayload
+  payload: Stats
 }
 
 interface MatchHistoryRequested {
@@ -110,11 +114,16 @@ interface MatchHistoryRequested {
 
 interface MatchHistorySucceeded {
   type: 'MATCH_HISTORY_SUCCEEDED'
-  // payload: any
+  payload: MatchHistory
+}
+
+interface UpdateStatsFinished {
+  type: 'UPDATE_STATS_FINISHED'
 }
 
 type StatsActions =
   UpdateStatsRequested |
   UpdateStatsSucceeded |
+  UpdateStatsFinished |
   MatchHistoryRequested |
-  MatchHistorySucceeded
+  MatchHistorySucceeded 

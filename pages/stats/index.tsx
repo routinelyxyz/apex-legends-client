@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import 'isomorphic-unfetch';
 import css from './style.scss';
 import { getAvatar, statsProps } from '../../helpers';
@@ -22,21 +22,20 @@ import { PlayerSearcher } from '../../components/PlayerSearcher';
 import { LegendStatsValue } from '../../components/LegendStatsValue';
 import { InfoCard } from '../../components/InfoCard';
 import { Stats, Player, MatchHistoryRecord, Platform } from '../../types';
-import { fetchInitialStats, FetchInitialStatsResult } from './fetchInitialStats';
+import { fetchInitialStats, FetchInitialStatsResult, updateStats, fetchStats } from './fetchInitialStats';
+import { statsReducer, initStatsReducer, sortLegends } from '../../store/hooks-reducers/stats';
 
 const countdown = process.env.NODE_ENV === 'production' ? 178 : 120;
 
 const StatsPage = ({
+  stats,
   router,
-  skipFirstFetch,
-  ...props
+  skipFirstFetch
 }: StatsPageProps) => {
+  const [state, dispatch] = useReducer(statsReducer, stats, initStatsReducer);
   const afterFirstRender = useFirstRender();
-  const [stats, setStats] = useState(() => props.stats);
-  const [matchHistory, setMatchHistory] = useState([]);
   const [now, setNow] = useState(getTs());
   const [to, setTo] = useState(getTs() + (skipFirstFetch ? countdown : 3));
-  const [isUpdating, setUpdating] = useState(false);
   const counter = to - now;
 
   const handleMatchHistoryUpdate = nextMatchHistory => {
@@ -53,19 +52,33 @@ const StatsPage = ({
   }
 
   const handleStatsUpdate = async (player = stats.player) => {
-    if (isUpdating) return;
+    if (state.isUpdating) {
+      return;
+    }
 
     try {
-      setUpdating(true);
+      dispatch({ type: 'UPDATE_STATS_REQUESTED' });
       NProgress.start();
+
       const latestMatch = await updateStats(player);
 
       if (latestMatch) {
-        handleMatchHistoryUpdate([latestMatch]);
+        dispatch({
+          type: 'MATCH_HISTORY_SUCCEEDED',
+          payload: [latestMatch]
+        });
 
         const nextStats = await fetchStats(player);
-        if (router.query.name === nextStats.player.name) {
-          setStats(nextStats);
+
+        if (
+          nextStats &&
+          router.query &&
+          router.query.name === nextStats.player.name
+        ) {
+          dispatch({
+            type: 'UPDATE_STATS_SUCCEEDED',
+            payload: nextStats
+          });
         }
       }
 
@@ -73,26 +86,27 @@ const StatsPage = ({
       console.error(err);
     } finally {
       setTo(getTs() + countdown);
-      setUpdating(false);
+      dispatch({ type: 'UPDATE_STATS_FINISHED '});
       NProgress.done();
     }
   }
 
   useEffect(() => {
-    let interval = setInterval(() => {
-      setNow(getTs());
-    }, 1000);
+    const interval = setInterval(() => 
+      setNow(getTs())
+    , 1000);
+    return () => clearInterval(interval);
+  }, []);
 
+  useEffect(() => {
     if (stats && afterFirstRender && props.stats.player.name !== stats.player.name) {
       setStats(props.stats);
       setTo(getTs() + 3);
     }
-
-    return () => clearInterval(interval);
   }, [props.stats, afterFirstRender]);
 
   useEffect(() => {
-    if (counter <= 0 && !isUpdating) {
+    if (counter <= 0 && !state.isUpdating) {
       handleStatsUpdate();
     }
   }, [counter]);
@@ -100,37 +114,29 @@ const StatsPage = ({
   const updateIn = useMemo(() => {
     const seconds = counter % 60;
     const minutes = Math.floor(counter / 60);
-    if ((minutes <= 0 && seconds <= 0) || isUpdating) return 'Just now';
+    if ((minutes <= 0 && seconds <= 0) || state.isUpdating) {
+      return 'Just now';
+    }
     return (minutes ? `${minutes} min. ` : '') + `${seconds} sec.`;
-  }, [counter, isUpdating]);
+  }, [counter, state.isUpdating]);
 
   const lvlProps = useSpring({
     from: { lvl: 0 },
-    to: { lvl: stats.lifetime.lvl.value },
+    to: { lvl: state.lifetimeStats.lvl.value },
     delay: 100,
     config: { mass: 1, tension: 150, friction: 50 }
   });
 
   const rankProps = useSpring({
     from: { rank: 1 },
-    to: { rank: stats.lifetime.kills.rank },
+    to: { rank: state.lifetimeStats.kills.rank },
     delay: 100,
     config: { mass: 1, tension: 150, friction: 50 }
   });
 
-  const sortedLegends = useMemo(() =>
-    [...stats.legends].sort((a, b) =>
-      a.kills.value > b.kills.value ? -1 : 1
-    )
-  , [stats]);
-
-  const lifetimeStats = useMemo(() =>
-    statsProps.legend
-      .flatMap(prop => {
-        const propData = stats.lifetime[prop];
-        return propData.value != null ? { prop, ...propData } : [];
-      })
-  , [stats]);
+  const sortedLegendStats = useMemo(() => 
+    sortLegends(state.legendStats)
+  , [state.legendStats]);
 
   return (
     <div>

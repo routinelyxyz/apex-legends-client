@@ -20,8 +20,8 @@ export type StatsData = {
 export interface LifetimeStats {
   id: number
   season: number
-  lvl: number
-  lvlProgress: number
+  lvl: StatsData
+  lvlProgress: StatsData
   kills: StatsData
   damage: StatsData
   headshots: StatsData
