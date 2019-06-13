@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { mapDispatchToProps } from '../../store/mappers';
 import Head from 'next/head';
 import axios from 'axios';
-import { withRouter } from 'next/router';
+import { withRouter, RouterProps } from 'next/router';
 import { useFirstRender } from '../../hooks';
 import NProgress from 'nprogress';
 
@@ -22,36 +22,15 @@ import { PlayerSearcher } from '../../components/PlayerSearcher';
 import { LegendStatsValue } from '../../components/LegendStatsValue';
 import { InfoCard } from '../../components/InfoCard';
 import { Stats, Player, MatchHistoryRecord, Platform } from '../../types';
-
-function getStatsUrl(player: Player) {
-  const { platform, name, id = '' } = player;
-  return `/stats/v2/${platform}/${encodeURIComponent(name)}?id=${id}`;
-}
-
-async function fetchStats(
-  player: Player
-): Promise<Stats | null> {
-  const response = await axios.get(getStatsUrl(player));
-  return response.data.data;
-}
-
-async function updateStats(
-  player: Player
-): Promise<MatchHistoryRecord | null> {
-  const response = await axios.post(getStatsUrl(player));
-  return response.data.latestMatch;
-}
-
+import { fetchInitialStats, FetchInitialStatsResult } from './fetchInitialStats';
 
 const countdown = process.env.NODE_ENV === 'production' ? 178 : 120;
 
-const StatsPage = (
-  {
-    name, url, platform,
-    router, skipFirstFetch = false,
-    ...props
-  }: StatsPageProps
-) => {
+const StatsPage = ({
+  router,
+  skipFirstFetch,
+  ...props
+}: StatsPageProps) => {
   const afterFirstRender = useFirstRender();
   const [stats, setStats] = useState(() => props.stats);
   const [matchHistory, setMatchHistory] = useState([]);
@@ -259,8 +238,10 @@ const StatsPage = (
   )
 }
 
-const RenderError = ({ status, platform, name }) => {
-  if (name == null || !name.length) return null;
+const RenderError = ({ status, platform, name }: FetchInitialStatsResult) => {
+  if (name == null || !name.length) {
+    return null
+  }
   return (
     <div className={css.error__container}>
       <p className={css.error__title}>
@@ -280,10 +261,9 @@ const RenderError = ({ status, platform, name }) => {
   )
 }
 
-const StatsPageContainer = (props: StatsPageProps) => {
-  const { stats, error = false } = props;
+const StatsPageContainer = (props: FetchInitialStatsResult) => {
+  const { stats, error = false, skipFirstFetch, router } = props;
   const isError = error || !stats;
-  
   return (
     <>
       <Head>
@@ -296,7 +276,13 @@ const StatsPageContainer = (props: StatsPageProps) => {
           pageMode
         />
       </div>
-      {!isError && <StatsPage {...props} />}
+      {!isError && (
+        <StatsPage
+          stats={stats as Stats}
+          skipFirstFetch={skipFirstFetch}
+          router={router}
+        />
+      )}
     </>
   );
 }
@@ -308,34 +294,20 @@ StatsPageContainer.getInitialProps = async ({ query }: any) => {
     return { stats: null }
   }
 
-  try {
-    const stats = await fetchStats(query);
-    return { stats, platform, name }
-  } catch(err) {
-    const { status } = err.response;
+  const result = await fetchInitialStats(query);
+  return result;
+}
 
-    if (status === 404) {
-      try {
-        await updateStats(query);
-        const stats = await fetchStats(query);
-        const skipFirstFetch = true;
-        return { stats, platform, name, skipFirstFetch }
-      } catch(err) {
-        const { status } = err.response;
-        return { stats: null, platform, name, status }
-      }
-    }
-
-  }
+interface QueryParams {
+  id?: string
+  platform: string
+  name: string
 }
 
 interface StatsPageProps {
-  stats: Stats | null
-  status?: number
-  platform?: Platform
-  name?: string
-  error?: true
-  skipFirstFetch?: boolean
+  stats: Stats
+  skipFirstFetch: boolean
+  router: RouterProps
 }
 
 export default withRouter(StatsPageContainer);
