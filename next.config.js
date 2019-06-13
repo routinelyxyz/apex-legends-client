@@ -2,12 +2,12 @@ const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 const withSass = require('@zeit/next-sass');
 const withPlugins = require('next-compose-plugins');
 const nextOffline = require('next-offline');
-const { resolve } = require('path');
 const isProduction = process.env.NODE_ENV === 'production';
+const withTypescript = require('@zeit/next-typescript');
 
 const CDN_URL = 'https://api.apex-legends.win';
 
-const nextConfig = {
+const workboxConfig = {
   workboxOpts: {
     swDest: 'static/service-worker.js',
     runtimeCaching: [
@@ -42,53 +42,22 @@ const nextConfig = {
   },
 }
 
-const manifest = {
-  name: "Apex-Legends.win",
-  short_name: "Apex-Legends.win",
-  start_url: "/",
-  display: "standalone",
-  background_color: "#23232F",
-  theme_color: "#23232F",
-  description: "Apex Legends stats, leaderboards, interactive and detailed items explorer, legend details. Quick updates with live and daily match tracking.",
-  icons: {
-    src: resolve(process.cwd(), './assets/pwa-icon.png'),
-    cache: true
-  }
-}
-
 const plugins = [
-  [withSass, { cssModules: true }]
-]
+  [withSass, { cssModules: true }],
+  [withTypescript]
+];
 
 if (isProduction) {
   plugins.push(
-    [nextOffline, nextConfig]
+    [nextOffline, workboxConfig]
   );
 }
 
 module.exports = withPlugins(
-  [
-    ...plugins
-    /*
-    [withBundleAnalyzer, {
-      analyzeServer: ["server", "both"].includes(process.env.BUNDLE_ANALYZE),
-      analyzeBrowser: ["browser", "both"].includes(process.env.BUNDLE_ANALYZE),
-      bundleAnalyzerConfig: {
-        server: {
-          analyzerMode: 'static',
-          reportFilename: '../bundles/server.html'
-        },
-        browser: {
-          analyzerMode: 'static',
-          reportFilename: '../bundles/client.html'
-        }
-      }
-    }]
-    */
-  ],
+  plugins,
   {
     target: isProduction ? 'serverless' : 'server',
-    webpack(config, { isServer, dev, buildId, config: { distDir }}) {
+    webpack(config) {
       
       const plugins = [
         ...config.plugins,
@@ -104,11 +73,3 @@ module.exports = withPlugins(
     }
   }
 );
-
-function moduleExists(name) {
-  try {
-    return require.resolve(name);
-  } catch (err) {
-    return false;
-  }
-}
