@@ -92,6 +92,7 @@ type WeaponData = {
 export interface Weapon extends WeaponData {
   id: number
   name: string
+  slug: string
   type: WeaponType
   ammo: AmmoType
   img: string
