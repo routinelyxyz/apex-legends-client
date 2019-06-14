@@ -1,77 +1,44 @@
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import css from './style.scss';
-import { useState, useRef, useContext, useEffect, useCallback } from 'react';
 import { debounce, applyCss, scrollTo } from '../../util';
 import useClickOutside from 'use-onclickoutside';
-import { connect } from 'react-redux';
-import { mapDispatchToProps } from '../../store/mappers';
 import Router from 'next/router';
 import { useDevice } from '../../hooks';
 import { MobileMenuContext, ModalContext } from '../../helpers/context';
 import axios from 'axios';
 import NProgress from 'nprogress';
+import { Platform } from '../../types';
 
-import { PlayerLabel } from '../../components/PlayersTable';
 import { BasicInput } from '../../reusable/Input';
-import { PhraseSelector } from '../../reusable/PhraseSelector';
 import { SearcherPlatforms } from '../../components/SearcherPlatforms';
 import { SlidingContainer } from '../../reusable/SlidingContainer';
+import { RenderPlayersResult } from './RenderPlayersResult';
 
 const debounceA = debounce(350);
-let timeout;
+let timeout: any;
 
-const RenderPlayersResult = ({ isSearching, playersFound, phrase }) => {
-  
-  if (!phrase.length) {
-    return (
-      <p className={css.players_error}>
-        Start typing to find players.
-      </p>
-    );
-  }
-
-  if (!isSearching && !playersFound.length) {
-    return (
-      <>
-        <p className={css.players_error}>
-          No saved players were found.
-        </p>
-        <p className={css.players_error}>
-          You can anyway try to update stats by pressing enter.
-        </p>
-      </>
-    );
-  }
-
-  return playersFound.map(player => (
-    <div
-      key={player.id}
-      className={css.player_label_searcher__container}
-    >
-      <PlayerLabel 
-        player={player}
-        renderName={name => (
-          <span className={css.player_label_searcher__name}>
-            <PhraseSelector
-              value={name}
-              phrase={phrase}
-            />
-          </span>
-        )}
-      />
-    </div>
-  ));
+interface PlayerSearcherProps {
+  height?: number  
+  pageMode?: boolean
+  statsPage?: boolean
+  testId?: string
 }
 
-const PlayerSearcher = ({ height = 250, pageMode, statsPage, testId }) => {
+export const PlayerSearcher = ({
+  height = 250,
+  pageMode,
+  statsPage,
+  testId
+}: PlayerSearcherProps) => {
   const [phrase, setPhrase] = useState('');
   const [focused, setFocused] = useState(false);
   const [playersFound, setPlayersFound] = useState([]);
-  const [platform, setPlatform] = useState('pc');
+  const [platform, setPlatform] = useState<Platform>('pc');
   const [isSearching, setIsSearching] = useState(false);
   const { isPhone } = useDevice();
   const mobileMenu = useContext(MobileMenuContext);
   const modal = useContext(ModalContext);
-  const refContainer = useRef();
+  const refContainer: any = useRef();
 
   useClickOutside(refContainer, () => {
     setFocused(false);
@@ -81,7 +48,7 @@ const PlayerSearcher = ({ height = 250, pageMode, statsPage, testId }) => {
     }
   });
 
-  const findPlayers = async (name) => {
+  const findPlayers = async (name: string) => {
     const response = await axios.get(`/stats/players/${encodeURI(name)}`);
     if (phrase.length) {
       setPlayersFound(response.data.data);
@@ -90,16 +57,19 @@ const PlayerSearcher = ({ height = 250, pageMode, statsPage, testId }) => {
     NProgress.done();
   }
 
-  const handleOnChange = event => {
+  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setPhrase(value);
     NProgress.start();
-    if (!isSearching) setIsSearching(true);
-    
+
+    if (!isSearching) {
+      setIsSearching(true);
+    }
     if (value && value.length) {
       clearTimeout(timeout);
       setIsSearching(false);
       NProgress.done();
+
       if (playersFound.length) {
         setPlayersFound([]);
       }
@@ -109,7 +79,7 @@ const PlayerSearcher = ({ height = 250, pageMode, statsPage, testId }) => {
     timeout = debounceA(() => findPlayers(value));
   }
 
-  const handleStatsSearch = (event) => {
+  const handleStatsSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && phrase.length) {
       setFocused(false);
       modal.setOpened(false);
@@ -176,10 +146,3 @@ const PlayerSearcher = ({ height = 250, pageMode, statsPage, testId }) => {
     </div>
   )
 }
-
-const SearcherWithRedux = connect(
-  (state) => ({ stats: state.stats }),
-  mapDispatchToProps
-)(PlayerSearcher);
-
-export { SearcherWithRedux as PlayerSearcher };

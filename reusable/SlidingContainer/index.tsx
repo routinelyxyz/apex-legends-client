@@ -1,9 +1,11 @@
 import React from 'react';
 import { animated, useTransition, config } from 'react-spring';
 
-interface SlidingContainerProps extends React.HTMLProps<HTMLDivElement>{
+// extends React.HTMLProps<HTMLDivElement>
+interface SlidingContainerProps {
   state: boolean
   height?: number
+  [key: string]: any
 }
 
 export const SlidingContainer = ({
@@ -31,7 +33,7 @@ export const SlidingContainer = ({
         {...rest}
       />
     )
-  ));
+  )) as JSX.Element;
 }
 
 const Memoized = React.memo(SlidingContainer);

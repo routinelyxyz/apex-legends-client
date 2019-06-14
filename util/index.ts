@@ -33,8 +33,8 @@ export const filterUnique = (
 
 
 interface scrollToProps {
-  top: number
-  left: number
+  top?: number
+  left?: number
   behavior?: 'smooth' | 'auto'
 }
 export const scrollTo = ({

@@ -12,7 +12,9 @@ export const PhraseSelector = ({ value, phrase }: PhraseSelectorProps) => {
 
   const phraseStart = valueLowered.indexOf(phraseLowered);
   if (phraseStart === -1) {
-    return value;
+    return (
+      <>{value}</>
+    );
   }
   const phraseEnd = phraseStart + phrase.length;
 

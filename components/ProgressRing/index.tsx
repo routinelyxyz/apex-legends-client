@@ -1,17 +1,29 @@
+import React from 'react';
 import './style.scss';
 import { animated, useSpring } from 'react-spring';
 
-export const ProgressRing = ({ radius, stroke, progress }) => {
+interface ProgressRingProps {
+  radius: number
+  stroke: number
+  progress: number
+}
+
+export const ProgressRing = ({
+  radius,
+  stroke,
+  progress
+}: ProgressRingProps) => {
+
   const normalizedRadius = radius - stroke * 2;
   const circumference = normalizedRadius * 2 * Math.PI;
   const strokeDashoffset = circumference - progress / 100 * circumference;
 
-  const props = useSpring({
+  const props: any = useSpring({
     from: { strokeDashoffset: 365 },
     to: { strokeDashoffset }
   });
 
-  const prog = useSpring({
+  const prog: any = useSpring({
     from: { progress: 0 },
     to: { progress },
     delay: 100
@@ -50,13 +62,12 @@ export const ProgressRing = ({ radius, stroke, progress }) => {
         strokeDasharray={circumference + ' ' + circumference}
         style={{
           strokeDashoffset: prog.progress
-            .interpolate(v => circumference - v / 100 * circumference)
+            .interpolate((v: number) => circumference - v / 100 * circumference)
         }}
         r={normalizedRadius}
         cx={radius}
         cy={radius}
       />
-
     </svg>
-  )
+  );
 }
