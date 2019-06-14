@@ -107,3 +107,10 @@ export interface Weapon extends WeaponData {
 export type Weapons = Weapon[];
 
 export type WeaponSortProp = 'name' | 'ammoType' | WeaponProps;
+
+export interface LegendAbility {
+  name: string
+  type: string
+  description: string
+  img?: string
+}

@@ -10,8 +10,8 @@ interface NavLinkProps extends Link {
   as: string
   active?: boolean
   className?: string
-  children: ReactChildren
-  title: string | ReactChildren
+  children: JSX.Element
+  title: string | JSX.Element
 }
 
 export const NavLink = ({

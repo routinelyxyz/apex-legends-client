@@ -16,6 +16,7 @@ interface StatsState {
   isUpdating: boolean
   isLoadingHistory: boolean
 }
+export { StatsState as StatState } 
 
 export const initialState: StatsState = {
   player: null,
@@ -72,6 +73,7 @@ export function statsReducer(
                 : []
               )
           }))
+          .filter(legendStats => legendStats.data.length)
       }
     case 'UPDATE_STATS_FINISHED': return {
       ...state,
@@ -167,7 +169,7 @@ type StatsActions =
   MatchHistorySucceeded
 
   
-interface LegendStatsData extends StatsData<number> {
+export interface LegendStatsData extends StatsData<number> {
   prop: 'kills' | 'damage' | 'headshots' | 'damagePerKill' | 'headshotsPerKill'
 }
 
@@ -192,9 +194,11 @@ interface LifetimeStatState {
   } | null
 }
 
-type LegendStatState = {
+export type LegendStatsRecord = {
   id: number
   season: number
   legend: Legend
   data: LegendStatsData[]
-}[]
+}
+
+type LegendStatState = LegendStatsRecord[]
