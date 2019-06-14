@@ -1,24 +1,15 @@
 import 'core-js/features/object/from-entries';
 import { NODE_ENV } from '../../helpers';
 import { filterByUniqueId, getTs } from '../../util';
-import { MatchHistory, KeyedObject, LegendStats, Stats, MatchHistoryRecord, Player, Legend, StatsData } from '../../types';
+import { MatchHistory, KeyedObject, LegendStats, Stats, MatchHistoryRecord, Player, Legend, StatsData, LifetimeStats } from '../../types';
 import dayjs from 'dayjs';
 
 export const countdown = NODE_ENV === 'production' ? 178 : 120;
 
 interface StatsState {
   player: Player | null
-  lifetimeStats: {
-    id: number | null
-    season: number | null
-    data: LifetimeStatsData[]
-  }
-  legendStats: {
-    id: number
-    season: number
-    legend: Legend
-    data: LegendStatsData[]
-  }[]
+  lifetimeStats: LifetimeStatState
+  legendStats: LegendStatState
   matchHistory: MatchHistoryState
 
   nextUpdateAt: number
@@ -31,7 +22,8 @@ export const initialState: StatsState = {
   lifetimeStats: {
     id: null,
     season: null,
-    data: []
+    data: [],
+    props: null
   },
   legendStats: [],
   matchHistory: [],
@@ -52,7 +44,7 @@ export function statsReducer(
     }
     case 'UPDATE_STATS':
     case 'UPDATE_STATS_SUCCEEDED':
-      const { id, season, ...rest } = action.payload.lifetime;
+      const { id, season, ...props } = action.payload.lifetime;
       return {
         ...state,
         isUpdating: false,
@@ -61,7 +53,8 @@ export function statsReducer(
         lifetimeStats: {
           id,
           season,
-          data: Object.entries(rest)
+          props,
+          data: Object.entries(props)
             .flatMap(([prop, data]) => data.value != null 
               ? { prop, ...data }
               : []
@@ -178,6 +171,8 @@ interface LegendStatsData extends StatsData<number> {
   prop: 'kills' | 'damage' | 'headshots' | 'damagePerKill' | 'headshotsPerKill'
 }
 
+type LifetimeStatsProps = 'lvl' | 'lvlProgress' | 'kills' | 'damage' | 'headshots' | 'damagePerKill' | 'headshotsPerKill';
+
 interface LifetimeStatsData extends StatsData<number> {
   prop: 'lvl' | 'lvlProgress' | 'kills' | 'damage' | 'headshots' | 'damagePerKill' | 'headshotsPerKill'
 }
@@ -187,3 +182,19 @@ export interface MatchHistoryRecordWithDay extends MatchHistoryRecord {
 }
 
 export type MatchHistoryState = MatchHistoryRecordWithDay[];
+
+interface LifetimeStatState {
+  id: number | null
+  season: number | null
+  data: LifetimeStatsData[]
+  props: {
+    [key in LifetimeStatsProps]: StatsData
+  } | null
+}
+
+type LegendStatState = {
+  id: number
+  season: number
+  legend: Legend
+  data: LegendStatsData[]
+}[]

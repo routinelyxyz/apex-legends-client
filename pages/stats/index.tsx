@@ -30,6 +30,9 @@ const StatsPage = ({
   const [state, dispatch] = useReducer(statsReducer, { stats, skipFirstFetch }, initStatsReducer);
   const [now, setNow] = useState(getTs());
   const afterFirstRender = useFirstRender();
+  const { props } = state.lifetimeStats;
+  const lvl = (props && props.lvl.rank) || 0;
+  const rank = (props && props.kills.rank) || 1;
   const counter = state.nextUpdateAt - now;
 
   async function handleStatsUpdate(player = state.player) {
@@ -37,14 +40,12 @@ const StatsPage = ({
       if (state.isUpdating || !player) {
         return;
       }
-      const latestMatch = await updateStats(player);
-
       dispatch({ type: 'UPDATE_STATS_REQUESTED' });
+      const latestMatch = await updateStats(player);
       NProgress.start();
 
       if (latestMatch) {
         const nextStats = await fetchStats(player);
-
         dispatch({
           type: 'MATCH_HISTORY_UPDATE',
           payload: [latestMatch]
@@ -115,16 +116,16 @@ const StatsPage = ({
     handleStatsUpdate();
   }
 
-  const lvlProps = useSpring({
+  const lvlProps: any = useSpring({
     from: { lvl: 0 },
-    to: { lvl: state.lifetimeStats.lvl.value },
+    to: { lvl },
     delay: 100,
     config: { mass: 1, tension: 150, friction: 50 }
   });
 
-  const rankProps = useSpring({
+  const rankProps: any = useSpring({
     from: { rank: 1 },
-    to: { rank: state.lifetimeStats.kills.rank },
+    to: { rank },
     delay: 100,
     config: { mass: 1, tension: 150, friction: 50 }
   });
@@ -152,14 +153,14 @@ const StatsPage = ({
         </div>
         <div className={css.player__info}>
           <h1 className={css.player__name}>
-            {stats.name || stats.player.name}
+            {state.player && state.player.name}
           </h1>
           <div className={css.info_card__container}>
             <InfoCard
               title="Rank"
               content={(
                 <animated.span className={stats.lifetime.kills.rank <= 10 && css.player__colored_rank}>
-                  {rankProps.rank.interpolate(v => v.toFixed())}
+                  {rankProps.rank.interpolate((v: number) => v.toFixed())}
                 </animated.span>
               )}
               className={css.info_card__item}
@@ -195,9 +196,9 @@ const StatsPage = ({
         Lifetime stats
       </h2>
       <div className={css.lifetime_stats__container}>
-        {lifetimeStats.length ? (
+        {state.lifetimeStats.data.length ? (
           <ul className={css.lifetime_stats__list}>
-            {lifetimeStats.map(stats => (
+            {state.lifetimeStats.data.map(stats => (
               <LegendStatsValue
                 key={stats.prop}
                 {...stats}
