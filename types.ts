@@ -114,3 +114,5 @@ export interface LegendAbility {
   description: string
   img?: string
 }
+
+export type Environment = 'development' | 'test' | 'production';

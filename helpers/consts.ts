@@ -1,4 +1,3 @@
+import { Environment } from "../types";
 
-type NodeEnv = 'development' | 'test' | 'production';
-
-export const NODE_ENV = <NodeEnv>process.env.NODE_ENV || 'development';
+export const NODE_ENV = <Environment>process.env.NODE_ENV || 'development';
