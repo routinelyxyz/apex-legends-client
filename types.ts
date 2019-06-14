@@ -104,3 +104,5 @@ export interface Weapon extends WeaponData {
 }
 
 export type Weapons = Weapon[];
+
+export type WeaponSortProp = 'name' | 'ammoType' | WeaponProps;

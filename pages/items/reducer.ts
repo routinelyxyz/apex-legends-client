@@ -1,9 +1,9 @@
-import { Weapon, AmmoType, WeaponType, WeaponProps, Weapons } from "../../types";
+import { Weapon, AmmoType, WeaponType, Weapons, WeaponSortProp } from "../../types";
 
 interface WeaponState {
   isLoading: boolean
   phrase: string
-  sortBy: SortByState
+  sortBy: WeaponSortProp
   sortAsc: boolean
   ammoTypes: AmmoTypeState[]
   categories: {
@@ -176,7 +176,7 @@ interface ToggleOrder {
 
 interface UpdateSortBy {
   type: 'UPDATE_SORT_BY'
-  payload: SortByState
+  payload: WeaponSortProp
 }
 
 interface ToggleCategory {
@@ -192,6 +192,9 @@ interface ToggleAmmoType {
 interface LoadFilters {
   type: 'LOAD_FILTERS'
   payload: {
+    phrase: string
+    sortBy: WeaponSortProp
+    sortAsc: boolean
     ammoTypeNames: string[]
     categoryNames: string[]
   }
@@ -210,8 +213,6 @@ type WeaponActions =
   LoadFilters     |
   ClearFilters;
 
-
-export type SortByState = 'name' | 'ammoType' | WeaponProps;
 
 interface AmmoTypeState extends AmmoType {
   selected: boolean
