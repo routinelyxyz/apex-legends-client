@@ -75,3 +75,32 @@ export type StatsPayload = {
 }
 
 export type MatchHistory = MatchHistoryRecord[];
+
+export type WeaponType = string;
+
+export interface AmmoType {
+  name: string
+  img: string
+}
+
+export type WeaponProps = 'bodyDamage' | 'bodyDPS' | 'headshotDPS' | 'reloadTime' | 'emptyReload' | 'magazine';
+
+type WeaponData = {
+  [key in WeaponProps]: number
+}
+
+export interface Weapon extends WeaponData {
+  id: number
+  name: string
+  type: WeaponType
+  ammo: AmmoType
+  img: string
+  // bodyDamage: number
+  // bodyDPS: number
+  // headshotDPS: number
+  // reloadTime: number
+  // emptyReload: number
+  // magazine: number
+}
+
+export type Weapons = Weapon[];
