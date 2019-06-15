@@ -1,5 +1,4 @@
 import React, { useReducer, useMemo } from 'react';
-import 'isomorphic-unfetch';
 import css from './style.scss';
 import { getAvatar } from '../../helpers';
 import { animated, useSpring } from 'react-spring';
@@ -22,6 +21,11 @@ import { LegendStatsValue } from '../../components/LegendStatsValue';
 import { InfoCard } from '../../components/InfoCard';
 
 
+interface StatsPageProps {
+  stats: Stats
+  skipFirstFetch: boolean
+  router: RouterProps
+}
 const StatsPage = ({
   stats,
   router,
@@ -232,8 +236,7 @@ const StatsPage = ({
             )
           }
         ]}
-      >
-      </HorizontalNavTab>
+      />
     </div>
   )
 }
@@ -302,12 +305,6 @@ interface QueryParams {
   id?: string
   platform: string
   name: string
-}
-
-interface StatsPageProps {
-  stats: Stats
-  skipFirstFetch: boolean
-  router: RouterProps
 }
 
 export default withRouter(StatsPageContainer);

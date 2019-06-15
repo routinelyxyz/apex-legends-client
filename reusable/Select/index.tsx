@@ -6,7 +6,6 @@ interface BaseSelectProps extends React.HTMLProps<HTMLSelectElement> {
   active?: boolean
   className?: string
 }
-
 export const BaseSelect = ({
   active,
   className,

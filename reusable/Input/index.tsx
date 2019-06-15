@@ -4,9 +4,8 @@ import { applyCss } from '../../util';
 
 interface BasicInputProps extends React.HTMLProps<HTMLInputElement> {
   className?: string
-  type: string
+  type?: 'text' | 'password' | 'date' | 'search' | 'url'
 }
-
 export const BasicInput = ({
   className,
   type = 'text',

@@ -1,20 +1,20 @@
-import css from './style.scss';
 import React from 'react';
+import css from './style.scss';
 
 interface PhraseSelectorProps {
   value: string
   phrase: string
 }
-
-export const PhraseSelector = ({ value, phrase }: PhraseSelectorProps) => {
+export const PhraseSelector = ({
+  value,
+  phrase
+}: PhraseSelectorProps) => {
   const valueLowered = value.toLowerCase();
   const phraseLowered = phrase.toLowerCase();
 
   const phraseStart = valueLowered.indexOf(phraseLowered);
   if (phraseStart === -1) {
-    return (
-      <>{value}</>
-    );
+    return value;
   }
   const phraseEnd = phraseStart + phrase.length;
 

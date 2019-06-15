@@ -36,7 +36,7 @@ export const useMeasure = <T>() => {
 }
 
 
-export const useMounted = (callback: () => {}) => {
+export const useMounted = (callback?: () => {}) => {
   const mounted = useRef(false);
   useEffect(() => {
     if (mounted.current && callback) {

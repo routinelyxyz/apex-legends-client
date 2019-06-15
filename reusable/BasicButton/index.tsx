@@ -1,4 +1,4 @@
-import React, { ReactChildren } from 'react';
+import React, { ReactNode } from 'react';
 import css from './style.scss';
 import { applyCss } from '../../util';
 
@@ -6,9 +6,8 @@ interface BasicButtonProps {
   title?: string
   active?: boolean
   className?: string
-  children?: ReactChildren | string
+  children?: ReactNode
 }
-
 export const BasicButton = ({
   title,
   children = title,

@@ -1,19 +1,18 @@
-import React, { ReactChildren } from 'react';
+import React, { ReactNode, ReactElement } from 'react';
 import css from './style.scss';
-import Link from 'next/link';
+import { LinkProps } from 'next/link';
 import { applyCss } from '../../helpers';
 
 export const H3 = <h3 className={css.h3} />;
 
-interface NavLinkProps extends Link {
+interface NavLinkProps extends LinkProps {
   href: string
   as: string
   active?: boolean
   className?: string
-  children: JSX.Element
-  title: string | JSX.Element
+  children: ReactElement
+  title: ReactNode
 }
-
 export const NavLink = ({
   href,
   as,

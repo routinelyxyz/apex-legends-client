@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import css from './style.scss';
 
 interface CheckmarkProps extends React.HTMLProps<HTMLInputElement> {
   title?: string
-  body?: JSX.Element | string
+  body?: ReactNode
 }
-
 export const Checkmark = ({
   title,
   body = title,

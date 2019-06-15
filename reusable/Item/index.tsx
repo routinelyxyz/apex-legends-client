@@ -3,13 +3,11 @@ import css from './style.scss';
 import Link from 'next/link';
 import { STATIC } from '../../helpers/consts';
 import { applyCss } from '../../helpers';
-import { Weapon } from '../../types';
+import { Weapon, KeyedObject } from '../../types';
 
-interface WeaponItemProps {
+interface WeaponItemProps extends KeyedObject {
   item: Weapon
-  [key: string]: any
 }
-
 export const WeaponItem = ({
   item,
   ...flipProps

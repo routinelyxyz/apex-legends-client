@@ -13,7 +13,6 @@ interface ProgressBarProps {
   value: number
   className?: string
 }
-
 export const ProgressBar = ({
   title,
   hoverTitle = () => '',
@@ -23,6 +22,7 @@ export const ProgressBar = ({
   value,
   className
 }: ProgressBarProps) => {
+  
   const percents: any = parsePercent(value);
   const props: any = useSpring({
     from: { percents: 0 },
