@@ -7,7 +7,7 @@ import { useDevice } from '../../hooks';
 import { MobileMenuContext, ModalContext } from '../../helpers/context';
 import axios from 'axios';
 import NProgress from 'nprogress';
-import { Platform } from '../../types';
+import { Platform, Player } from '../../types';
 
 import { BasicInput } from '../../reusable/Input';
 import { SearcherPlatforms } from '../../components/SearcherPlatforms';
@@ -32,7 +32,7 @@ export const PlayerSearcher = ({
 }: PlayerSearcherProps) => {
   const [phrase, setPhrase] = useState('');
   const [focused, setFocused] = useState(false);
-  const [playersFound, setPlayersFound] = useState([]);
+  const [playersFound, setPlayersFound] = useState<Player[]>([]);
   const [platform, setPlatform] = useState<Platform>('pc');
   const [isSearching, setIsSearching] = useState(false);
   const { isPhone } = useDevice();
@@ -49,7 +49,7 @@ export const PlayerSearcher = ({
   });
 
   const findPlayers = async (name: string) => {
-    const response = await axios.get(`/stats/players/${encodeURI(name)}`);
+    const response = await axios.get<{ data: Player[] }>(`/stats/players/${encodeURI(name)}`);
     if (phrase.length) {
       setPlayersFound(response.data.data);
     }

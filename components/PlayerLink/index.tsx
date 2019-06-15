@@ -1,8 +1,8 @@
 import React from 'react';
-import Link from 'next/link';
+import Link, { LinkProps } from 'next/link';
 import { Player } from '../../types';
 
-interface PlayerLinkProps {
+interface PlayerLinkProps extends LinkProps {
   player: Player
 }
 

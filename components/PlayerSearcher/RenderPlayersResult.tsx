@@ -1,12 +1,13 @@
 import React from 'react';
 import css from './style.scss';
+import { Player } from '../../types';
 
 import { PlayerLabel } from '../../components/PlayersTable';
 import { PhraseSelector } from '../../reusable/PhraseSelector';
 
 interface RenderPlayersResultProps {
   isSearching: boolean
-  playersFound: []
+  playersFound: Player[]
   phrase: string
 }
 
