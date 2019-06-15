@@ -133,3 +133,11 @@ export interface TrendingStatsRecord {
 }
 
 export type TrendingStats = TrendingStatsRecord[];
+
+export interface Action <T, P = {}> extends P {
+  type: T
+}
+
+export type LifetimeStatsProp = 'kills' | 'damage' | 'headshots' | 'lvl';
+export type LegendStatsProp = 'kills' | 'damage' | 'headshots' | 'damagePerKill' | 'headshotsPerKill';
+export type LeaderboardStatsProp = LifetimeStatsProp | LegendStatsProp;

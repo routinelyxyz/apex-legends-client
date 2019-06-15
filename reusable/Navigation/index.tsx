@@ -75,7 +75,7 @@ export const PaginationMenu = ({
 interface NavigationProps extends PaginationMenuProps {
   menuBottom?: boolean
   menuTop?: boolean
-  children: ReactNode
+  children?: ReactNode
 }
 export const Navigation = ({
   menuBottom = true,

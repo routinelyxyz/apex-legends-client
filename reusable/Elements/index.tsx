@@ -3,7 +3,7 @@ import css from './style.scss';
 import { LinkProps } from 'next/link';
 import { applyCss } from '../../helpers';
 
-export const H3 = <h3 className={css.h3} />;
+export const H3 = () => (<h3 className={css.h3} />);
 
 interface NavLinkProps extends LinkProps {
   href: string
