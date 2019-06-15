@@ -7,7 +7,6 @@ import { Legend } from '../../types';
 interface LegendCardProps {
   legend: Legend
 }
-
 export const LegendCard = ({ legend }: LegendCardProps) => (
   <li>
     <Link

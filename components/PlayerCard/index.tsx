@@ -1,13 +1,25 @@
+import React from 'react';
 import css from './style.scss';
 import { applyCss } from '../../util';
 import { getAvatar } from '../../helpers';
+import { TrendingStatsRecord } from '../../types';
 
 import { PlayerLink } from '../../components/PlayerLink';
 
 interface PlayerCardProps {
+  data: TrendingStatsRecordData
+  scaleSize?: number
+  className?: string
+  horizontal?: boolean
+  place?: number
 }
-
-export const PlayerCard = ({ data, scaleSize, className, horizontal, place = 1 }) => {
+export const PlayerCard = ({
+  data,
+  scaleSize,
+  className,
+  horizontal,
+  place = 1
+}: PlayerCardProps) => {
   const props = [
     { name: 'Kills', prop: 'kills' },
     { name: 'Damage', prop: 'damage' },
@@ -53,4 +65,8 @@ export const PlayerCard = ({ data, scaleSize, className, horizontal, place = 1 }
       </div>
     </div>
   )
+}
+
+interface TrendingStatsRecordData extends TrendingStatsRecord {
+  [key: string]: any
 }

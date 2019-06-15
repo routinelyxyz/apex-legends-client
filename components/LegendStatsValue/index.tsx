@@ -8,7 +8,6 @@ import { ProgressBar } from '../../reusable/ProgressBar';
 interface LegendStatsValueProps extends LegendStatsData {
   link<T, P>(rank: T, prop: P): string
 }
-
 const LegendStatsValue = ({
   value,
   prop,

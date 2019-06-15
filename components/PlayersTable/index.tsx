@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import css from './style.scss';
 import { statsTitlesMap, getStatic, getAvatar, applyCss } from '../../helpers'
 
@@ -6,8 +6,8 @@ import { PlayerLink } from '../../components/PlayerLink';
 import { Player } from '../../types';
 
 interface TableProps {
-  thead: JSX.Element
-  tbody: JSX.Element
+  thead: ReactNode
+  tbody: ReactNode
 }
 export const Table = ({ thead, tbody }: TableProps) => (
   <table className={css.players_table}>
@@ -49,8 +49,8 @@ export const PlayerLabel = ({
 );
 
 interface TdProps {
-  children: JSX.Element
-  align?: 'right' | 'left'
+  children: ReactNode
+  align?: 'right' | 'left' | 'center'
   fontSize: number
 }
 export const Td = ({
@@ -67,8 +67,8 @@ export const Td = ({
 );
 
 interface ThProps {
-  children: JSX.Element
-  align?: 'right' | 'left'
+  children: ReactNode
+  align?: 'right' | 'left' | 'center'
   fontSize: number
 }
 export const Th = ({

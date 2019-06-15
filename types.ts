@@ -116,3 +116,12 @@ export interface LegendAbility {
 }
 
 export type Environment = 'development' | 'test' | 'production';
+
+export interface TrendingStatsRecord {
+  kills?: number
+  damage?: number
+  headshots?: number
+  player: Player
+}
+
+export type TrendingStats = TrendingStatsRecord[];

@@ -9,7 +9,6 @@ import { LegendStatsValue } from '../LegendStatsValue';
 interface LegendStatsProps {
   stats: LegendStatsRecord
 }
-
 export function LegendStats({ stats }: LegendStatsProps) {
   return (
     <div className={`box ${css.container}`}>

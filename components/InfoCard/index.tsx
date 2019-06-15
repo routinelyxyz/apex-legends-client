@@ -1,13 +1,12 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import css from './style.scss';
 
 interface InfoCardProps {
   title: string
-  content?: JSX.Element
-  children?: JSX.Element
+  content?: ReactNode
+  children?: ReactNode
   className?: string
 }
-
 export const InfoCard = ({
   title,
   content,

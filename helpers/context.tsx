@@ -4,9 +4,8 @@ import { useDevice } from '../hooks';
 type ModalContext = {
   opened: boolean
   scroll: boolean
-  setOpened(status: boolean): void
+  setOpened(status: boolean): any
 }
-
 export const ModalContext = React.createContext<ModalContext>({} as any);
 
 export const ModalProvider = () => {
@@ -36,7 +35,6 @@ interface MobileMenuContext {
   visible: boolean
   setVisible(status: boolean): void
 }
-
 export const MobileMenuContext = React.createContext<MobileMenuContext>({} as any);
 
 export const MobileMenuProvider = () => {

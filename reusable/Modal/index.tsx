@@ -1,13 +1,12 @@
 import css from './style.scss';
-import React, { ReactChildren } from 'react';
+import React, { ReactNode } from 'react';
 
 interface ModalSlideProps {
   opened: boolean
   onClose: () => {}
   title?: string
-  children: JSX.Element
+  children: ReactNode
 }
-
 export const ModalSlide = ({
   opened,
   onClose,

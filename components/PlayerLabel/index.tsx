@@ -6,7 +6,9 @@ import { Player } from '../../types';
 interface PlayerLabelProps {
   player: Player
 }
-
+/**
+ * @deprecated new version in table component
+ */
 export const PlayerLabel = ({ player }: PlayerLabelProps) => (
   <Link
     href={`/stats?platform=${player.platform}&id=${player.id}`}

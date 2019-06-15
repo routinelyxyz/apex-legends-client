@@ -7,7 +7,6 @@ const icon = "https://c-8oqtgrjgwu0x24icogrgfkcx2eewtugefpx2eeqo.g00.gamepedia.c
 interface LegendAbilityProps {
   ability: types.LegendAbility
 }
-
 export const LegendAbility = ({ ability }: LegendAbilityProps) => (
   <li className={css.container}>
     <div className={css.header}>
