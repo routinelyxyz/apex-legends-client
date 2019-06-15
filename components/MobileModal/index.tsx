@@ -7,8 +7,8 @@ import { ModalSlide } from '../../reusable/Modal';
 
 interface MobileModalProps {
   title: string
-  modalTitle: string
-  children: ReactNode
+  modalTitle?: string
+  children?: ReactNode
 }
 export const MobileModal = ({
   title,

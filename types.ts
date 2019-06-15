@@ -34,7 +34,14 @@ export interface Legend {
   name: string
   slug: string
   img: string
-} 
+}
+
+export { Legend as LegendBase }
+
+export interface LegendDetailed extends Legend {
+  title: string
+  abilities: LegendAbility[]
+}
 
 export interface LegendStats {
   id: number
@@ -109,6 +116,7 @@ export type Weapons = Weapon[];
 export type WeaponSortProp = 'name' | 'ammoType' | WeaponProps;
 
 export interface LegendAbility {
+  id: number
   name: string
   type: string
   description: string

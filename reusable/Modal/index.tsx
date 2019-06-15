@@ -5,7 +5,7 @@ interface ModalSlideProps {
   opened: boolean
   onClose: () => {}
   title?: string
-  children: ReactNode
+  children?: ReactNode
 }
 export const ModalSlide = ({
   opened,

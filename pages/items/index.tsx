@@ -22,7 +22,7 @@ const sortProps = [
   ['name', 'Name'],
   ...weaponProps,
   ['ammoType', 'Ammo type']
-];
+] as [string, string][];
 
 interface WeaponsPageProps {
   items: Weapons
@@ -157,7 +157,7 @@ const WeaponsPage = ({ items, router }: WeaponsPageProps) => {
             <h3 className={css.h3}>Ammo type</h3>
             {state.ammoTypes.map(ammoType => (
               <Checkmark
-                content={(
+                body={(
                   <div className={css.ammo_checkmark}>
                     <img
                       {...applyCss(
