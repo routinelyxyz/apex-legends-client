@@ -25,10 +25,10 @@ export const parsePercent = (number: number) => {
 
 export const getTs = () => Math.floor(Date.now() / 1000); 
 
-export const filterUnique = (
-  value: string | number | boolean,
+export const filterUnique = <T>(
+  value: T,
   index: number,
-  self: []
+  self: T[]
 ) => self.indexOf(value) === index;
 
 
@@ -63,7 +63,7 @@ export const filterByUniqueId = <T extends RecordWithId<T>>(
   return foundIndex === index;
 }
 
-export const filterTruthyProp = <T>([prop, val]: T) => val ? prop : [];
+export const filterTruthyProp = <T extends Array<T>>([prop, val]: T) => val ? prop : [];
 
 export const filterTruthyEntry = <T>(object: T) => Object
   .entries(object)
