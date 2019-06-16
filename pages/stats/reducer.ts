@@ -1,4 +1,3 @@
-import 'core-js/features/object/from-entries';
 import { NODE_ENV } from '../../helpers';
 import { filterByUniqueId, getTs } from '../../util';
 import { MatchHistory, KeyedObject, LegendStats, Stats, MatchHistoryRecord, Player, Legend, StatsData, LifetimeStats } from '../../types';

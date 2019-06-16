@@ -1,4 +1,5 @@
-import React from 'react'
+import 'core-js/features/object/from-entries';
+import React from 'react';
 import App, { Container, NextAppContext } from 'next/app';
 import LoadFonts from '../middleware/font';
 import '../assets/css/global.scss';
