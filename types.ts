@@ -175,3 +175,12 @@ export interface RecentlyUpdatedRecord {
 }
 
 export type RecentlyUpdated = RecentlyUpdatedRecord[];
+
+export interface WeaponRatioRecord {
+  name: keyof Weapon
+  min: number
+  diff: number
+  max: number
+}
+
+export type WeaponRatios = WeaponRatioRecord[];
