@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, ReactNode } from 'react';
 import { useDevice } from '../hooks';
 
 type ModalContext = {
@@ -8,7 +8,11 @@ type ModalContext = {
 }
 export const ModalContext = React.createContext<ModalContext>({} as any);
 
-export const ModalProvider = () => {
+
+interface ModalProviderProps {
+  children: ReactNode
+}
+export const ModalProvider = (_props: ModalProviderProps) => {
   const [opened, setOpened] = useState(false);
   const { isDesktop } = useDevice();
 
@@ -37,7 +41,11 @@ interface MobileMenuContext {
 }
 export const MobileMenuContext = React.createContext<MobileMenuContext>({} as any);
 
-export const MobileMenuProvider = () => {
+
+interface MobileMenuProviderProps {
+  children: ReactNode
+}
+export const MobileMenuProvider = (_props: MobileMenuProviderProps) => {
   const [visible, setVisible] = useState(true);
 
   const value = useMemo(() => ({
