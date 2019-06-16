@@ -22,12 +22,10 @@ export function leaderboardsReducer(
   switch(action.type) {
     case 'UPDATE_PLATFORM': return {
       ...state,
-      isFetching: true,
       platform: action.payload
     }
     case 'UPDATE_PROPERTY': return {
       ...state,
-      isFetching: true,
       property: action.payload
     }
     case 'UPDATE_LEGEND':
@@ -37,7 +35,6 @@ export function leaderboardsReducer(
       );
       return {
         ...state,
-        isFetching: true,
         property: setInitialProp ? initialState.property : state.property,
         legend: action.payload
       }
