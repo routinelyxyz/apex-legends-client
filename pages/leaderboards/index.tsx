@@ -1,65 +1,46 @@
 import React, { useReducer } from 'react';
 import css from './style.scss';
-import { getUrl, NODE_ENV } from '../../helpers';
 import qs from 'querystringify';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { withRouter, RouterProps } from 'next/router';
 import { useMounted } from '../../hooks';
-import { statsPropTitles, statsProps, statsTitlesMap, platforms } from '../../helpers';
-import Link from 'next/link';
+import { statsProps, statsTitlesMap, platforms, NODE_ENV } from '../../helpers';
 import Head from 'next/head';
-import axios from 'axios';
+import Axios from 'axios';
+import { leaderboardsReducer, initLeaderboardsReducer, initialState } from './reducer';
+import { LegendBase, Platform } from '../../types';
 
 import { Navigation } from '../../reusable/Navigation';
 import { Select } from '../../reusable/Select';
 import { H3 } from '../../reusable/Elements';
 import { PlayersTable } from '../../components/PlayersTable';
-import { leaderboardsReducer, initLeaderboardsReducer, initialState } from './reducer';
-import { LegendBase, Platform } from '../../types';
 
-
-const initialLegend = 'all';
-const initialProp = 'kills';
 
 interface LeaderboardsPageProps {
   data: any
   legends: LegendBase[]
-  router: RouterProps
+  router: RouterProps<QueryParams>
 }
 const LeadeboardsPage = ({
   data,
-  query,
   legends,
   router
 }: LeaderboardsPageProps) => {
-  const { perPage = 100 } = data;
-  const [state, dispatch] = useReducer(leaderboardsReducer, query, initLeaderboardsReducer);
-  const page = router.query.page != null ? Number(router.query.page) : 1;
-  const [legend, setLegend] = useState(query.legend || initialLegend);
-  const [prop, setProp] = useState(query.prop || initialProp);
   const isMounted = useMounted();
-
-  const statProps = statsProps[legend === 'all' ? 'lifetime' : 'legend'];
-
-  const handleLegendUpdate = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const { value } = event.target;
-    if (
-      legend === 'all' ||
-      (legend !== 'all' && value === 'all')
-    ) {
-      setProp(initialProp);
-    }
-    setLegend(value);
-
-    dispatch({
-      type: 'UPDATE_LEGEND',
-      payload: event.target.value
-    });
-  }
+  const [state, dispatch] = useReducer(
+    leaderboardsReducer, router.query, initLeaderboardsReducer
+  );
+  const statProps = statsProps[state.legend === 'all' ? 'lifetime' : 'legend'];
+  const { perPage = 100 } = data;
+  const activePage = (
+    router.query &&
+    router.query.page
+    && Number(router.query.page)
+  ) || 1;
 
   useEffect(() => {
-    const query: any = {};
     const { platform, legend, property } = state;
+    const query: any = {};
 
     if (!isMounted || state.isFetching) {
       return;
@@ -72,11 +53,13 @@ const LeadeboardsPage = ({
     const href = '/leaderboards' + qs.stringify(query, true);
     const as = href;
 
+    dispatch({ type: 'FETCH_REQUESTED' });
+
     router.replace(href, as, { shallow: false })
       .catch(console.log)
-      .finally(() => dispatch({ type: 'UPDATE_FINISHED' }))
+      .finally(() => dispatch({ type: 'FETCH_FINISHED' }));
 
-  }, [state.platform, state.legend, state.property, isMounted]);
+  }, [state, isMounted]);
 
   const handlePlatformUpdate = (event: React.ChangeEvent<HTMLSelectElement>) => {
     dispatch({
@@ -88,6 +71,13 @@ const LeadeboardsPage = ({
   const handlePropertyUpdate = (event: React.ChangeEvent<HTMLSelectElement>) => {
     dispatch({
       type: 'UPDATE_PROPERTY',
+      payload: event.target.value
+    });
+  }
+
+  const handleLegendUpdate = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    dispatch({
+      type: 'UPDATE_LEGEND',
       payload: event.target.value
     });
   }
@@ -153,22 +143,22 @@ const LeadeboardsPage = ({
                 value={prop}
                 key={prop}
               >
-                {statsTitlesMap[prop] || prop}
+                {(statsTitlesMap as any)[prop] || prop}
               </option>
             ))}
           </Select>
         </div>
       </div>
       <Navigation
-        activePage={page}
+        activePage={activePage}
         pagesCount={data.pages}
         href={p => '/leaderboards?page=' + p}
         menuTop
       >
         <PlayersTable
           data={data.data}
-          prop={prop}
-          renderRank={index => (index + 1) + (page - 1) * perPage}
+          prop={state.property}
+          renderRank={index => (index + 1) + (activePage - 1) * perPage}
           clearFilters={() => dispatch({ type: 'CLEAR_FILTERS' })}
         />
       </Navigation>
@@ -176,12 +166,15 @@ const LeadeboardsPage = ({
   )
 }
 
-LeadeboardsPage.getInitialProps = async (props) => {
-  const { query } = props;
+LeadeboardsPage.getInitialProps = async (props: {
+  query?: QueryParams
+  asPath: string
+}) => {
+  const { query = {} } = props;
 
   const [leaderboards, legends] = await Promise.all([
-    axios.get('/stats' + props.asPath),
-    axios.get('/legends')
+    Axios.get('/stats' + props.asPath),
+    Axios.get('/legends')
   ]);
   
   if (props.asPath !== '/leaderboards' && NODE_ENV === 'production') {
@@ -196,8 +189,11 @@ LeadeboardsPage.getInitialProps = async (props) => {
   }
 }
 
-interface QueryParams {
-
+export interface QueryParams {
+  platform?: Platform
+  legend?: string
+  page?: number
+  prop?: string
 }
 
 export default withRouter(LeadeboardsPage);

@@ -1,10 +1,11 @@
 import { Platform } from '../../types';
+import { QueryParams } from './';
 
 interface LeaderboardState {
   isFetching: boolean
   platform: Platform
-  legend: 'all' | string
-  property: 'kills' | string
+  legend: string
+  property: string
 }
 
 export const initialState: LeaderboardState = {
@@ -31,14 +32,20 @@ export function leaderboardsReducer(
     }
     case 'UPDATE_LEGEND':
       const { legend } = state;
-      const setInitialProp = legend === 'all' || (legend !== 'all' && action.payload === 'all');
+      const setInitialProp = legend === 'all' || (
+        legend !== 'all' && action.payload === 'all'
+      );
       return {
         ...state,
         isFetching: true,
-        property: setInitialProp ? 'kills' : state.property,
+        property: setInitialProp ? initialState.property : state.property,
         legend: action.payload
       }
-    case 'UPDATE_FINISHED': return {
+    case 'FETCH_REQUESTED': return {
+      ...state,
+      isFetching: true
+    }
+    case 'FETCH_FINISHED': return {
       ...state,
       isFetching: false
     }
@@ -48,7 +55,9 @@ export function leaderboardsReducer(
 }
 
 
-export function initLeaderboardsReducer(query: any): LeaderboardState {
+export function initLeaderboardsReducer(
+  query: QueryParams = {}
+): LeaderboardState {
   return {
     ...initialState,
     platform: query.platform || initialState.platform,
@@ -81,8 +90,12 @@ interface ClearFilters {
   type: 'CLEAR_FILTERS'
 }
 
-interface UpdateFinished {
-  type: 'UPDATE_FINISHED'
+interface FetchRequested {
+  type: 'FETCH_REQUESTED'
+}
+
+interface FetchFinished {
+  type: 'FETCH_FINISHED'
 }
 
 type LeaderboardsAction =
@@ -91,4 +104,5 @@ type LeaderboardsAction =
   UpdateLegend    |
   UpdateData      |
   ClearFilters    |
-  UpdateFinished
+  FetchRequested  |
+  FetchFinished

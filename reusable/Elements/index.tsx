@@ -1,9 +1,14 @@
 import React, { ReactNode, ReactElement } from 'react';
 import css from './style.scss';
-import { LinkProps } from 'next/link';
+import Link, { LinkProps } from 'next/link';
 import { applyCss } from '../../helpers';
 
-export const H3 = () => (<h3 className={css.h3} />);
+interface H3Props {
+  children: ReactNode
+}
+export const H3 = (_props: H3Props) => (
+  <h3 className={css.h3} />
+);
 
 interface NavLinkProps extends LinkProps {
   href: string
