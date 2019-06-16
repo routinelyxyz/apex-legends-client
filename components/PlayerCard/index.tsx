@@ -2,13 +2,13 @@ import React from 'react';
 import css from './style.scss';
 import { applyCss } from '../../util';
 import { getAvatar } from '../../helpers';
-import { TrendingStatsRecord } from '../../types';
+import { TrendingStatsRecord, DailyRanking, DailyRankingRecord } from '../../types';
 
 import { PlayerLink } from '../../components/PlayerLink';
 
 interface PlayerCardProps {
-  data: TrendingStatsRecordData
-  scaleSize?: number
+  data: DailyRankingRecord
+  scaleSize?: boolean
   className?: string
   horizontal?: boolean
   place?: number

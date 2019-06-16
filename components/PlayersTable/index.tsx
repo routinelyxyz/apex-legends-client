@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
 import css from './style.scss';
-import { statsTitlesMap, getStatic, getAvatar, applyCss } from '../../helpers'
+import { statsTitlesMap, getAvatar, applyCss } from '../../helpers';
+import { PlayerBase, RecentlyUpdated, DailyRanking } from '../../types';
 
 import { PlayerLink } from '../../components/PlayerLink';
-import { Player } from '../../types';
 
 interface TableProps {
   thead: ReactNode
@@ -21,7 +21,7 @@ export const Table = ({ thead, tbody }: TableProps) => (
 );
 
 interface PlayerLabelProps {
-  player: Player
+  player: PlayerBase
   renderName?: (name: string) => JSX.Element | string
 }
 export const PlayerLabel = ({
@@ -51,7 +51,7 @@ export const PlayerLabel = ({
 interface TdProps {
   children: ReactNode
   align?: 'right' | 'left' | 'center'
-  fontSize: number
+  fontSize?: number
 }
 export const Td = ({
   children,
@@ -69,7 +69,7 @@ export const Td = ({
 interface ThProps {
   children: ReactNode
   align?: 'right' | 'left' | 'center'
-  fontSize: number
+  fontSize?: number
 }
 export const Th = ({
   children,
@@ -84,18 +84,18 @@ export const Th = ({
   </th>
 );
 
-interface PlayersTableProps {
-  data: []
-  prop: string
-  clearFilters: () => void
+interface PlayersTableProps<T> {
+  data: T
+  prop: keyof T[0]
+  clearFilters?: () => void
   renderRank: (index: number) => number
 }
-export const PlayersTable = ({
+export function PlayersTable<T extends RecentlyUpdated | DailyRanking>({
   data,
   prop,
   clearFilters,
   renderRank = i => i + 1
-}: PlayersTableProps) => {
+}: PlayersTableProps<T>) {
   if (!data.length) {
     return (
       <div className={css.not_found}>
@@ -121,7 +121,7 @@ export const PlayersTable = ({
           <th>Player</th>
           <Th align="center">
             <span className={css.prop_name}>
-              {statsTitlesMap[prop] || prop}
+              {(statsTitlesMap as any)[prop] || prop}
             </span>
           </Th>
         </tr>
@@ -133,7 +133,7 @@ export const PlayersTable = ({
             <PlayerLabel player={row.player} />
           </Td>
           <Td align="center" fontSize={18}>
-            {(row[prop] && row[prop].toLocaleString('en-US')) || 0}
+            {(row[prop] && row[prop]!.toLocaleString('en-US')) || 0}
           </Td>
         </tr> 
       ))}

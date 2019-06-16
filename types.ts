@@ -1,6 +1,13 @@
 
 export type Platform = 'pc' | 'ps4' | 'xbox';
 
+export interface PlayerBase {
+  id: number
+  name: string
+  platform: Platform
+  avatar: boolean
+}
+
 export interface Player {
   id: number
   name: string
@@ -29,14 +36,14 @@ export interface LifetimeStats<T = StatsValue> {
   headshotsPerKill: StatsData<T>
 }
 
-export interface Legend {
+export interface LegendBase {
   id: number
   name: string
   slug: string
   img: string
 }
 
-export { Legend as LegendBase }
+export { LegendBase as Legend }
 
 export interface LegendDetailed extends Legend {
   title: string
@@ -125,6 +132,9 @@ export interface LegendAbility {
 
 export type Environment = 'development' | 'test' | 'production';
 
+/**
+ * @deprecated
+ */
 export interface TrendingStatsRecord {
   kills?: number
   damage?: number
@@ -141,3 +151,27 @@ export interface Action <T, P = {}> extends P {
 export type LifetimeStatsProp = 'kills' | 'damage' | 'headshots' | 'lvl';
 export type LegendStatsProp = 'kills' | 'damage' | 'headshots' | 'damagePerKill' | 'headshotsPerKill';
 export type LeaderboardStatsProp = LifetimeStatsProp | LegendStatsProp;
+
+export interface DailyRankingRecord {
+  kills: number | null
+  headshots: number | null
+  damage: number | null
+  matchesPlayed: number | null
+  player: PlayerBase
+}
+
+export type DailyRanking = DailyRankingRecord[];
+
+export interface RecentlyUpdatedRecord {
+  id: number
+  kills: number | null
+  damage: number | null
+  headshots: number | null
+  damagePerKill: number | null
+  headshotsPerKill: number | null
+  date: string
+  player: PlayerBase
+  legend: LegendBase
+}
+
+export type RecentlyUpdated = RecentlyUpdatedRecord[];
