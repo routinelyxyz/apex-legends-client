@@ -53,12 +53,16 @@ const LegendPage = ({ legend }: LegendPageProps) => {
   )
 }
 
-LegendPage.getInitialProps = async ({ query: { slug }}: any) => {
-  const [top1, legend] = await Promise.all([
-    Axios.get(`/stats/leaderboards?legend=${slug}&top1`),
-    Axios.get(`/legends/${slug}`)
-  ]);
-  return { legend: legend.data.data, top1: top1.data.data[0] }
+LegendPage.getInitialProps = async ({
+  query: { slug }}
+: { query: QueryParams }
+) => {
+  const response = await Axios.get(`/legends/${slug}`);
+  return { legend: response.data.data };
+}
+
+interface QueryParams {
+  slug?: string
 }
 
 export default LegendPage;

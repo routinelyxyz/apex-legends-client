@@ -1,4 +1,4 @@
-import React, { useContext, ReactNode } from 'react';
+import React, { useContext } from 'react';
 import css from './style.scss';
 import { useDevice } from '../../hooks';
 import { ModalContext } from '../../helpers/context';
@@ -8,7 +8,11 @@ import { ModalSlide } from '../../reusable/Modal';
 interface MobileModalProps {
   title: string
   modalTitle?: string
-  children?: ReactNode
+  /**
+   * @type ReactNode
+   * @ignore React.FC inproperly uses ReactNode type
+   */
+  children?: any
 }
 export const MobileModal = ({
   title,
@@ -35,7 +39,7 @@ export const MobileModal = ({
           {children}
         </ModalSlide>
       </>
-    )
+    );
   }
 
   return children;

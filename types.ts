@@ -45,7 +45,7 @@ export interface LegendBase {
 
 export { LegendBase as Legend }
 
-export interface LegendDetailed extends Legend {
+export interface LegendDetailed extends LegendBase {
   title: string
   abilities: LegendAbility[]
 }
@@ -58,7 +58,7 @@ export interface LegendStats {
   headshots: StatsData
   damagePerKill: StatsData
   headshotsPerKill: StatsData
-  legend: Legend
+  legend: LegendBase
 }
 
 export interface MatchHistoryRecord {
@@ -70,7 +70,7 @@ export interface MatchHistoryRecord {
   headshots: StatsValue
   damagePerKill: StatsValue
   headshotsPerKill: StatsValue
-  legend: Legend
+  legend: LegendBase
 }
 
 export type KeyedObject = {
@@ -144,7 +144,7 @@ export interface TrendingStatsRecord {
 
 export type TrendingStats = TrendingStatsRecord[];
 
-export interface Action <T, P = {}> extends P {
+export interface Action <T, P = {}> {
   type: T
 }
 

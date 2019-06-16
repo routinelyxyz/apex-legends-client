@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useReducer } from 'react';
 import css from './style.scss';
 import { weaponProps, STATIC, applyCss } from '../../helpers';
-import { withRouter, WithRouterProps, RouterProps } from 'next/router';
+import { withRouter, RouterProps } from 'next/router';
 import qs from 'querystringify';
 import { debounce } from '../../util';
 import Head from 'next/head';
@@ -28,7 +28,6 @@ interface WeaponsPageProps {
   items: Weapons
   router: RouterProps<QueryProps>
 }
-
 const WeaponsPage = ({ items, router }: WeaponsPageProps) => {
   const [state, dispatch] = useReducer(weaponsReducer, items, initWeaponsReducer);
   const {
