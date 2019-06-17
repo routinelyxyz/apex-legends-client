@@ -3,12 +3,9 @@ import React from 'react';
 import App, { Container, NextAppContext } from 'next/app';
 import LoadFonts from '../middleware/font';
 import '../assets/css/global.scss';
-import { withReduxStore } from '../middleware/with-redux-store';
-import { Provider } from 'react-redux';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { loadSavedPlayersAsync } from '../store/actions-async/stats';
-import axios from 'axios';
+import Axios from 'axios';
 import { GA_ID, HOST_URL } from '../helpers/consts';
 import Router from 'next/router';
 import NProgress from 'nprogress';
@@ -16,13 +13,10 @@ import { MobileMenuProvider, ModalProvider } from '../context';
 import { MainLayout } from '../layouts/index';
 
 dayjs.extend(relativeTime);
-axios.defaults.baseURL = HOST_URL;
-axios.defaults.timeout = 9000;
+Axios.defaults.baseURL = HOST_URL;
+Axios.defaults.timeout = 9000;
 
-interface MyAppProps {
-  store: any
-}
-class MyApp extends App<MyAppProps> {
+class MyApp extends App {
 
   static async getInitialProps({
     Component,
@@ -55,29 +49,22 @@ class MyApp extends App<MyAppProps> {
       }
     });
     Router.events.on('routeChangeError', () => NProgress.done());
-    setTimeout(() =>
-      this.props.store.dispatch(
-        loadSavedPlayersAsync()
-      )
-    );
   }
 
   render() {
-    const { Component, pageProps, router, store } = this.props;
+    const { Component, pageProps, router } = this.props;
     return (
       <Container>
-        <Provider store={store}>
-          <MobileMenuProvider>
-            <ModalProvider>
-              <MainLayout route={router.route}>
-                <Component {...pageProps}/>
-              </MainLayout>
-            </ModalProvider>
-          </MobileMenuProvider>
-        </Provider>
+        <MobileMenuProvider>
+          <ModalProvider>
+            <MainLayout route={router.route}>
+              <Component {...pageProps}/>
+            </MainLayout>
+          </ModalProvider>
+        </MobileMenuProvider>
       </Container>
     );
   }
 }
 
-export default withReduxStore(MyApp);
+export default MyApp;
