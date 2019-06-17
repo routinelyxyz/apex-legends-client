@@ -1,9 +1,10 @@
 import React, { ReactNode } from 'react';
 import css from './style.scss';
 import { PlayerBase } from '../../types';
-import { PlayerLink } from '../PlayerLink';
 import { applyCss } from '../../util';
 import { getAvatar } from '../../helpers';
+
+import { PlayerLink } from '../PlayerLink';
 
 interface PlayerLabelProps {
   player: PlayerBase
