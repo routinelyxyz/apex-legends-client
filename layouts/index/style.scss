@@ -4,7 +4,7 @@
   min-height: 100vh;
   $bg-color: #23232F;
   background: $bg-color;
-  background: #23232F url("/static/bgfinal.jpg") no-repeat top center;
+  background: #23232F url("/static/img/bg.jpg") no-repeat top center;
   @include phone {
     padding-bottom: 80px;
   }

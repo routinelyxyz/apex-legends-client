@@ -1,8 +1,7 @@
 import React from 'react';
 import css from './style.scss';
-import 'isomorphic-unfetch';
 import Head from 'next/head';
-import axios from 'axios';
+import Axios from 'axios';
 import { useState, useMemo, useEffect } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -129,9 +128,9 @@ HomePage.getInitialProps = async () => {
   try {
     const options = { timeout: 500 };
     const [dailyRanking, recentlyUpdated] = await Promise.all([
-      axios.get('/stats/v2/daily-ranking', options),
-      axios.get('/stats/v2/recently-updated', options)
-    ]); 
+      Axios.get('/stats/v2/daily-ranking', options),
+      Axios.get('/stats/v2/recently-updated', options)
+    ]);
 
     return {
       dailyRanking: dailyRanking.data.data,
