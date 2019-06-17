@@ -1,4 +1,5 @@
 import { Weapon, AmmoType, WeaponType, Weapons, WeaponSortProp } from "../../types";
+import { QueryParams } from "./";
 
 interface WeaponState {
   isLoading: boolean
@@ -49,23 +50,6 @@ export function weaponsReducer(
         return ammoType;
       })
     }
-    case 'LOAD_FILTERS': return {
-      ...state,
-      ...action.payload,
-      isLoading: false,
-      ammoTypes: state.ammoTypes.map(ammoType => {
-        if (action.payload.ammoTypeNames.includes(ammoType.name)) {
-          return { ...ammoType, selected: true }
-        }
-        return ammoType;
-      }),
-      categories: state.categories.map(category => {
-        if (action.payload.categoryNames.includes(category.name)) {
-          return { ...category, selected: true }
-        }
-        return category;
-      })
-    }
     case 'CLEAR_FILTERS': return {
       ...initialState,
       categories: state.categories.map(category => 
@@ -80,7 +64,24 @@ export function weaponsReducer(
   }
 }
 
-export function initWeaponsReducer(items: Weapons): WeaponState {
+interface InitWeaponsReducerParams<> {
+  items: Weapons
+  query?: QueryParams
+}
+export function initWeaponsReducer({
+  items,
+  query = {}
+}: InitWeaponsReducerParams): WeaponState {
+  const {
+    name: phrase = '',
+    sortBy = initialState.sortBy,
+    sortDesc: sortAsc = initialState.sortAsc,
+    ammo = '',
+    category = ''
+  } = query;
+
+  const selectedCategoryNames = category.split(',');
+  const selectedAmmoTypeNames = ammo.split(',');
 
   const ammoTypes = items
     .flatMap((item, index, self) => {
@@ -88,7 +89,8 @@ export function initWeaponsReducer(items: Weapons): WeaponState {
         anyItem.ammo.name === item.ammo.name
       );
       if (foundIndex === index) {
-        return [{ ...item.ammo, selected: false }];
+        const selected = selectedAmmoTypeNames.includes(item.ammo.name);
+        return [{ ...item.ammo, selected }];
       }
       return [];
     });
@@ -99,7 +101,8 @@ export function initWeaponsReducer(items: Weapons): WeaponState {
         anyItem.type === item.type
       );
       if (foundIndex === index) {
-        return [{ name: item.type, selected: false }];
+        const selected = selectedCategoryNames.includes(item.type);
+        return [{ name: item.type, selected }];
       }
       return [];
     })
@@ -109,6 +112,9 @@ export function initWeaponsReducer(items: Weapons): WeaponState {
 
   return {
     ...initialState,
+    phrase,
+    sortBy,
+    sortAsc,
     ammoTypes,
     categories,
     items
@@ -189,17 +195,6 @@ interface ToggleAmmoType {
   payload: string
 }
 
-interface LoadFilters {
-  type: 'LOAD_FILTERS'
-  payload: {
-    phrase: string
-    sortBy: WeaponSortProp
-    sortAsc: boolean
-    ammoTypeNames: string[]
-    categoryNames: string[]
-  }
-}
-
 interface ClearFilters {
   type: 'CLEAR_FILTERS'
 }
@@ -210,7 +205,6 @@ type WeaponActions =
   UpdateSortBy    |
   ToggleCategory  |
   ToggleAmmoType  |
-  LoadFilters     |
   ClearFilters;
 
 

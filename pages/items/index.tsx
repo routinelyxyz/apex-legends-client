@@ -1,11 +1,13 @@
 import React, { useMemo, useEffect, useReducer } from 'react';
 import css from './style.scss';
-import { weaponProps, STATIC, applyCss } from '../../helpers';
+import { weaponPropsArr, applyCss } from '../../helpers';
 import { withRouter, RouterProps } from 'next/router';
 import qs from 'querystringify';
 import { debounce } from '../../util';
 import Head from 'next/head';
 import axios from 'axios';
+import { Weapons, WeaponSortProp } from '../../types';
+import { STATIC } from '../../helpers/consts';
 import { weaponsReducer, initWeaponsReducer, weaponsFilter, initialState } from './reducer';
 
 import Input from '../../reusable/Input';
@@ -14,13 +16,12 @@ import Select from '../../reusable/Select';
 import { SortDirection } from '../../reusable/SortDirection';
 import { WeaponsGrid } from '../../components/WeaponsGrid';
 import { MobileModal } from '../../components/MobileModal';
-import { Weapons, WeaponSortProp } from '../../types';
 
 const debounceA = debounce(500);
 const initialUpdateKey = 'truename00';
 const sortProps = [
   ['name', 'Name'],
-  ...weaponProps,
+  ...weaponPropsArr.map(({ prop, title }) => [prop, title]),
   ['ammoType', 'Ammo type']
 ] as [string, string][];
 
@@ -29,7 +30,12 @@ interface WeaponsPageProps {
   router: RouterProps<QueryParams>
 }
 const WeaponsPage = ({ items, router }: WeaponsPageProps) => {
-  const [state, dispatch] = useReducer(weaponsReducer, items, initWeaponsReducer);
+  const { query } = router;
+  const [state, dispatch] = useReducer(
+    weaponsReducer,
+    { items, query },
+    initWeaponsReducer
+  );
   const {
     filteredWeapons,
     selectedCategoryNames,
@@ -65,34 +71,6 @@ const WeaponsPage = ({ items, router }: WeaponsPageProps) => {
 
     return () => clearTimeout(timeout);
   }, [updateKey]);
-
-  useEffect(() => {
-    if (!router.query) {
-      return;
-    }
-    const {
-      name: phrase = '',
-      sortBy = initialState.sortBy,
-      sortDesc: sortAsc = initialState.sortAsc,
-      ammo = '',
-      category = ''
-    } = router.query;
-
-    const timeoutId = setTimeout(() => {
-      dispatch({
-        type: 'LOAD_FILTERS',
-        payload: {
-          phrase,
-          categoryNames: category.split(','),
-          ammoTypeNames: ammo.split(','),
-          sortAsc,
-          sortBy
-        }
-      });
-    }, 150);
-
-    return () => clearTimeout(timeoutId);
-  }, []);
 
   const handleCategoryToggle = (categoryName: string) => {
     dispatch({
@@ -220,7 +198,7 @@ WeaponsPage.getInitialProps = async () => {
 
 export default withRouter(WeaponsPage);
 
-interface QueryParams {
+export interface QueryParams {
   name?: string
   sortBy?: WeaponSortProp
   sortDesc?: boolean
