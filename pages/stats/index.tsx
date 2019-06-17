@@ -24,7 +24,7 @@ import { InfoCard } from '../../components/InfoCard';
 interface StatsPageProps {
   stats: Stats
   skipFirstFetch: boolean
-  router: RouterProps
+  router: RouterProps<QueryParams>
 }
 const StatsPage = ({
   stats,
@@ -91,7 +91,7 @@ const StatsPage = ({
   }
 
   useEffect(() => {
-    const interval = setInterval(() => setNow(getTs()), 1000);
+    const interval = setInterval(() => setNow(prevNow => prevNow + 1), 1000);
     if (
       stats &&
       state.player &&
@@ -103,7 +103,6 @@ const StatsPage = ({
         payload: stats
       });
     }
-
     return () => clearInterval(interval);
   }, [stats, afterFirstRender]);
 
