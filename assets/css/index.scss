@@ -15,22 +15,6 @@ body {
   }
 }
 
-.app_container {
-  position: relative;
-  min-height: 100vh;
-  $bg-color: #23232F;
-  background: $bg-color;
-  background: #23232F url("/static/bgfinal.jpg") no-repeat top center;
-  @include phone {
-    padding-bottom: 80px;
-  }
-  color: #fff;
-}
-
-.app_content {
-  @extend %rwd-sizing;
-}
-
 .disable_scroll {
   overflow: hidden;
 }
