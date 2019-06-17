@@ -1,5 +1,6 @@
 import * as consts from './consts';
 import { PlayerBase } from '../types';
+export { applyCss as applyCss } from '../util';
 
 export const platforms = [
   { name: 'All', value: 'all' },
@@ -72,15 +73,6 @@ export const statsTitlesMap = {
   headshotsPerKill: 'Headshots / Kill',
   lvl: 'Level'
 }
-
-
-export const applyCss = (...inputs: (string|boolean|undefined)[]) => ({
-  className: inputs
-    .filter(input =>
-      typeof input === 'string' && input.length
-    )
-    .join(' ')
-});
 
 export const getStatic = (url: string) => consts.STATIC + url;
 export const getUrl = (url: string) => consts.HOST_URL + url;

@@ -1,4 +1,3 @@
-export { applyCss as applyCss } from '../helpers';
 
 export const debounce = (delay = 250) => {
   let timeout: any;
@@ -68,3 +67,12 @@ export const filterTruthyProp = <T extends Array<T>>([prop, val]: T) => val ? pr
 export const filterTruthyEntry = <T>(object: T) => Object
   .entries(object)
   .flatMap(filterTruthyProp);
+
+
+export const applyCss = (...inputs: (string|boolean|undefined)[]) => ({
+  className: inputs
+    .filter(input =>
+      typeof input === 'string' && input.length
+    )
+    .join(' ')
+});
