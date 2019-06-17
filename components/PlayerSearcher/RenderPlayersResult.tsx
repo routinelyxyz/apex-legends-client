@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import css from './style.scss';
 import { Player } from '../../types';
 
@@ -15,7 +15,7 @@ export const RenderPlayersResult = ({
   isSearching,
   playersFound,
   phrase
-}: RenderPlayersResultProps) => {
+}: RenderPlayersResultProps): ReactNode => {
   
   if (!phrase.length) {
     return (

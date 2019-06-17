@@ -4,7 +4,7 @@ import { debounce, applyCss, scrollTo } from '../../util';
 import useClickOutside from 'use-onclickoutside';
 import Router from 'next/router';
 import { useDevice } from '../../hooks';
-import { MobileMenuContext, ModalContext } from '../../helpers/context';
+import { MobileMenuContext, ModalContext } from '../../context';
 import axios from 'axios';
 import NProgress from 'nprogress';
 import { Platform, Player } from '../../types';

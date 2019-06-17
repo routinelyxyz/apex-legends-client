@@ -12,7 +12,7 @@ import axios from 'axios';
 import { GA_ID, HOST_URL } from '../helpers/consts';
 import Router from 'next/router';
 import NProgress from 'nprogress';
-import { MobileMenuProvider, ModalProvider } from '../helpers/context';
+import { MobileMenuProvider, ModalProvider } from '../context';
 import Layout from '../layouts';
 
 dayjs.extend(relativeTime);

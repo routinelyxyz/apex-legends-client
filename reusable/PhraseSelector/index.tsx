@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import css from './style.scss';
 
 interface PhraseSelectorProps {
@@ -8,7 +8,7 @@ interface PhraseSelectorProps {
 export const PhraseSelector = ({
   value,
   phrase
-}: PhraseSelectorProps) => {
+}: PhraseSelectorProps): ReactNode => {
   const valueLowered = value.toLowerCase();
   const phraseLowered = phrase.toLowerCase();
 

@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useContext, useMemo } from 'react';
+import { useState, useEffect, useRef, useContext, useMemo, RefObject } from 'react';
 import ResizeObserver from 'resize-observer-polyfill';
-import { ModalContext } from '../helpers/context';
+import { ModalContext } from '../context';
 
 export const useWindowSize = () => {
   const isClient = typeof window !== 'undefined';
@@ -27,11 +27,17 @@ export const useWindowSize = () => {
   return windowSize;
 }
 
-export const useMeasure = <T>() => {
-  const ref = useRef<T>();
+interface DOMRectReadOnly {
+  left: number
+  top: number
+  width: number
+  height: number
+}
+export const useMeasure = <T>(): [{ ref: RefObject<T> }, DOMRectReadOnly] => {
+  const ref = useRef<T>(null);
   const [bounds, set] = useState({ left: 0, top: 0, width: 0, height: 0 });
   const [ro] = useState(() => new ResizeObserver(([entry]) => set(entry.contentRect)));
-  useEffect(() => (ro.observe(<any>ref.current), ro.disconnect), []);
+  useEffect(() => (ro.observe(<any>ref.current), ro.disconnect), [ref, ro]);
   return [{ ref }, bounds];
 }
 

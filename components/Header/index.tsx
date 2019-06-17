@@ -2,15 +2,11 @@ import React from 'react';
 import css from './style.scss';
 import { useContext } from 'react';
 import { applyCss } from '../../helpers';
-import { MobileMenuContext } from '../../helpers/context';
+import { MobileMenuContext } from '../../context';
 import Link from 'next/link';
 
 import { PlayerSearcher } from '../PlayerSearcher';
 import { NavLink } from '../../reusable/Elements';
-
-interface HeaderProps {
-  route: string
-}
 
 const navigationLinks = [
   {
@@ -44,8 +40,11 @@ const navigationLinks = [
     icon: 'rising',
     active: (route: string) => route.startsWith('/stats')
   }
-]
+];
 
+interface HeaderProps {
+  route: string
+}
 export const Header = ({ route }: HeaderProps) => {
   const mobileMenu = useContext(MobileMenuContext);
   return (
