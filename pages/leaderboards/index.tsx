@@ -4,11 +4,12 @@ import qs from 'querystringify';
 import { useEffect } from 'react';
 import { withRouter, RouterProps } from 'next/router';
 import { useMounted } from '../../hooks';
-import { statsProps, statsTitlesMap, platforms, NODE_ENV } from '../../helpers';
+import { statsProps, statsTitlesMap, platforms } from '../../helpers';
 import Head from 'next/head';
 import Axios from 'axios';
 import { leaderboardsReducer, initLeaderboardsReducer, initialState } from './reducer';
 import { LegendBase, Platform } from '../../types';
+import { NODE_ENV } from '../../helpers/consts';
 
 import { Navigation } from '../../reusable/Navigation';
 import { Select } from '../../reusable/Select';
