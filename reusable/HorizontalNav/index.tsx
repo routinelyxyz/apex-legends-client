@@ -1,5 +1,5 @@
-import css from './style.scss';
 import React, { useState, ReactNode } from 'react';
+import css from './style.scss';
 import { applyCss } from '../../util';
 
 interface HorizontalNavTabProps {

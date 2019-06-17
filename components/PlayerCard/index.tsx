@@ -2,7 +2,7 @@ import React from 'react';
 import css from './style.scss';
 import { applyCss } from '../../util';
 import { getAvatar } from '../../helpers';
-import { TrendingStatsRecord, DailyRanking, DailyRankingRecord } from '../../types';
+import { TrendingStatsRecord, DailyRankingRecord } from '../../types';
 
 import { PlayerLink } from '../../components/PlayerLink';
 
@@ -58,7 +58,7 @@ export const PlayerCard = ({
               key={name}
             >
               <span className={css.prop}>{name}</span>
-              <span>{data[prop] || 0}</span>
+              <span>{(data as any)[prop] || 0}</span>
             </li>
           ))}
         </ul>

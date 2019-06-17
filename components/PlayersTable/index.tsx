@@ -1,9 +1,10 @@
 import React, { ReactNode } from 'react';
 import css from './style.scss';
-import { statsTitlesMap, getAvatar, applyCss } from '../../helpers';
-import { PlayerBase, RecentlyUpdated, DailyRanking } from '../../types';
+import { statsTitlesMap, applyCss } from '../../helpers';
+import { RecentlyUpdated, DailyRanking } from '../../types';
 
-import { PlayerLink } from '../../components/PlayerLink';
+import { PlayerLabel } from '../PlayerLabel';
+
 
 interface TableProps {
   thead: ReactNode
@@ -18,34 +19,6 @@ export const Table = ({ thead, tbody }: TableProps) => (
       {tbody}
     </tbody>
   </table>
-);
-
-interface PlayerLabelProps {
-  player: PlayerBase
-  renderName?: (name: string) => JSX.Element | string
-}
-export const PlayerLabel = ({
-  player,
-  renderName = name => name
-}: PlayerLabelProps) => (
-  <PlayerLink player={player}>
-    <a className={css.player}>
-      <div {...applyCss(
-        css.platform_container,
-        css[player.platform]
-      )}>
-        <img
-          className={css.platform}
-          src={`/static/img/${player.platform}.svg`}
-        />
-      </div>
-      <img
-        src={getAvatar(player, 40)}
-        className={css.avatar}
-      />
-      {renderName(player.name)}
-    </a>
-  </PlayerLink>
 );
 
 interface TdProps {

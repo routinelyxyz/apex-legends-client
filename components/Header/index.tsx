@@ -6,7 +6,7 @@ import { MobileMenuContext } from '../../context';
 import Link from 'next/link';
 
 import { PlayerSearcher } from '../PlayerSearcher';
-import { NavLink } from '../../reusable/Elements';
+import { NavLink } from '../../reusable/NavLink';
 
 const navigationLinks = [
   {

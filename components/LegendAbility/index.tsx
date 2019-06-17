@@ -18,7 +18,10 @@ export const LegendAbility = ({ ability }: LegendAbilityProps) => (
       </span>
     </div>
     <div className={css.container_circle}>
-      <img className={css.img_circle} src={icon}/>
+      <img
+        className={css.img_circle}
+        src={ability.img || icon}
+      />
     </div>
     <p className={css.description}>
       {ability.description}

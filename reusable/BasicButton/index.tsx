@@ -1,11 +1,12 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, HTMLProps } from 'react';
 import css from './style.scss';
 import { applyCss } from '../../util';
 
-interface BasicButtonProps {
+interface BasicButtonProps extends HTMLProps<HTMLButtonElement> {
   title?: string
   active?: boolean
   className?: string
+  type?: 'button' | 'submit' | 'reset'
   children?: ReactNode
 }
 export const BasicButton = ({
@@ -14,17 +15,15 @@ export const BasicButton = ({
   active = true,
   className,
   ...btnProps
-}: BasicButtonProps) => {
-  return (
-    <button
-      {...btnProps}
-      {...applyCss(
-        css.container,
-        active && css.active,
-        className
-      )}
-    >
-      {children}
-    </button>
-  )
-}
+}: BasicButtonProps) => (
+  <button
+    {...btnProps}
+    {...applyCss(
+      css.container,
+      active && css.active,
+      className
+    )}
+  >
+    {children}
+  </button>
+);

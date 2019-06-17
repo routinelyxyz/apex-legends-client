@@ -1,64 +1,7 @@
-@import "../../assets/css/rwd.scss";
 
 .h3 {
   font-size: 12px;
   letter-spacing: 2px;
   text-transform: uppercase;
   margin-right: 10px;
-}
-
-.navlink {
-  font-size: 16px;
-  color: rgb(99, 99, 134);
-  position: relative;
-  padding: 20px 25px;
-  .l {
-    font-size: 18px;
-    margin-right: 30px;
-  }
-  &:hover {
-    color: #fff;
-    &:before {
-      opacity: .15;
-    }
-  }
-  &:before {
-    content: "";
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    background: radial-gradient(
-      #8289ff 0, transparent 80%
-    ) no-repeat;
-    background-position-y: 20px;
-    left: 0;
-    bottom: -10px;
-    opacity: 0;
-    transition: opacity .3s ease;
-  }
-  &:after {
-    content: "";
-    height: 3px;
-    width: 100%;
-    border-radius: 8px;
-    background: #6770FA;
-    position: absolute;
-    left: 0;
-    bottom: -10px;
-    opacity: 0;
-    transition: opacity .3s ease;
-    @include phone {
-      opacity: 1;
-    }
-    /* box-shadow: 0 0 10px 5px #6770FA; */
-  }
-  &.active {
-    color: #fff;
-    &:after {
-      opacity: 1;
-    }
-    &:before {
-      opacity: .15;
-    }
-  }
 }

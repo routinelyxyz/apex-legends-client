@@ -7,7 +7,6 @@ interface ProgressRingProps {
   stroke: number
   progress: number
 }
-
 export const ProgressRing = ({
   radius,
   stroke,
@@ -19,11 +18,6 @@ export const ProgressRing = ({
   const strokeDashoffset = circumference - progress / 100 * circumference;
 
   const props: any = useSpring({
-    from: { strokeDashoffset: 365 },
-    to: { strokeDashoffset }
-  });
-
-  const prog: any = useSpring({
     from: { progress: 0 },
     to: { progress },
     delay: 100
@@ -61,7 +55,7 @@ export const ProgressRing = ({
         strokeWidth={stroke}
         strokeDasharray={circumference + ' ' + circumference}
         style={{
-          strokeDashoffset: prog.progress
+          strokeDashoffset: props.progress
             .interpolate((v: number) => circumference - v / 100 * circumference)
         }}
         r={normalizedRadius}

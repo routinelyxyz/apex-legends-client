@@ -9,7 +9,6 @@ interface StatsPropertyProps {
   value: number | string | null
   time?: boolean
 }
-
 const StatsProperty = ({ name, value, time }: StatsPropertyProps) => (
   <div className={css.record__box}>
     <p className={css.record__prop}>
@@ -28,7 +27,6 @@ const StatsProperty = ({ name, value, time }: StatsPropertyProps) => (
 interface StatsHistoryRecordProps {
   match: MatchHistoryRecord
 }
-
 export const StatsHistoryRecord = ({ match }: StatsHistoryRecordProps) => {
   return (
     <li className={css.record__container}>

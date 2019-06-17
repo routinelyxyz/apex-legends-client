@@ -1,4 +1,4 @@
-import React, { ReactNode, ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 import Link, { LinkProps } from 'next/link';
 import { PlayerBase } from '../../types';
 
@@ -6,7 +6,6 @@ interface PlayerLinkProps extends LinkProps {
   player: PlayerBase
   children: ReactElement
 }
-
 export const PlayerLink = ({
   player,
   children

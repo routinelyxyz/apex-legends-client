@@ -1,6 +1,6 @@
 import React from 'react';
 import css from './style.scss';
-import { applyCss } from '../../helpers';
+import { applyCss } from '../../util';
 
 interface BaseSelectProps extends React.HTMLProps<HTMLSelectElement> {
   active?: boolean

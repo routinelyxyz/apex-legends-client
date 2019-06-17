@@ -1,11 +1,11 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, HTMLProps } from 'react';
 import { animated, useTransition, config } from 'react-spring';
-import { ReactNodeArray } from 'prop-types';
 
-// extends React.HTMLProps<HTMLDivElement>
 interface SlidingContainerProps {
   state: boolean
   height?: number
+  className?: string
+  children?: ReactNode
 }
 export const SlidingContainer = ({
   state,

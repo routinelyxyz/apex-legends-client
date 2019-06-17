@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import css from './style.scss';
 import { useDevice } from '../../hooks';
-import { ModalContext } from '../../helpers/context';
+import { ModalContext } from '../../context';
 
 import { ModalSlide } from '../../reusable/Modal';
 

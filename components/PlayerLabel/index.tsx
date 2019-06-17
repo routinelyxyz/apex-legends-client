@@ -1,38 +1,34 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import css from './style.scss';
-import Link from 'next/link';
-import { Player } from '../../types';
+import { PlayerBase } from '../../types';
+import { PlayerLink } from '../PlayerLink';
+import { applyCss } from '../../util';
+import { getAvatar } from '../../helpers';
 
 interface PlayerLabelProps {
-  player: Player
+  player: PlayerBase
+  renderName?: (name: string) => ReactNode
 }
-/**
- * @deprecated new version in table component
- */
-export const PlayerLabel = ({ player }: PlayerLabelProps) => (
-  <Link
-    href={`/stats?platform=${player.platform}&id=${player.id}`}
-    as={`/stats/${player.platform}/${player.name}`}
-  >
-    <a className={css.container}>
+export const PlayerLabel = ({
+  player,
+  renderName = name => name
+}: PlayerLabelProps) => (
+  <PlayerLink player={player}>
+    <a className={css.player}>
+      <div {...applyCss(
+        css.platform_container,
+        css[player.platform]
+      )}>
+        <img
+          className={css.platform}
+          src={`/static/img/${player.platform}.svg`}
+        />
+      </div>
       <img
-        src={player.img}
-        className={css.img}
+        src={getAvatar(player, 40)}
+        className={css.avatar}
       />
-      <span className={css.name}>
-        {player.name}
-      </span>
-      <span className={css.lvl}>
-        <span className={css.lvl_value}>
-          {player.lvl}
-        </span>
-        lvl
-      </span>
-      <img
-        src={`/static/${player.platform}.svg`}
-        className={css.platform}
-        title={player.platform}
-      />
+      {renderName(player.name)}
     </a>
-  </Link>
+  </PlayerLink>
 );

@@ -1,8 +1,8 @@
 import React from 'react';
 import css from './style.scss';
-import { HOST_URL, STATIC } from '../../helpers';
 import Link from 'next/link';
 import { Legend } from '../../types';
+import { STATIC } from '../../helpers/consts';
 
 interface LegendCardProps {
   legend: Legend

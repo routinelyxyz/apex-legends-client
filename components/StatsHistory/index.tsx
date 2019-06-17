@@ -11,7 +11,6 @@ interface StatsHistoryProps {
   isUpdating: boolean
   updateMatchHistory: () => any
 }
-
 export const StatsHistory = ({
   matchHistory,
   isUpdating,

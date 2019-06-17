@@ -9,7 +9,6 @@ interface WeaponsGridProps {
   items: Weapons
   flipKey: string
 }
-
 export const WeaponsGrid = ({ items, flipKey }: WeaponsGridProps) => {
   return (
     <Flipper

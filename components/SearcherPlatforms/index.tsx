@@ -8,9 +8,8 @@ const platforms: Platform[] = ['pc', 'ps4', 'xbox'];
 interface SearcherPlatformsProps {
   platform: Platform
   setPlatform: (platformType: Platform) => void
-  small: boolean
+  small?: boolean
 }
-
 export const SearcherPlatforms = ({
   platform,
   setPlatform,

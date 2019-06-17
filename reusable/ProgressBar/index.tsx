@@ -1,8 +1,7 @@
 import React from 'react';
 import css from './style.scss';
 import { animated, useSpring, config } from 'react-spring';
-import { parsePercent } from '../../util';
-import { applyCss } from '../../helpers';
+import { parsePercent, applyCss } from '../../util';
 
 interface ProgressBarProps {
   title?: string
