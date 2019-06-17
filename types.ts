@@ -142,6 +142,9 @@ export interface TrendingStatsRecord {
   player: Player
 }
 
+/**
+ * @deprecated
+ */
 export type TrendingStats = TrendingStatsRecord[];
 
 export interface Action <T, P = {}> {
@@ -177,7 +180,7 @@ export interface RecentlyUpdatedRecord {
 export type RecentlyUpdated = RecentlyUpdatedRecord[];
 
 export interface WeaponRatioRecord {
-  name: keyof Weapon
+  name: WeaponProps 
   min: number
   diff: number
   max: number

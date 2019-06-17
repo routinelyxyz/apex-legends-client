@@ -26,7 +26,7 @@ const sortProps = [
 
 interface WeaponsPageProps {
   items: Weapons
-  router: RouterProps<QueryProps>
+  router: RouterProps<QueryParams>
 }
 const WeaponsPage = ({ items, router }: WeaponsPageProps) => {
   const [state, dispatch] = useReducer(weaponsReducer, items, initWeaponsReducer);
@@ -220,7 +220,7 @@ WeaponsPage.getInitialProps = async () => {
 
 export default withRouter(WeaponsPage);
 
-interface QueryProps {
+interface QueryParams {
   name?: string
   sortBy?: WeaponSortProp
   sortDesc?: boolean

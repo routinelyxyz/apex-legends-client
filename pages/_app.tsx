@@ -13,7 +13,7 @@ import { GA_ID, HOST_URL } from '../helpers/consts';
 import Router from 'next/router';
 import NProgress from 'nprogress';
 import { MobileMenuProvider, ModalProvider } from '../context';
-import Layout from '../layouts';
+import { MainLayout } from '../layouts/index';
 
 dayjs.extend(relativeTime);
 axios.defaults.baseURL = HOST_URL;
@@ -69,9 +69,9 @@ class MyApp extends App<MyAppProps> {
         <Provider store={store}>
           <MobileMenuProvider>
             <ModalProvider>
-              <Layout route={router.route}>
+              <MainLayout route={router.route}>
                 <Component {...pageProps}/>
-              </Layout>
+              </MainLayout>
             </ModalProvider>
           </MobileMenuProvider>
         </Provider>

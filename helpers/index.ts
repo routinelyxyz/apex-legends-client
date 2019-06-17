@@ -15,24 +15,44 @@ export const platformNames = {
   xbox: 'Xbox'
 }
 
-export const weaponProps = [
-  ['bodyDamage', 'Body damage'],
-  ['headshotDamage', 'Headshot damage'],
-  ['bodyDPS', 'Body DPS'],
-  ['reload', 'Reload time',  (v: string) => parseFloat(v) + ' s'],
-  ['emptyReload', 'Reload time (empty magazine)', (v: string) => parseFloat(v) + ' s'],
-  ['magazine', 'Magazine size'],
-];
-
 export const weaponPropTitles = {
   bodyDamage: 'Body damage',
   headshotDamage: 'Headshot damage',
   bodyDPS: 'Body DPS',
   headshotDPS: 'Headshot DPS',
-  reload: 'Reload time',
+  reloadTime: 'Reload time',
   emptyReload: 'Reload time (empty mag)',
   magazine: 'Magazine size'
 }
+
+export const weaponPropsArr = [
+  {
+    prop: 'bodyDamage',
+    title: weaponPropTitles.bodyDamage
+  },
+  {
+    prop: 'headshotDamage',
+    title: weaponPropTitles.bodyDamage
+  },
+  {
+    prop: 'bodyDPS',
+    title: weaponPropTitles.bodyDPS
+  },
+  {
+    prop: 'reloadTime',
+    title: weaponPropTitles.reloadTime,
+    parser: (v: string) => parseFloat(v) + ' s'
+  },
+  {
+    prop: 'emptyReload',
+    title: weaponPropTitles.emptyReload,
+    parser: (v: string) => parseFloat(v) + ' s'
+  },
+  {
+    prop: 'magazine',
+    title: weaponPropTitles.magazine
+  }
+];
 
 export const ammoNames = {
   Light: 'Light bullets'

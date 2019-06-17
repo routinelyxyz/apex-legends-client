@@ -25,5 +25,3 @@ export const MainLayout = ({ children, route }: MainLayoutProps) => {
     </div>
   );
 }
-
-export default MainLayout;

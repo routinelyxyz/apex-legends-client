@@ -1,7 +1,7 @@
 import React from 'react';
 import css from './style.scss';
 import { useMemo } from 'react';
-import { weaponProps, ammoNames, weaponPropTitles, getStatic } from '../../../helpers';
+import { ammoNames, weaponPropTitles, getStatic, weaponPropsArr } from '../../../helpers';
 import Link from 'next/link';
 import Head from 'next/head';
 import Axios from 'axios';
@@ -12,10 +12,10 @@ import { ProgressBar } from '../../../reusable/ProgressBar';
 import { round } from '../../../util';
 
 
-const halfLength = Math.ceil(weaponProps.length / 2);
+const halfLength = Math.ceil(weaponPropsArr.length / 2);
 const splittedProps = [
-  weaponProps.slice(0, halfLength),
-  weaponProps.slice(halfLength, weaponProps.length)
+  weaponPropsArr.slice(0, halfLength),
+  weaponPropsArr.slice(halfLength, weaponPropsArr.length)
 ];
 
 interface WeaponPageProps {
@@ -113,16 +113,16 @@ const WeaponPage = ({ item, ratios }: WeaponPageProps) => {
               <article className={css.overview_container}>
                 {splittedProps.map((propsCol, index) => (
                   <ul className={css.props_list} key={index}>
-                    {propsCol.map(([prop, name, parser]) => (
+                    {propsCol.map(({ prop, title, parser }) => (
                       <li
                         key={prop}
                         className={css.prop_row}
                       >
                         <span className={css.prop_name}>
-                          {name}
+                          {title}
                         </span>
                         <span className={css.prop_value}>
-                          {parser ? parser(item[prop]) : item[prop]}
+                          {parser ? parser((item as any)[prop]) : (item as any)[prop]}
                         </span>
                       </li>
                     ))}
@@ -137,7 +137,12 @@ const WeaponPage = ({ item, ratios }: WeaponPageProps) => {
   )
 }
 
-WeaponPage.getInitialProps = async ({ query: { slug }}: any) => {
+interface GetInitialPropsParams {
+  query: {
+    slug?: string
+  }
+}
+WeaponPage.getInitialProps = async ({ query: { slug } = {}}: GetInitialPropsParams) => {
   const [itemResponse, ratioResponse] = await Promise.all([
     Axios.get(`/items/weapon/${slug}`),
     Axios.get('/items/weapons/ratio'),
