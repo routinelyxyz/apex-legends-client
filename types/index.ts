@@ -24,6 +24,8 @@ export type StatsData<T = StatsValue> = {
   value: T
 }
 
+export type LifetimeStatsDataProps = 'lvl' | 'lvlProgress' | 'kills' | 'damage' | 'headshots' | 'damagePerKill' | 'headshotsPerKill';
+
 export interface LifetimeStats<T = StatsValue> {
   id: number
   season: number
@@ -35,6 +37,7 @@ export interface LifetimeStats<T = StatsValue> {
   damagePerKill: StatsData<T>
   headshotsPerKill: StatsData<T>
 }
+
 
 export interface LegendBase {
   id: number
@@ -50,7 +53,9 @@ export interface LegendDetailed extends LegendBase {
   abilities: LegendAbility[]
 }
 
-export interface LegendStats {
+export type LegendStatsDataProps = 'kills' | 'damage' | 'headshots' | 'damagePerKill' | 'headshotsPerKill';
+
+export interface LegendStatsRecord {
   id: number
   season: number
   kills: StatsData
@@ -60,6 +65,8 @@ export interface LegendStats {
   headshotsPerKill: StatsData
   legend: LegendBase
 }
+
+export type LegendStats = LegendStatsRecord[];
 
 export interface MatchHistoryRecord {
   id: number
@@ -80,7 +87,7 @@ export type KeyedObject = {
 export type Stats = {
   player: Player
   lifetime: LifetimeStats
-  legends: LegendStats[]
+  legends: LegendStats
 }
 
 export type StatsPayload = {
@@ -101,6 +108,10 @@ export type WeaponProps = 'bodyDamage' | 'bodyDPS' | 'headshotDPS' | 'reloadTime
 
 type WeaponData = {
   [key in WeaponProps]: number
+}
+
+type A = {
+  [key in 'id' | 'prop']: number
 }
 
 export interface Weapon extends WeaponData {
