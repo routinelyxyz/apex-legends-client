@@ -8,7 +8,7 @@ import Head from 'next/head';
 import { withRouter, RouterProps } from 'next/router';
 import { useFirstRender } from '../../hooks';
 import NProgress from 'nprogress';
-import { Stats } from '../../types';
+import { Stats, Platform } from '../../types';
 import { fetchInitialStats, FetchInitialStatsResult, updateStats, fetchStats, fetchMatchHistory } from './fetchInitialStats';
 import { statsReducer, initStatsReducer, groupMatchHistory } from './reducer';
 
@@ -34,9 +34,10 @@ const StatsPage = ({
   const [state, dispatch] = useReducer(statsReducer, { stats, skipFirstFetch }, initStatsReducer);
   const [now, setNow] = useState(getTs());
   const afterFirstRender = useFirstRender();
-  const { props } = state.lifetimeStats;
-  const lvl = (props && props.lvl.rank) || 0;
-  const rank = (props && props.kills.rank) || 1;
+  const { lifetimeStats } = state;
+  const lvl = (lifetimeStats.props && lifetimeStats.props.lvl.rank) || 0;
+  const rank = (lifetimeStats.props && lifetimeStats.props.kills.rank) || 1;
+  const lvlProgress = (lifetimeStats.props && lifetimeStats.props.lvlProgress.value) || 0;
   const counter = state.nextUpdateAt - now;
 
   async function handleStatsUpdate(player = state.player) {
@@ -146,7 +147,7 @@ const StatsPage = ({
           <ProgressRing
             radius={73}
             stroke={7}
-            progress={stats.lifetime.lvlProgress}
+            progress={lvlProgress}
           />
           <div className={css.avatar__container}>
             <img
@@ -183,7 +184,7 @@ const StatsPage = ({
               title="Level"
               content={(
                 <animated.span>
-                  {lvlProps.lvl.interpolate(v => v.toFixed())}
+                  {lvlProps.lvl.interpolate((v: number) => v.toFixed())}
                 </animated.span>
               )}
             />
@@ -290,8 +291,15 @@ const StatsPageContainer = (props: FetchInitialStatsResult) => {
   );
 }
 
-StatsPageContainer.getInitialProps = async ({ query, ...props }: any) => {
-  const { platform, name, id } = query;
+interface GetInitialPropsParams {
+  query: QueryParams
+  router: RouterProps<QueryParams>
+}
+StatsPageContainer.getInitialProps = async ({
+  query,
+  ...props
+}: GetInitialPropsParams) => {
+  const { platform, name } = query;
 
   if (!name || !platform) {
     return { stats: null }
@@ -301,10 +309,11 @@ StatsPageContainer.getInitialProps = async ({ query, ...props }: any) => {
   return { ...result, ...props }
 }
 
-interface QueryParams {
+
+export interface QueryParams {
   id?: string
-  platform: string
-  name: string
+  platform?: Platform
+  name?: string
 }
 
 export default withRouter(StatsPageContainer);

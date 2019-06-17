@@ -1,7 +1,7 @@
-import { NODE_ENV } from '../../helpers';
-import { filterByUniqueId, getTs } from '../../util';
-import { MatchHistory, KeyedObject, LegendStats, Stats, MatchHistoryRecord, Player, Legend, StatsData, LifetimeStats } from '../../types';
+import { getTs } from '../../util';
+import { MatchHistory, KeyedObject, Stats, MatchHistoryRecord, Player, Legend, StatsData } from '../../types';
 import dayjs from 'dayjs';
+import { NODE_ENV } from '../../helpers/consts';
 
 export const countdown = NODE_ENV === 'production' ? 178 : 120;
 
@@ -43,37 +43,10 @@ export function statsReducer(
       isUpdating: true
     }
     case 'UPDATE_STATS':
-    case 'UPDATE_STATS_SUCCEEDED':
-      const { id, season, ...props } = action.payload.lifetime;
-      return {
-        ...state,
-        isUpdating: false,
-        player: action.payload.player,
-        nextUpdateAt: getTs() + countdown,
-        lifetimeStats: {
-          id,
-          season,
-          props,
-          data: Object.entries(props)
-            .flatMap(([prop, data]) => data.value != null 
-              ? { prop, ...data }
-              : []
-            )
-        },
-        legendStats: action.payload.legends
-          .sort(sortLegendStats)
-          .map(({ id, season, legend, ...data }) => ({
-            id,
-            season,
-            legend,
-            data: Object.entries(data)
-              .flatMap(([prop, data]) => data.value != null 
-                ? { prop, ...data }
-                : []
-              )
-          }))
-          .filter(legendStats => legendStats.data.length)
-      }
+    case 'UPDATE_STATS_SUCCEEDED': return {
+      ...state,
+      ...normalizeStats(action.payload)
+    }
     case 'UPDATE_STATS_FINISHED': return {
       ...state,
       isUpdating: false
@@ -93,7 +66,10 @@ export function statsReducer(
         ...state,
         isLoadingHistory: false,
         matchHistory: [...matchHistoryWithDay, ...state.matchHistory]
-          .filter(filterByUniqueId)
+          .filter((record, index, self) => {
+            const foundIndex = self.findIndex(anyItem => anyItem.id == record.id);
+            return foundIndex === index;
+          })
       }
     default: throw new Error('Unknown action type');
   }
@@ -103,23 +79,52 @@ export function initStatsReducer({ stats, skipFirstFetch }: {
   stats: Stats
   skipFirstFetch: boolean
 }): StatsState {
+  const nextState = normalizeStats(stats);
   return {
     ...initialState,
-    legendStats: stats.legends.sort(sortLegendStats),
-    lifetimeStats: stats.lifetime,
-    player: stats.player,
-    nextUpdateAt: skipFirstFetch ? countdown : 3
+    ...nextState,
+    nextUpdateAt: skipFirstFetch ? nextState.nextUpdateAt : 3
   }
 }
 
-function sortLegendStats(a: LegendStats, b: LegendStats) {
-  if (a.kills.value) {
-    if (b.kills.value) {
-      return a.kills.value > b.kills.value ? 1 : -1;
-    }
-    return 1;
+function normalizeStats(stats: Stats) {
+  const { id, season, ...props } = stats.lifetime;
+  return {
+    isUpdating: false,
+    player: stats.player,
+    nextUpdateAt: getTs() + countdown,
+    lifetimeStats: {
+      id,
+      season,
+      props,
+      data: Object.entries(props)
+        .flatMap(([prop, data]) => data.value != null 
+          ? { prop, ...data }
+          : []
+        )
+    },
+    legendStats: stats.legends
+      .sort((a, b) => {
+        if (a.kills.value) {
+          if (b.kills.value) {
+            return a.kills.value > b.kills.value ? 1 : -1;
+          }
+          return 1;
+        }
+        return -1;
+      })
+      .map(({ id, season, legend, ...data }) => ({
+        id,
+        season,
+        legend,
+        data: Object.entries(data)
+          .flatMap(([prop, data]) => data.value != null 
+            ? { prop, ...data }
+            : []
+          )
+      }))
+      .filter(legendStats => legendStats.data.length)
   }
-  return -1;
 }
 
 export function groupMatchHistory(
@@ -174,7 +179,7 @@ export interface LegendStatsData extends StatsData<number> {
 
 type LifetimeStatsProps = 'lvl' | 'lvlProgress' | 'kills' | 'damage' | 'headshots' | 'damagePerKill' | 'headshotsPerKill';
 
-interface LifetimeStatsData extends StatsData<number> {
+export interface LifetimeStatsData extends StatsData<number> {
   prop: 'lvl' | 'lvlProgress' | 'kills' | 'damage' | 'headshots' | 'damagePerKill' | 'headshotsPerKill'
 }
 

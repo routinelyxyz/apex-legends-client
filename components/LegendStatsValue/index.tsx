@@ -1,12 +1,12 @@
 import React from 'react';
 import css from './style.scss';
 import { statsTitlesMap } from '../../helpers';
-import { LegendStatsData } from '../../pages/stats/reducer';
+import { LifetimeStatsData } from '../../pages/stats/reducer';
 
 import { ProgressBar } from '../../reusable/ProgressBar';
 
-interface LegendStatsValueProps extends LegendStatsData {
-  link<T, P>(rank: T, prop: P): string
+interface LegendStatsValueProps extends LifetimeStatsData {
+  link?: <T, P>(rank: T, prop: P) => string
 }
 const LegendStatsValue = ({
   value,
@@ -22,7 +22,7 @@ const LegendStatsValue = ({
       key={prop}
     >
       <span className={css.prop}>
-        {statsTitlesMap[prop] || prop}
+        {(statsTitlesMap as any)[prop] || prop}
       </span>
       <p className={css.value}>
         {value.toLocaleString('en-US')}
