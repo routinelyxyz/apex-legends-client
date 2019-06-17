@@ -11,3 +11,5 @@ export const HOST_URL = NODE_ENV === 'production'
 export const STATIC = NODE_ENV === 'production'
   ? 'https://static.apex-legends.win'
   : 'http://static.localhost';
+
+export const isServer = typeof window === 'undefined';
