@@ -147,9 +147,9 @@ export interface TrendingStatsRecord {
  */
 export type TrendingStats = TrendingStatsRecord[];
 
-export interface Action <T, P = {}> {
+export type Action <T, P = undefined, M = undefined> = {
   type: T
-}
+} & { payload?: P } & { meta?: M }
 
 export type LifetimeStatsProp = 'kills' | 'damage' | 'headshots' | 'lvl';
 export type LegendStatsProp = 'kills' | 'damage' | 'headshots' | 'damagePerKill' | 'headshotsPerKill';

@@ -1,10 +1,9 @@
 import React, { ReactNode } from 'react';
 import css from './style.scss';
 import { statsTitlesMap, applyCss } from '../../helpers';
-import { RecentlyUpdated, DailyRanking } from '../../types';
+import { PlayerBase } from '../../types';
 
 import { PlayerLabel } from '../PlayerLabel';
-
 
 interface TableProps {
   thead: ReactNode
@@ -57,18 +56,27 @@ export const Th = ({
   </th>
 );
 
-interface PlayersTableProps<T> {
-  data: T
-  prop: keyof T[0]
+interface PlayersTableDataRecord {
+  kills: number | null
+  headshots: number | null
+  damage: number | null
+  matchesPlayed: number | null
+  damagePerKill: number | null
+  headshotsPerKill: number | null
+  player: PlayerBase
+}
+interface PlayersTableProps {
+  data: PlayersTableDataRecord[]
+  prop: string
   clearFilters?: () => void
   renderRank: (index: number) => number
 }
-export function PlayersTable<T extends RecentlyUpdated | DailyRanking>({
+export function PlayersTable({
   data,
   prop,
   clearFilters,
   renderRank = i => i + 1
-}: PlayersTableProps<T>) {
+}: PlayersTableProps) {
   if (!data.length) {
     return (
       <div className={css.not_found}>
@@ -106,7 +114,7 @@ export function PlayersTable<T extends RecentlyUpdated | DailyRanking>({
             <PlayerLabel player={row.player} />
           </Td>
           <Td align="center" fontSize={18}>
-            {(row[prop] && row[prop]!.toLocaleString('en-US')) || 0}
+            {((row as any)[prop] && (row as any)[prop].toLocaleString('en-US')) || 0}
           </Td>
         </tr> 
       ))}

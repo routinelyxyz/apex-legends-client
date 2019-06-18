@@ -66,7 +66,3 @@ export const PlayerCard = ({
     </div>
   )
 }
-
-interface TrendingStatsRecordData extends TrendingStatsRecord {
-  [key: string]: any
-}
