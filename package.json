@@ -42,7 +42,9 @@
     "use-onclickoutside": "^0.3.0"
   },
   "devDependencies": {
+    "@testing-library/react": "^8.0.1",
     "@types/fontfaceobserver": "0.0.6",
+    "@types/jest": "^24.0.15",
     "@types/next": "^8.0.5",
     "@types/nprogress": "^0.2.0",
     "@types/querystringify": "^2.0.0",

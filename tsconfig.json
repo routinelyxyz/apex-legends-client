@@ -21,6 +21,7 @@
     ]
   },
   "exclude": [
-    "middleware"
+    "middleware",
+    "__tests__"
   ]
 }
