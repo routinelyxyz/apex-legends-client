@@ -8,7 +8,7 @@ import { statsProps, statsTitlesMap, platforms } from '../../helpers';
 import Head from 'next/head';
 import Axios from 'axios';
 import { leaderboardsReducer, initLeaderboardsReducer, initialState } from './reducer';
-import { LegendBase, Platform } from '../../types';
+import { LegendBase, Platform, Leaderboards } from '../../types';
 import { NODE_ENV } from '../../helpers/consts';
 
 import { Navigation } from '../../reusable/Navigation';
@@ -18,7 +18,7 @@ import { PlayersTable } from '../../components/PlayersTable';
 
 
 interface LeaderboardsPageProps {
-  data: any
+  data: Leaderboards
   legends: LegendBase[]
   router: RouterProps<QueryParams>
 }
@@ -32,11 +32,11 @@ const LeadeboardsPage = ({
     leaderboardsReducer, router.query, initLeaderboardsReducer
   );
   const statProps = statsProps[state.legend === 'all' ? 'lifetime' : 'legend'];
-  const { perPage = 100 } = data;
+  const itemsPerPage = 100;
   const activePage = (
     router.query &&
-    router.query.page
-    && Number(router.query.page)
+    router.query.page &&
+    Number(router.query.page)
   ) || 1;
 
   useEffect(() => {
@@ -159,7 +159,7 @@ const LeadeboardsPage = ({
         <PlayersTable
           data={data.data}
           prop={state.property}
-          renderRank={index => (index + 1) + (activePage - 1) * perPage}
+          renderRank={index => (index + 1) + (activePage - 1) * itemsPerPage}
           clearFilters={() => dispatch({ type: 'CLEAR_FILTERS' })}
         />
       </Navigation>

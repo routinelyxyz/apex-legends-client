@@ -1,8 +1,7 @@
-import React, { useReducer, useMemo } from 'react';
+import React, { useReducer, useMemo, useState, useEffect } from 'react';
 import css from './style.scss';
 import { getAvatar } from '../../helpers';
 import { animated, useSpring } from 'react-spring';
-import { useState, useEffect } from 'react';
 import { getTs, applyCss } from '../../util';
 import Head from 'next/head';
 import { withRouter, RouterProps } from 'next/router';
@@ -40,29 +39,28 @@ const StatsPage = ({
   const lvlProgress = (lifetimeStats.props && lifetimeStats.props.lvlProgress.value) || 0;
   const counter = state.nextUpdateAt - now;
 
-  async function handleStatsUpdate(player = state.player) {
+  async function handleStatsUpdate() {
     try {
-      if (state.isUpdating || !player) {
+      if (state.isUpdating || !state.player) {
         return;
       }
-      dispatch({ type: 'UPDATE_STATS_REQUESTED' });
-      const latestMatch = await updateStats(player);
       NProgress.start();
+      dispatch({ type: 'STATS_UPDATE_REQUESTED' });
+      const latestMatch = await updateStats(state.player);
 
       if (latestMatch) {
-        const nextStats = await fetchStats(player);
+        const nextStats = await fetchStats(state.player);
         dispatch({
           type: 'MATCH_HISTORY_UPDATE',
           payload: [latestMatch]
         });
-
         if (
           nextStats &&
           router.query &&
           router.query.name === nextStats.player.name
         ) {
           dispatch({
-            type: 'UPDATE_STATS_SUCCEEDED',
+            type: 'STATS_UPDATE_SUCCEEDED',
             payload: nextStats
           });
         }
@@ -71,7 +69,7 @@ const StatsPage = ({
     } catch (err) {
       console.error(err);
     } finally {
-      dispatch({ type: 'UPDATE_STATS_FINISHED'});
+      dispatch({ type: 'STATS_UPDATE_FINISHED' });
       NProgress.done();
     }
   }
@@ -80,12 +78,12 @@ const StatsPage = ({
     if (!state.player || state.isLoadingHistory) {
       return;
     }
-    dispatch({ type: 'MATCH_HISTORY_REQUESTED' });
+    dispatch({ type: 'MATCH_HISTORY_UPDATE_REQUESTED' });
 
     const matchHistory = await fetchMatchHistory(state.player.id);
 
     dispatch({
-      type: 'MATCH_HISTORY_SUCCEEDED',
+      type: 'MATCH_HISTORY_UPDATE_SUCCEEDED',
       payload: matchHistory
     });
   }
@@ -99,7 +97,7 @@ const StatsPage = ({
       stats.player.name !== state.player.name
     ) {
       dispatch({
-        type: 'UPDATE_STATS',
+        type: 'STATS_UPDATE',
         payload: stats
       });
     }

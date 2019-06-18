@@ -38,25 +38,25 @@ export function statsReducer(
   action: StatsActions
 ): StatsState {
   switch(action.type) {
-    case 'UPDATE_STATS_REQUESTED': return {
+    case 'STATS_UPDATE_REQUESTED': return {
       ...state,
       isUpdating: true
     }
-    case 'UPDATE_STATS':
-    case 'UPDATE_STATS_SUCCEEDED': return {
+    case 'STATS_UPDATE':
+    case 'STATS_UPDATE_SUCCEEDED': return {
       ...state,
       ...normalizeStats(action.payload)
     }
-    case 'UPDATE_STATS_FINISHED': return {
+    case 'STATS_UPDATE_FINISHED': return {
       ...state,
       isUpdating: false
     }
-    case 'MATCH_HISTORY_REQUESTED': return {
+    case 'MATCH_HISTORY_UPDATE_REQUESTED': return {
       ...state,
       isLoadingHistory: true
     }
     case 'MATCH_HISTORY_UPDATE':
-    case 'MATCH_HISTORY_SUCCEEDED':
+    case 'MATCH_HISTORY_UPDATE_SUCCEEDED':
       const matchHistoryWithDay = action.payload
         .map(record => ({
           ...record,
@@ -143,34 +143,34 @@ export function groupMatchHistory(
 
 export type GroupMatchHistoryResult = [string, MatchHistoryState][];
 
-interface UpdateStatsRequested {
-  type: 'UPDATE_STATS_REQUESTED'
+interface StatsUpdateRequested {
+  type: 'STATS_UPDATE_REQUESTED'
 }
 
-interface UpdateStatsSucceeded {
-  type: 'UPDATE_STATS_SUCCEEDED' | 'UPDATE_STATS'
+interface StatsUpdateSucceeded {
+  type: 'STATS_UPDATE_SUCCEEDED' | 'STATS_UPDATE'
   payload: Stats
 }
 
-interface MatchHistoryRequested {
-  type: 'MATCH_HISTORY_REQUESTED'
+interface StatsUpdateFinished {
+  type: 'STATS_UPDATE_FINISHED'
 }
 
-interface MatchHistorySucceeded {
-  type: 'MATCH_HISTORY_SUCCEEDED' | 'MATCH_HISTORY_UPDATE'
+interface MatchHistoryUpdateRequested {
+  type: 'MATCH_HISTORY_UPDATE_REQUESTED'
+}
+
+interface MatchHistoryUpdateSucceeded {
+  type: 'MATCH_HISTORY_UPDATE_SUCCEEDED' | 'MATCH_HISTORY_UPDATE'
   payload: MatchHistory
 }
 
-interface UpdateStatsFinished {
-  type: 'UPDATE_STATS_FINISHED'
-}
-
 type StatsActions =
-  UpdateStatsRequested  |
-  UpdateStatsSucceeded  |
-  UpdateStatsFinished   |
-  MatchHistoryRequested |
-  MatchHistorySucceeded
+  | StatsUpdateRequested
+  | StatsUpdateSucceeded
+  | StatsUpdateFinished
+  | MatchHistoryUpdateRequested
+  | MatchHistoryUpdateSucceeded;
 
   
 export interface LegendStatsData extends StatsData<number> {

@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import css from './style.scss';
 import Head from 'next/head';
 import Axios from 'axios';
-import { useState, useMemo, useEffect } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { DailyRanking, RecentlyUpdated } from '../../types';
 
 import { PlayerCard } from '../../components/PlayerCard';
 import { PlayerSearcher } from '../../components/PlayerSearcher';
-import { PlayersTable, Table, PlayerLabel, Td, Th } from '../../components/PlayersTable';
+import { PlayersTable, Table, Td, Th } from '../../components/PlayersTable';
+import { PlayerLabel } from '../../components/PlayerLabel';
 
 dayjs.extend(utc);
 const endOfDay = dayjs().utc().endOf('day');

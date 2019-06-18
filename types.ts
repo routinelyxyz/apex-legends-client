@@ -187,3 +187,16 @@ export interface WeaponRatioRecord {
 }
 
 export type WeaponRatios = WeaponRatioRecord[];
+
+export interface LeaderboardsRecord {
+  id: number
+  kills: number | null
+  player: PlayerBase
+  [key: string]: number | null | PlayerBase
+}
+
+export interface Leaderboards {
+  page: number
+  pages: number
+  data: LeaderboardsRecord[]
+}

@@ -96,10 +96,10 @@ interface FetchFinished {
 }
 
 type LeaderboardsAction =
-  UpdatePlatform  |
-  UpdateProperty  |
-  UpdateLegend    |
-  UpdateData      |
-  ClearFilters    |
-  FetchRequested  |
-  FetchFinished
+  | UpdatePlatform
+  | UpdateProperty
+  | UpdateLegend  
+  | UpdateData    
+  | ClearFilters  
+  | FetchRequested
+  | FetchFinished;
