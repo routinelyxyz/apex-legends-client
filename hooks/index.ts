@@ -28,16 +28,20 @@ export const useWindowSize = () => {
 }
 
 interface DOMRectReadOnly {
-  left: number
-  top: number
-  width: number
-  height: number
+  readonly left: number
+  readonly top: number
+  readonly width: number
+  readonly height: number
 }
-export const useMeasure = <T>(): [{ ref: RefObject<T> }, DOMRectReadOnly] => {
+type UseMeasureResult<T> = [
+  { ref: RefObject<T> },
+  DOMRectReadOnly
+]
+export function useMeasure <T>(): UseMeasureResult<T> {
   const ref = useRef<T>(null);
   const [bounds, set] = useState({ left: 0, top: 0, width: 0, height: 0 });
   const [ro] = useState(() => new ResizeObserver(([entry]) => set(entry.contentRect)));
-  useEffect(() => (ro.observe(<any>ref.current), ro.disconnect), [ref, ro]);
+  useEffect(() => (ro.observe((ref as any).current), ro.disconnect), [ref, ro]);
   return [{ ref }, bounds];
 }
 

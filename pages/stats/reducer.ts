@@ -5,7 +5,7 @@ import { NODE_ENV } from '../../helpers/consts';
 
 export const countdown = NODE_ENV === 'production' ? 178 : 120;
 
-interface StatsState {
+interface StatState {
   player: Player | null
   lifetimeStats: LifetimeStatState
   legendStats: LegendStatState
@@ -15,9 +15,8 @@ interface StatsState {
   isUpdating: boolean
   isLoadingHistory: boolean
 }
-export { StatsState as StatState } 
 
-export const initialState: StatsState = {
+export const initialState: StatState = {
   player: null,
   lifetimeStats: {
     id: null,
@@ -34,9 +33,9 @@ export const initialState: StatsState = {
 }
 
 export function statsReducer(
-  state: StatsState,
+  state: StatState,
   action: StatsActions
-): StatsState {
+): StatState {
   switch(action.type) {
     case 'STATS_UPDATE_REQUESTED': return {
       ...state,
@@ -78,7 +77,7 @@ export function statsReducer(
 export function initStatsReducer({ stats, skipFirstFetch }: {
   stats: Stats
   skipFirstFetch: boolean
-}): StatsState {
+}): StatState {
   const nextState = normalizeStats(stats);
   return {
     ...initialState,
@@ -138,7 +137,7 @@ export function groupMatchHistory(
       return grouped;
     }, {});
 
-  return <any>Object.entries(grouped);
+  return Object.entries(grouped);
 }
 
 export type GroupMatchHistoryResult = [string, MatchHistoryState][];

@@ -1,6 +1,6 @@
 import { Environment } from "../types";
 
-export const NODE_ENV = <Environment>process.env.NODE_ENV || 'development';
+export const NODE_ENV = (process.env.NODE_ENV || 'development') as Environment;
 
 export const GA_ID = 'UA-136317731-1';
 
