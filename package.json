@@ -37,10 +37,7 @@
     "react": "^16.8.2",
     "react-dom": "^16.8.2",
     "react-flip-toolkit": "^6.5.7",
-    "react-redux": "^6.0.1",
     "react-spring": "^8.0.7",
-    "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0",
     "resize-observer-polyfill": "^1.5.1",
     "use-onclickoutside": "^0.3.0"
   },
