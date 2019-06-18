@@ -161,9 +161,13 @@ const StatsPage = ({
             <InfoCard
               title="Rank"
               content={(
-                <animated.span className={stats.lifetime.kills.rank <= 10 && css.player__colored_rank}>
-                  {rankProps.rank.interpolate((v: number) => v.toFixed())}
-                </animated.span>
+                <span {...applyCss(
+                  rank <= 10 && css.player__colored_rank
+                )}>
+                  <animated.span>
+                    {rankProps.rank.interpolate((v: number) => v.toFixed())}
+                  </animated.span>
+                </span>
               )}
               className={css.info_card__item}
             />

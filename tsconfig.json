@@ -7,6 +7,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
+    // "outDir": "./dist",
     // "noUnusedLocals": true,
     // "noUnusedParameters": true,
     "preserveConstEnums": true,
@@ -18,5 +19,8 @@
     "plugins": [
       { "name": "typescript-tslint-plugin" }
     ]
-  }
+  },
+  "exclude": [
+    "middleware"
+  ]
 }

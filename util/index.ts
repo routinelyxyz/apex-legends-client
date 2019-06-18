@@ -1,3 +1,4 @@
+import { DynamicClassName } from "../types";
 
 export const debounce = (delay = 250) => {
   let timeout: any;
@@ -69,7 +70,7 @@ export const filterTruthyEntry = <T>(object: T) => Object
   .flatMap(filterTruthyProp);
 
 
-export const applyCss = (...inputs: (string|boolean|undefined)[]) => ({
+export const applyCss = (...inputs: (DynamicClassName)[]) => ({
   className: inputs
     .filter(input =>
       typeof input === 'string' && input.length

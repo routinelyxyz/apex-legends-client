@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, ReactElement } from 'react';
 import css from './style.scss';
 import { Player } from '../../types';
 
@@ -14,7 +14,7 @@ export const RenderPlayersResult = ({
   isSearching,
   playersFound,
   phrase
-}: RenderPlayersResultProps): ReactNode => {
+}: RenderPlayersResultProps) => {
   
   if (!phrase.length) {
     return (
@@ -35,22 +35,26 @@ export const RenderPlayersResult = ({
       </>
     );
   }
-  return playersFound.map(player => (
-    <div
-      key={player.id}
-      className={css.player_label_searcher__container}
-    >
-      <PlayerLabel 
-        player={player}
-        renderName={name => (
-          <span className={css.player_label_searcher__name}>
-            <PhraseSelector
-              value={name}
-              phrase={phrase}
+  return (
+    <>
+      {playersFound.map(player => (
+          <li
+            key={player.id}
+            className={css.player_label_searcher__container}
+          >
+            <PlayerLabel 
+              player={player}
+              renderName={name => (
+                <span className={css.player_label_searcher__name}>
+                  <PhraseSelector
+                    value={name}
+                    phrase={phrase}
+                  />
+                </span>
+              )}
             />
-          </span>
-        )}
-      />
-    </div>
-  ));
+          </li>
+        ))}
+    </>
+  );
 }

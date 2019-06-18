@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import css from './style.scss';
 
-import { NavLink } from '../../reusable/Elements';
+import { NavLink } from '../../reusable/NavLink';
 
 interface ItemsLayoutProps {
   children: ReactNode

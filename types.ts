@@ -200,3 +200,5 @@ export interface Leaderboards {
   pages: number
   data: LeaderboardsRecord[]
 }
+
+export type DynamicClassName = string | boolean | null | undefined;

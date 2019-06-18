@@ -18,7 +18,7 @@ function getOrCreateStore(initialState?: AppState) {
 }
 
 
-export const withReduxStore = (App: NextComponentClass) =>
+export const withReduxStore = (App: NextComponentClass<{ store: any }>) =>
   class AppWithRedux extends React.Component {
 
     store: AppState;

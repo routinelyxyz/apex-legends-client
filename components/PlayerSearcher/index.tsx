@@ -118,7 +118,7 @@ export const PlayerSearcher = ({
     >
       <div className={css.input_container}>
         <BasicInput
-          className={pageMode && css.input_large}
+          className={pageMode ? css.input_large : ''}
           type="text"
           placeholder="Search player..."
           value={phrase}
