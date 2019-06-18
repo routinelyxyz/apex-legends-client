@@ -1,15 +1,14 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import css from './style.scss';
-import { useMemo } from 'react';
 import { ammoNames, weaponPropTitles, getStatic, weaponPropsArr } from '../../../helpers';
 import Link from 'next/link';
 import Head from 'next/head';
 import Axios from 'axios';
+import { round } from '../../../util';
 import { Weapon, WeaponRatios } from '../../../types';
 
 import { HorizontalNavTab } from '../../../reusable/HorizontalNav';
 import { ProgressBar } from '../../../reusable/ProgressBar';
-import { round } from '../../../util';
 
 
 const halfLength = Math.ceil(weaponPropsArr.length / 2);

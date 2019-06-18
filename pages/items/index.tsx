@@ -10,9 +10,9 @@ import { Weapons, WeaponSortProp } from '../../types';
 import { STATIC } from '../../helpers/consts';
 import { weaponsReducer, initWeaponsReducer, weaponsFilter, initialState } from './reducer';
 
-import Input from '../../reusable/Input';
-import Checkmark from '../../reusable/Checkmark';
-import Select from '../../reusable/Select';
+import { BasicInput } from '../../reusable/Input';
+import { Checkmark } from '../../reusable/Checkmark';
+import { Select } from '../../reusable/Select';
 import { SortDirection } from '../../reusable/SortDirection';
 import { WeaponsGrid } from '../../components/WeaponsGrid';
 import { MobileModal } from '../../components/MobileModal';
@@ -24,6 +24,7 @@ const sortProps = [
   ...weaponPropsArr.map(({ prop, title }) => [prop, title]),
   ['ammoType', 'Ammo type']
 ] as [string, string][];
+
 
 interface WeaponsPageProps {
   items: Weapons
@@ -52,7 +53,6 @@ const WeaponsPage = ({ items, router }: WeaponsPageProps) => {
 
   useEffect(() => {
     const query: any = {};
-    let timeout: any;
 
     if (state.phrase.length) query.name = state.phrase;
     if (state.sortBy !== initialState.sortBy) query.sortBy = state.sortBy;
@@ -63,14 +63,16 @@ const WeaponsPage = ({ items, router }: WeaponsPageProps) => {
     const href = '/items' + qs.stringify(query, true);
     const as = href;
 
-    timeout = debounceA(() => {
-      if (router.pathname === '/items' && updateKey !== initialUpdateKey) {
-        router.replace(href, as, { shallow: true });
-      }
-    });
+    const timeout = debounceA(() => handleQueryUpdate(href, as));
 
     return () => clearTimeout(timeout);
   }, [updateKey]);
+
+  function handleQueryUpdate(href: string, as: string) {
+    if (router.pathname === '/items' && areFiltersApplied) {
+      router.replace(href, as, { shallow: true });
+    }
+  }
 
   const handleCategoryToggle = (categoryName: string) => {
     dispatch({
@@ -113,7 +115,7 @@ const WeaponsPage = ({ items, router }: WeaponsPageProps) => {
         <nav className={css.search_filters}>
           <label className={css.filters_searcher} data-testid="Items__input">
             <h3 className={css.h3}>Name</h3>
-            <Input
+            <BasicInput
               placeholder="Weapon name..."
               value={state.phrase}
               onChange={handlePhraseUpdate}

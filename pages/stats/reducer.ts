@@ -165,7 +165,8 @@ interface MatchHistoryUpdateSucceeded {
   payload: MatchHistory
 }
 
-type StatsActions = StatsUpdateRequested
+type StatsActions =
+  | StatsUpdateRequested
   | StatsUpdateSucceeded
   | StatsUpdateFinished
   | MatchHistoryUpdateRequested

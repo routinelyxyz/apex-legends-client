@@ -1,8 +1,7 @@
-import React, { useReducer, useMemo } from 'react';
+import React, { useReducer, useMemo, useState, useEffect } from 'react';
 import css from './style.scss';
 import { getAvatar } from '../../helpers';
 import { animated, useSpring } from 'react-spring';
-import { useState, useEffect } from 'react';
 import { getTs, applyCss } from '../../util';
 import Head from 'next/head';
 import { withRouter, RouterProps } from 'next/router';

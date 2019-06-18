@@ -200,12 +200,12 @@ interface ClearFilters {
 }
 
 type WeaponActions = 
-  UpdatePhrase    |
-  ToggleOrder     |
-  UpdateSortBy    |
-  ToggleCategory  |
-  ToggleAmmoType  |
-  ClearFilters;
+  | UpdatePhrase
+  | ToggleOrder
+  | UpdateSortBy
+  | ToggleCategory
+  | ToggleAmmoType  
+  | ClearFilters;
 
 
 interface AmmoTypeState extends AmmoType {

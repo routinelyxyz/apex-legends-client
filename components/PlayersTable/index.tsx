@@ -57,12 +57,12 @@ export const Th = ({
 );
 
 interface PlayersTableDataRecord {
-  kills: number | null
-  headshots: number | null
-  damage: number | null
-  matchesPlayed: number | null
-  damagePerKill: number | null
-  headshotsPerKill: number | null
+  kills?: number | null
+  headshots?: number | null
+  damage?: number | null
+  matchesPlayed?: number | null
+  damagePerKill?: number | null
+  headshotsPerKill?: number | null
   player: PlayerBase
 }
 interface PlayersTableProps {

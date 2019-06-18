@@ -12,10 +12,10 @@ interface PaginationMenuProps {
 export const PaginationMenu = ({
   activePage,
   pagesCount,
-  href = p => '?activePage=' + p
+  href = p => '?page=' + p
 }: PaginationMenuProps) => {
 
-  const buttons = useMemo<(number|string)[]>(() => {
+  const buttons = useMemo(() => {
 
     if (pagesCount <= 5) {
       return Array
@@ -23,7 +23,10 @@ export const PaginationMenu = ({
         .map((_, index) => index + 1);
     }
 
-    function getPagesArray(activePage: number, pagesCount: number) {
+    function getPagesArray(
+      activePage: number,
+      pagesCount: number
+    ): (number|string)[] {
       if (pagesCount - 3 >= activePage) {
         if (activePage === 1) {
           return [activePage , activePage + 1, activePage + 2, pagesCount];
