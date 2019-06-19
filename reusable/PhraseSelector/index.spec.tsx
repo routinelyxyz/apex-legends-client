@@ -4,7 +4,6 @@ import {
 } from '@testing-library/react';
 import { PhraseSelector } from '.';
 
-
 test('Selects phrase correctly', () => {
   const { container } = render(
     <PhraseSelector

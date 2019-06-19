@@ -15,20 +15,20 @@ export const PhraseSelector = ({
   const phraseStart = valueLowered.indexOf(phraseLowered);
   if (phraseStart === -1) {
     return (
-      <>
+      <div>
         {value}
-      </>
+      </div>
     );
   }
   const phraseEnd = phraseStart + phrase.length;
 
   return (
-    <>
+    <div>
       {value.slice(0, phraseStart)}
       <strong className={css.selection}>
         {value.slice(phraseStart, phraseEnd)}
       </strong>
       {value.slice(phraseEnd)}
-    </>
+    </div>
   );
 }
