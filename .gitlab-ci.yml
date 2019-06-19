@@ -15,7 +15,10 @@ cache:
     - cache/Cypress
     - node_modules
 
+#disabled
 cypress:
+  only:
+    - disabled
   stage: test
   image: cypress/browsers:node11.13.0-chrome73
   variables:
