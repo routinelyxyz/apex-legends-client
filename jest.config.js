@@ -1,14 +1,19 @@
 module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'jsdom',
-  "moduleNameMapper": {
-    "^.+\\.(css|less|scss)$": "identity-obj-proxy"
+  preset: "ts-jest/presets/js-with-ts",
+  testEnvironment: "jsdom",
+  moduleFileExtensions: ["ts", "tsx", "js"],
+  moduleNameMapper: {
+    "\\.(css|scss|less)$": "identity-obj-proxy"
   },
-  "testPathIgnorePatterns": ["/node_modules/", "/cypress/", "/cache/"],
-  // "globals": {
-  //   "ts-jest": {
-  //     "babelConfig": true,
-  //     "tsConfig": "tsconfig.json"
-  //   }
-  // }
-};
+  transform: {
+    "^.+\\.(ts|tsx)$": "ts-jest"
+  },
+  // testMatch: ["**/__tests__/*.(ts|tsx)"],
+  // setupFiles: ["./jest.setup.js"],
+  testPathIgnorePatterns: ["./.next/", "./node_modules/"],
+  globals: {
+    "ts-jest": {
+      tsConfig: "tsconfig.jest.json"
+    }
+  }
+}

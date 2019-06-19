@@ -11,6 +11,5 @@ test('Selects phrase correctly', () => {
       phrase="inter"
     />
   );
-
   expect(container.firstChild).toMatchSnapshot();
 });
