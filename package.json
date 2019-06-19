@@ -10,6 +10,7 @@
     "start:ci": "start-server-and-test start http://localhost:3000 test:cypress",
     "now-build": "next build",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "test:cypress": "cypress run"
   },
   "repository": {

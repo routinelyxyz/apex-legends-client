@@ -33,6 +33,19 @@ cypress:
       - cypress/screenshots
     expire_in: 1 week
 
+jest:
+  stage: test
+  image: node:11.14.0
+  variables:
+    NODE_ENV: "development"
+  script:
+    - npm i --silent
+    - npm run test:coverage
+  artifacts:
+    paths:
+      - coverage
+    expire_in: 1 week
+
 deploy_staging:
   stage: deploy_staging
   image: node:11.14.0
