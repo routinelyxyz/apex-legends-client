@@ -9,7 +9,7 @@ module.exports = {
     "^.+\\.(ts|tsx)$": "ts-jest"
   },
   // testMatch: ["**/__tests__/*.(ts|tsx)"],
-  // setupFiles: ["./jest.setup.js"],
+  setupFilesAfterEnv: ["./jest.setup.js"],
   testPathIgnorePatterns: ["./.next/", "./node_modules/"],
   globals: {
     "ts-jest": {
