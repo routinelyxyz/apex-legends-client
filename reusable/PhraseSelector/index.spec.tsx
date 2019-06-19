@@ -6,10 +6,12 @@ import { PhraseSelector } from '.';
 
 test('Selects phrase correctly', () => {
   const { container } = render(
-    <PhraseSelector
-      value="Interstellar"
-      phrase="inter"
-    />
+    <div>
+      <PhraseSelector
+        value="Interstellar"
+        phrase="inter"
+      />
+    </div>
   );
   expect(container.firstChild).toMatchSnapshot();
 });
