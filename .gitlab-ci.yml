@@ -40,7 +40,7 @@ jest:
   stage: test
   image: node:11.14.0
   variables:
-    NODE_ENV: "development"
+    NODE_ENV: "test"
   script:
     - npm i --silent
     - npm run test:coverage
