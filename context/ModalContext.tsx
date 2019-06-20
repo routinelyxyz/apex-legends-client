@@ -6,13 +6,17 @@ type ModalContext = {
   scroll: boolean
   setOpened(status: boolean): any
 }
-export const ModalContext = React.createContext<ModalContext>({} as any);
+export const ModalContext = React.createContext<ModalContext>({
+  opened: false,
+  scroll: true,
+  setOpened() {}
+});
 
 
 interface ModalProviderProps {
   children: ReactNode
 }
-export const ModalProvider = (_props: ModalProviderProps) => {
+export const ModalProvider = ({ children }: ModalProviderProps) => {
   const [opened, setOpened] = useState(false);
   const { isDesktop } = useDevice();
 
@@ -31,6 +35,8 @@ export const ModalProvider = (_props: ModalProviderProps) => {
   }, [opened]);
 
   return (
-    <ModalContext.Provider value={value} />
+    <ModalContext.Provider value={value}>
+      {children}
+    </ModalContext.Provider>
   );
 }

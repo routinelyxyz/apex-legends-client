@@ -4,13 +4,16 @@ interface MobileMenuContext {
   visible: boolean
   setVisible(status: boolean): void
 }
-export const MobileMenuContext = React.createContext<MobileMenuContext>({} as any);
+export const MobileMenuContext = React.createContext<MobileMenuContext>({
+  visible: true,
+  setVisible() {}
+});
 
 
 interface MobileMenuProviderProps {
   children: ReactNode
 }
-export const MobileMenuProvider = (_props: MobileMenuProviderProps) => {
+export const MobileMenuProvider = ({ children }: MobileMenuProviderProps) => {
   const [visible, setVisible] = useState(true);
 
   const value = useMemo(() => ({
@@ -19,6 +22,8 @@ export const MobileMenuProvider = (_props: MobileMenuProviderProps) => {
   }), [visible]);
 
   return (
-    <MobileMenuContext.Provider value={value} />
+    <MobileMenuContext.Provider value={value}>
+      {children}
+    </MobileMenuContext.Provider>
   );
 }

@@ -60,12 +60,15 @@ export const PlayerSearcher = ({
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setPhrase(value);
+    if (!focused) {
+      setFocused(true);
+    }
     NProgress.start();
 
     if (!isSearching) {
       setIsSearching(true);
     }
-    if (value && value.length) {
+    if (!value && !value.length) {
       clearTimeout(timeout);
       setIsSearching(false);
       NProgress.done();
@@ -125,10 +128,11 @@ export const PlayerSearcher = ({
           onChange={handleOnChange}
           onFocus={handleFocus}
           onKeyPress={handleStatsSearch}
+          data-testid="PlayerSearcher__input"
         />
         <SearcherPlatforms
           platform={platform}
-          setPlatform={platform => setPlatform(platform)}
+          setPlatform={setPlatform}
           small={!pageMode}
         />
       </div>

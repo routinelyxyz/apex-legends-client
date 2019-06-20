@@ -63,11 +63,11 @@ export const filterByUniqueId = <T extends RecordWithId<T>>(
   return foundIndex === index;
 }
 
-export const filterTruthyProp = <T extends Array<T>>([prop, val]: T) => val ? prop : [];
+// export const filterTruthyProp = <T extends Array<T>>([prop, val]: T) => val ? prop : [];
 
-export const filterTruthyEntry = <T>(object: T) => Object
-  .entries(object)
-  .flatMap(filterTruthyProp);
+// export const filterTruthyEntry = <T>(object: T) => Object
+//   .entries(object)
+//   .flatMap(filterTruthyProp);
 
 
 export const applyCss = (...inputs: (DynamicClassName)[]) => ({
