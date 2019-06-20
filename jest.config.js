@@ -10,7 +10,7 @@ module.exports = {
   },
   // testMatch: ["**/__tests__/*.(ts|tsx)"],
   setupFilesAfterEnv: ["./jest.setup.js"],
-  testPathIgnorePatterns: ["./.next/", "./node_modules/"],
+  testPathIgnorePatterns: ["./.next/", "./node_modules/", "./cypress"],
   globals: {
     "ts-jest": {
       tsConfig: "tsconfig.jest.json"

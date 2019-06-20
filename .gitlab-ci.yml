@@ -15,7 +15,10 @@ cache:
     - cache/Cypress
     - node_modules
 
+#disabled
 cypress:
+  only:
+    - disabled
   stage: test
   image: cypress/browsers:node11.13.0-chrome73
   variables:
@@ -31,6 +34,19 @@ cypress:
     paths:
       - cypress/videos
       - cypress/screenshots
+    expire_in: 1 week
+
+jest:
+  stage: test
+  image: node:11.14.0
+  variables:
+    NODE_ENV: "test"
+  script:
+    - npm i --silent
+    - npm run test:coverage
+  artifacts:
+    paths:
+      - coverage
     expire_in: 1 week
 
 deploy_staging:
