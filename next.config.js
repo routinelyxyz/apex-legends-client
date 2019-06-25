@@ -1,3 +1,4 @@
+require('core-js');
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 const withSass = require('@zeit/next-sass');
 const withPlugins = require('next-compose-plugins');
