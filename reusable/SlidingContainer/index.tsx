@@ -1,4 +1,4 @@
-import React, { ReactNode, HTMLProps } from 'react';
+import React, { ReactNode } from 'react';
 import { animated, useTransition, config } from 'react-spring';
 
 interface SlidingContainerProps {

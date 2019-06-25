@@ -50,14 +50,12 @@ export const PlayerSearcher = ({
 
   const findPlayers = async (name: string) => {
     const response = await axios.get<{ data: Player[] }>(`/stats/players/${encodeURI(name)}`);
-    if (phrase.length) {
-      setPlayersFound(response.data.data);
-    }
+    setPlayersFound(response.data.data);
     setIsSearching(false);
     NProgress.done();
   }
 
-  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setPhrase(value);
     if (!focused) {
