@@ -1,6 +1,6 @@
-import { useReducer, useEffect } from "react";
+import { useReducer, useEffect, DependencyList } from "react";
 
-interface AxioState<T> {
+interface FetchState<T> {
   isFetching: boolean
   isError: boolean
   response: Response | null
@@ -8,7 +8,7 @@ interface AxioState<T> {
   controller: AbortController | null
 }
 
-function initAxiosReducer<T>(): AxioState<T> {
+function initFetchReducer<T>(): FetchState<T> {
   return initialState;
 }
 
@@ -20,9 +20,9 @@ const initialState = {
   controller: null
 }
 
-function useAxiosReducer<T>(
-  state: AxioState<T>,
-  action: AxioStateAction
+function fetchReducer<T>(
+  state: FetchState<T>,
+  action: FetchAction
 ) {
   switch(action.type) {
     case 'FETCH_REQUESTED': return {
@@ -31,16 +31,17 @@ function useAxiosReducer<T>(
     }
     case 'FETCH_SUCCEEDED': return {
       ...state,
+      response: action.payload.response,
+      data: action.payload.data,
       isFetching: false,
       isError: false,
-      data: action.payload,
       controller: null
     }
     case 'FETCH_FAILED': return {
       ...state,
+      response: action.payload.response,
       isFetching: false,
       isError: true,
-      error: action.error,
       data: null,
       controller: null
     }
@@ -50,9 +51,9 @@ function useAxiosReducer<T>(
 export function useFetch<T>(
   url: string,
   options?: RequestInit,
-  dependencies: any[] = []
-) {
-  const [state, dispatch] = useReducer(useAxiosReducer, initAxiosReducer as any);
+  dependencies: DependencyList = []
+): FetchState<T> {
+  const [state, dispatch] = useReducer(fetchReducer, initFetchReducer as any);
 
   async function handleRequest() {
     const controller = new AbortController();
@@ -69,12 +70,15 @@ export function useFetch<T>(
       const data: T = await response.json();
       dispatch({
         type: 'FETCH_SUCCEEDED',
-        payload: data
+        payload: {
+          response,
+          data
+        }
       });
     } else {
       dispatch({
         type: 'FETCH_FAILED',
-        error: new Error
+        payload: { response }
       });
     }
   }
@@ -98,15 +102,20 @@ interface FetchRequested {
 
 interface FetchSucceeded {
   type: 'FETCH_SUCCEEDED'
-  payload: any
+  payload: {
+    data: any
+    response: Response
+  }
 }
 
 interface FetchFailed {
-  type: 'FETCH_FAILED',
-  error: any
+  type: 'FETCH_FAILED'
+  payload: {
+    response: Response
+  }
 }
 
-type AxioStateAction =
+type FetchAction =
   | FetchRequested
   | FetchSucceeded
   | FetchFailed;
