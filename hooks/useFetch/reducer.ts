@@ -7,7 +7,7 @@ export interface FetchState<T> {
   controller: AbortController | null
 }
 
-export const initialState = {
+export const initialState: FetchState<any> = {
   isFetching: true,
   isError: false,
   response: null,
