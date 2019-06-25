@@ -1,11 +1,11 @@
-import Axios, { AxiosRequestConfig, AxiosError } from "axios";
 import { useReducer, useEffect } from "react";
 
 interface AxioState<T> {
   isFetching: boolean
   isError: boolean
-  error: null | AxiosError,
-  data: null | T
+  response: Response | null
+  data: T | null
+  controller: AbortController | null
 }
 
 function initAxiosReducer<T>(): AxioState<T> {
@@ -15,8 +15,9 @@ function initAxiosReducer<T>(): AxioState<T> {
 const initialState = {
   isFetching: true,
   isError: false,
-  error: null,
-  data: null
+  response: null,
+  data: null,
+  controller: null
 }
 
 function useAxiosReducer<T>(
@@ -24,51 +25,75 @@ function useAxiosReducer<T>(
   action: AxioStateAction
 ) {
   switch(action.type) {
-    case 'FETCH_REQUESTED': return initialState;
+    case 'FETCH_REQUESTED': return {
+      ...initialState,
+      controller: action.payload
+    }
     case 'FETCH_SUCCEEDED': return {
       ...state,
       isFetching: false,
       isError: false,
-      data: action.payload
+      data: action.payload,
+      controller: null
     }
     case 'FETCH_FAILED': return {
       ...state,
       isFetching: false,
       isError: true,
       error: action.error,
-      data: null
+      data: null,
+      controller: null
     }
   }
 }
 
-export function useAxios<T>(
+export function useFetch<T>(
   url: string,
-  options?: AxiosRequestConfig,
+  options?: RequestInit,
   dependencies: any[] = []
 ) {
-  const [state, dispatch] = useReducer(useAxiosReducer, initAxiosReducer);
+  const [state, dispatch] = useReducer(useAxiosReducer, initAxiosReducer as any);
+
+  async function handleRequest() {
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    dispatch({
+      type: 'FETCH_REQUESTED',
+      payload: controller
+    });
+
+    const response = await fetch(url, { ...options, signal });
+
+    if (response.ok) {
+      const data: T = await response.json();
+      dispatch({
+        type: 'FETCH_SUCCEEDED',
+        payload: data
+      });
+    } else {
+      dispatch({
+        type: 'FETCH_FAILED',
+        error: new Error
+      });
+    }
+  }
 
   useEffect(() => {
+    if (state.isFetching && state.controller) {
+      state.controller.abort();
+    }
+    handleRequest();
 
-    Axios({ url, ...options })
-      .then(response => {
-        dispatch({
-          type: 'FETCH_SUCCEEDED',
-          payload: response.data
-        })
-      })
-      .catch((error: AxiosError) => {
-        dispatch({
-          type: 'FETCH_FAILED',
-          error
-        });
-      });
-
+    () => state.controller && state.controller.abort();
   }, dependencies);
+
+  return state;
 }
 
 interface FetchRequested {
   type: 'FETCH_REQUESTED'
+  payload: AbortController
 }
 
 interface FetchSucceeded {
@@ -78,7 +103,7 @@ interface FetchSucceeded {
 
 interface FetchFailed {
   type: 'FETCH_FAILED',
-  error: AxiosError
+  error: any
 }
 
 type AxioStateAction =
