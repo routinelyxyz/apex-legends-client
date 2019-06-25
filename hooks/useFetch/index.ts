@@ -23,7 +23,7 @@ const initialState = {
 function fetchReducer<T>(
   state: FetchState<T>,
   action: FetchAction
-) {
+): FetchState<T> {
   switch(action.type) {
     case 'FETCH_REQUESTED': return {
       ...initialState,
@@ -45,6 +45,7 @@ function fetchReducer<T>(
       data: null,
       controller: null
     }
+    default: throw Error;
   }
 }
 
