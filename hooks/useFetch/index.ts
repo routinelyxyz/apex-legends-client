@@ -1,5 +1,5 @@
-import { useReducer, useEffect, DependencyList, Reducer, useCallback } from "react";
-import { fetchReducer, initialState, FetchAction, FetchState } from "./reducer";
+import { useReducer, useEffect, DependencyList, Reducer, useCallback } from 'react';
+import { fetchReducer, initialState, FetchAction, FetchState } from './reducer';
 
 export function useFetch<T>(
   url: string,

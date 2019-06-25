@@ -3,7 +3,7 @@ import { useFetch } from ".";
 import { render } from '@testing-library/react';
 
 jest.mock('fetch', () => ({
-  get: jest.fn()
+  json: jest.fn(async () => ({}))
 }));
 
 
