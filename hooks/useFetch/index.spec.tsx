@@ -46,7 +46,9 @@ describe('useFetch hook', () => {
 
     (fetch as jest.Mock).mockResolvedValueOnce({});
 
-    const { container, findByText } = render(<MockedComponent todoId={1} />);
+    const { container, findByText, rerender } = render(<MockedComponent todoId={1} />);
+    
+    rerender(<MockedComponent todoId={2} />);
 
   });
 })

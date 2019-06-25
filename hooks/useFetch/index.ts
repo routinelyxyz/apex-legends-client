@@ -1,4 +1,4 @@
-import { useReducer, useEffect, DependencyList, Reducer } from "react";
+import { useReducer, useEffect, DependencyList, Reducer, useCallback } from "react";
 import { fetchReducer, initialState, FetchAction, FetchState } from "./reducer";
 
 export function useFetch<T>(
@@ -9,7 +9,7 @@ export function useFetch<T>(
   const [state, dispatch] = useReducer<Reducer<FetchState<T>, FetchAction<T>>>(fetchReducer, initialState);
   const { controller, ...restState } = state;
 
-  async function handleRequest() {
+  const handleRequest = useCallback(async () => {
     const controller = new AbortController();
     const { signal } = controller;
 
@@ -35,7 +35,7 @@ export function useFetch<T>(
         payload: { response }
       });
     }
-  }
+  }, [dispatch]);
 
   useEffect(() => {
     if (state.isFetching && controller) {
