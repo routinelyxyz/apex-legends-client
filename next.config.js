@@ -59,6 +59,22 @@ module.exports = withPlugins(
   {
     target: isProduction ? 'serverless' : 'server',
     webpack(config) {
+      const originalEntry = config.entry;
+
+      config.entry = async () => {
+        const entries = await originalEntry();
+        const excludedEntries = ['reducer', 'fetchInitialStats'];
+
+        const filteredEntries = Object.fromEntries(
+          Object
+            .entries(entries)
+            .filter(([entryName]) => !excludedEntries.some(excludedEntry => 
+              entryName.includes(excludedEntry)  
+            ))
+        );
+        return filteredEntries;
+      }
+
       
       const plugins = [
         ...config.plugins,
