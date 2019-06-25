@@ -1,4 +1,4 @@
-import { useReducer, useEffect, DependencyList } from "react";
+import { useReducer, useEffect, DependencyList, Reducer } from "react";
 
 interface FetchState<T> {
   isFetching: boolean
@@ -6,10 +6,6 @@ interface FetchState<T> {
   response: Response | null
   data: T | null
   controller: AbortController | null
-}
-
-function initFetchReducer<T>(): FetchState<T> {
-  return initialState;
 }
 
 const initialState = {
@@ -22,11 +18,13 @@ const initialState = {
 
 function fetchReducer<T>(
   state: FetchState<T>,
-  action: FetchAction
+  action: FetchAction<T>
 ): FetchState<T> {
   switch(action.type) {
     case 'FETCH_REQUESTED': return {
-      ...initialState,
+      ...state,
+      isFetching: true,
+      isError: false,
       controller: action.payload
     }
     case 'FETCH_SUCCEEDED': return {
@@ -53,8 +51,9 @@ export function useFetch<T>(
   url: string,
   options?: RequestInit,
   dependencies: DependencyList = []
-): FetchState<T> {
-  const [state, dispatch] = useReducer(fetchReducer, initFetchReducer as any);
+): UseFetchResult<T> {
+  const [state, dispatch] = useReducer<Reducer<FetchState<T>, FetchAction<T>>>(fetchReducer, initialState);
+  const { controller, ...restState } = state;
 
   async function handleRequest() {
     const controller = new AbortController();
@@ -85,15 +84,27 @@ export function useFetch<T>(
   }
 
   useEffect(() => {
-    if (state.isFetching && state.controller) {
-      state.controller.abort();
+    if (state.isFetching && controller) {
+      controller.abort();
     }
     handleRequest();
 
-    () => state.controller && state.controller.abort();
+    () => controller && controller.abort();
   }, dependencies);
 
-  return state;
+
+  return {
+    ...restState,
+    cancel: controller && controller.abort
+  }
+}
+
+interface UseFetchResult<T> {
+  isFetching: boolean
+  isError: boolean
+  response: Response | null
+  data: T | null
+  cancel: AbortController['abort'] | null
 }
 
 interface FetchRequested {
@@ -101,10 +112,10 @@ interface FetchRequested {
   payload: AbortController
 }
 
-interface FetchSucceeded {
+interface FetchSucceeded<T> {
   type: 'FETCH_SUCCEEDED'
   payload: {
-    data: any
+    data: T
     response: Response
   }
 }
@@ -116,7 +127,7 @@ interface FetchFailed {
   }
 }
 
-type FetchAction =
+type FetchAction<T> =
   | FetchRequested
-  | FetchSucceeded
+  | FetchSucceeded<T>
   | FetchFailed;
