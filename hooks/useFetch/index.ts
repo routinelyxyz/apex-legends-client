@@ -43,7 +43,11 @@ export function useFetch<T>(
     }
     handleRequest();
 
-    () => controller && controller.abort();
+    return () => {
+      if (controller) {
+        controller.abort();
+      }
+    }
   }, dependencies);
 
 

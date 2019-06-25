@@ -37,9 +37,9 @@ export function fetchReducer<T>(
     case 'FETCH_FAILED': return {
       ...state,
       response: action.payload.response,
+      data: null,
       isFetching: false,
       isError: true,
-      data: null,
       controller: null
     }
     default: throw Error;
