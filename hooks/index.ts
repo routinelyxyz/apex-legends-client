@@ -91,3 +91,31 @@ export const useModal = () => {
   useEffect(() => () => modal.setOpened(false), []);
   return modal;
 }
+
+
+const defaultOptions: IntersectionObserverInit = {
+  root: null,
+  rootMargin: '0px',
+  threshold: 0
+}
+export function useObserver<T extends HTMLElement>(
+  callback: IntersectionObserverCallback,
+  options: IntersectionObserverInit = defaultOptions
+) {
+  const ref = useRef<T>(null);
+  const observer = useRef<IntersectionObserver>();
+
+  useEffect(() => {
+    observer.current = new IntersectionObserver(callback, options);
+    if (ref.current !== null) {
+      observer.current.observe(ref.current);
+    }
+    return () => {
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+    }
+  }, []);
+
+  return ref;
+}
