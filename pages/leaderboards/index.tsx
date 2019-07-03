@@ -7,7 +7,7 @@ import { useMounted } from '../../hooks';
 import { statsProps, statsTitlesMap, platforms } from '../../helpers';
 import Head from 'next/head';
 import Axios from 'axios';
-import { leaderboardsReducer, initLeaderboardsReducer, initialState } from './reducer';
+import { leaderboardsReducer, initLeaderboardsReducer, initialState } from '../../common/reducers/leaderboards';
 import { LegendBase, Platform, Leaderboards } from '../../types';
 import { NODE_ENV } from '../../helpers/consts';
 

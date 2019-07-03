@@ -8,8 +8,8 @@ import { withRouter, RouterProps } from 'next/router';
 import { useFirstRender } from '../../hooks';
 import NProgress from 'nprogress';
 import { Stats, Platform } from '../../types';
-import { fetchInitialStats, FetchInitialStatsResult, updateStats, fetchStats, fetchMatchHistory } from './fetchInitialStats';
-import { statsReducer, initStatsReducer, groupMatchHistory } from './reducer';
+import { fetchInitialStats, FetchInitialStatsResult, updateStats, fetchStats, fetchMatchHistory } from '../../common/methods/fetchInitialStats';
+import { statsReducer, initStatsReducer, groupMatchHistory } from '../../common/reducers/stats';
 
 import { ProgressRing } from '../../components/ProgressRing';
 import { HorizontalNavTab } from '../../reusable/HorizontalNav';

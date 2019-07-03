@@ -1,7 +1,7 @@
 import React from 'react';
 import css from './style.scss';
 import { statsTitlesMap } from '../../helpers';
-import { LifetimeStatsData } from '../../pages/stats/reducer';
+import { LifetimeStatsData } from '../../common/reducers/stats';
 
 import { ProgressBar } from '../../reusable/ProgressBar';
 

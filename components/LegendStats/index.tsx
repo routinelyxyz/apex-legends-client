@@ -1,7 +1,7 @@
 import React from 'react';
 import css from './style.scss';
 import { getStatic } from '../../helpers';
-import { LegendStatsRecord } from '../../pages/stats/reducer';
+import { LegendStatsRecord } from '../../common/reducers/stats';
 
 import { LegendStatsValue } from '../LegendStatsValue';
 

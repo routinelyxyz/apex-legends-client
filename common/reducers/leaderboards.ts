@@ -1,5 +1,5 @@
 import { Platform } from '../../types';
-import { QueryParams } from './';
+import { QueryParams } from '../../pages/leaderboards';
 
 interface LeaderboardState {
   isFetching: boolean

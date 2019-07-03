@@ -8,7 +8,7 @@ import Head from 'next/head';
 import axios from 'axios';
 import { Weapons, WeaponSortProp } from '../../types';
 import { STATIC } from '../../helpers/consts';
-import { weaponsReducer, initWeaponsReducer, weaponsFilter, initialState } from './reducer';
+import { weaponsReducer, initWeaponsReducer, weaponsFilter, initialState } from '../../common/reducers/weapon';
 
 import { BasicInput } from '../../reusable/Input';
 import { Checkmark } from '../../reusable/Checkmark';

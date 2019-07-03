@@ -1,5 +1,5 @@
 import { Weapon, AmmoType, WeaponType, Weapons, WeaponSortProp } from "../../types";
-import { QueryParams } from "./";
+import { QueryParams } from "../../pages/items";
 
 interface WeaponState {
   isLoading: boolean
